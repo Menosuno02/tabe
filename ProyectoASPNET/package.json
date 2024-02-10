@@ -1,0 +1,21 @@
+{
+  "name": "proyectoaspnet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildcss": "postcss wwwroot/css/global.css -o wwwroot/css/global.min.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "postcss-cli": "^11.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "daisyui": "^4.6.2",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  }
+}
