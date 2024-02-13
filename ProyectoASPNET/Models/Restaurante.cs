@@ -10,6 +10,7 @@
         public string Horario { get; set; }
         public string Logo { get; set; }
         public string Imagen { get; set; }
+        public int TiempoEntega { get; set; }
         public int IdCategoriaRestaurante { get; set; }
     }
 }
