@@ -1,6 +1,8 @@
 /*
 ! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
-*//*
+*/
+
+/*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
@@ -8,10 +10,14 @@
 *,
 ::before,
 ::after {
-  box-sizing: border-box; /* 1 */
-  border-width: 0; /* 2 */
-  border-style: solid; /* 2 */
-  border-color: #e5e7eb; /* 2 */
+  box-sizing: border-box;
+  /* 1 */
+  border-width: 0;
+  /* 2 */
+  border-style: solid;
+  /* 2 */
+  border-color: #e5e7eb;
+  /* 2 */
 }
 
 ::before,
@@ -31,15 +37,23 @@
 
 html,
 :host {
-  line-height: 1.5; /* 1 */
-  -webkit-text-size-adjust: 100%; /* 2 */
-  -moz-tab-size: 4; /* 3 */
+  line-height: 1.5;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -moz-tab-size: 4;
+  /* 3 */
   -o-tab-size: 4;
-     tab-size: 4; /* 3 */
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
-  font-feature-settings: normal; /* 5 */
-  font-variation-settings: normal; /* 6 */
-  -webkit-tap-highlight-color: transparent; /* 7 */
+     tab-size: 4;
+  /* 3 */
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
+  font-variation-settings: normal;
+  /* 6 */
+  -webkit-tap-highlight-color: transparent;
+  /* 7 */
 }
 
 /*
@@ -48,8 +62,10 @@ html,
 */
 
 body {
-  margin: 0; /* 1 */
-  line-height: inherit; /* 2 */
+  margin: 0;
+  /* 1 */
+  line-height: inherit;
+  /* 2 */
 }
 
 /*
@@ -59,9 +75,12 @@ body {
 */
 
 hr {
-  height: 0; /* 1 */
-  color: inherit; /* 2 */
-  border-top-width: 1px; /* 3 */
+  height: 0;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  border-top-width: 1px;
+  /* 3 */
 }
 
 /*
@@ -116,10 +135,14 @@ code,
 kbd,
 samp,
 pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
-  font-feature-settings: normal; /* 2 */
-  font-variation-settings: normal; /* 3 */
-  font-size: 1em; /* 4 */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* 1 */
+  font-feature-settings: normal;
+  /* 2 */
+  font-variation-settings: normal;
+  /* 3 */
+  font-size: 1em;
+  /* 4 */
 }
 
 /*
@@ -157,9 +180,12 @@ sup {
 */
 
 table {
-  text-indent: 0; /* 1 */
-  border-color: inherit; /* 2 */
-  border-collapse: collapse; /* 3 */
+  text-indent: 0;
+  /* 1 */
+  border-color: inherit;
+  /* 2 */
+  border-collapse: collapse;
+  /* 3 */
 }
 
 /*
@@ -173,15 +199,24 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit; /* 1 */
-  font-feature-settings: inherit; /* 1 */
-  font-variation-settings: inherit; /* 1 */
-  font-size: 100%; /* 1 */
-  font-weight: inherit; /* 1 */
-  line-height: inherit; /* 1 */
-  color: inherit; /* 1 */
-  margin: 0; /* 2 */
-  padding: 0; /* 3 */
+  font-family: inherit;
+  /* 1 */
+  font-feature-settings: inherit;
+  /* 1 */
+  font-variation-settings: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  font-weight: inherit;
+  /* 1 */
+  line-height: inherit;
+  /* 1 */
+  color: inherit;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+  padding: 0;
+  /* 3 */
 }
 
 /*
@@ -202,9 +237,12 @@ button,
 [type='button'],
 [type='reset'],
 [type='submit'] {
-  -webkit-appearance: button; /* 1 */
-  background-color: transparent; /* 2 */
-  background-image: none; /* 2 */
+  -webkit-appearance: button;
+  /* 1 */
+  background-color: transparent;
+  /* 2 */
+  background-image: none;
+  /* 2 */
 }
 
 /*
@@ -246,8 +284,10 @@ Correct the cursor style of increment and decrement buttons in Safari.
 */
 
 [type='search'] {
-  -webkit-appearance: textfield; /* 1 */
-  outline-offset: -2px; /* 2 */
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
 }
 
 /*
@@ -264,8 +304,10 @@ Remove the inner padding in Chrome and Safari on macOS.
 */
 
 ::-webkit-file-upload-button {
-  -webkit-appearance: button; /* 1 */
-  font: inherit; /* 2 */
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
 }
 
 /*
@@ -316,6 +358,7 @@ menu {
 /*
 Reset default styling for dialogs.
 */
+
 dialog {
   padding: 0;
 }
@@ -334,14 +377,18 @@ textarea {
 */
 
 input::-moz-placeholder, textarea::-moz-placeholder {
-  opacity: 1; /* 1 */
-  color: #9ca3af; /* 2 */
+  opacity: 1;
+  /* 1 */
+  color: #9ca3af;
+  /* 2 */
 }
 
 input::placeholder,
 textarea::placeholder {
-  opacity: 1; /* 1 */
-  color: #9ca3af; /* 2 */
+  opacity: 1;
+  /* 1 */
+  color: #9ca3af;
+  /* 2 */
 }
 
 /*
@@ -356,6 +403,7 @@ button,
 /*
 Make sure disabled buttons don't get the pointer cursor.
 */
+
 :disabled {
   cursor: default;
 }
@@ -374,8 +422,10 @@ audio,
 iframe,
 embed,
 object {
-  display: block; /* 1 */
-  vertical-align: middle; /* 2 */
+  display: block;
+  /* 1 */
+  vertical-align: middle;
+  /* 2 */
 }
 
 /*
@@ -389,6 +439,7 @@ video {
 }
 
 /* Make elements with the HTML hidden attribute stay hidden by default */
+
 [hidden] {
   display: none;
 }
@@ -400,7 +451,6 @@ video {
 }
 
 @supports not (color: oklch(0 0 0)) {
-
   :root {
     color-scheme: light;
     --fallback-p: #491eff;
@@ -426,7 +476,6 @@ video {
   }
 
   @media (prefers-color-scheme: dark) {
-
     :root {
       color-scheme: dark;
       --fallback-p: #7582ff;
@@ -491,7 +540,6 @@ html {
 }
 
 @media (prefers-color-scheme: dark) {
-
   :root {
     color-scheme: dark;
     --in: 0.7206 0.191 231.6;
@@ -691,46 +739,41 @@ html {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+
 .container {
   width: 100%;
 }
-@media (min-width: 640px) {
 
+@media (min-width: 640px) {
   .container {
     max-width: 640px;
   }
 }
-@media (min-width: 768px) {
 
+@media (min-width: 768px) {
   .container {
     max-width: 768px;
   }
 }
-@media (min-width: 1024px) {
 
+@media (min-width: 1024px) {
   .container {
     max-width: 1024px;
   }
 }
-@media (min-width: 1280px) {
 
+@media (min-width: 1280px) {
   .container {
     max-width: 1280px;
   }
 }
-@media (min-width: 1536px) {
 
+@media (min-width: 1536px) {
   .container {
     max-width: 1536px;
   }
 }
-@media (hover:hover) {
 
-  .label a:hover {
-    --tw-text-opacity: 1;
-    color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
-  }
-}
 .btn {
   display: inline-flex;
   height: 3rem;
@@ -769,11 +812,13 @@ html {
   --tw-bg-opacity: 1;
   --tw-border-opacity: 1;
 }
+
 .btn-disabled,
   .btn[disabled],
   .btn:disabled {
   pointer-events: none;
 }
+
 :where(.btn:is(input[type="checkbox"])),
 :where(.btn:is(input[type="radio"])) {
   width: auto;
@@ -781,13 +826,14 @@ html {
      -moz-appearance: none;
           appearance: none;
 }
+
 .btn:is(input[type="checkbox"]):after,
 .btn:is(input[type="radio"]):after {
   --tw-content: attr(aria-label);
   content: var(--tw-content);
 }
-@media (hover: hover) {
 
+@media (hover: hover) {
   .btn:hover {
     --tw-border-opacity: 1;
     border-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-border-opacity)));
@@ -796,7 +842,6 @@ html {
   }
 
   @supports (color: color-mix(in oklab, black, black)) {
-
     .btn:hover {
       background-color: color-mix(
             in oklab,
@@ -812,7 +857,6 @@ html {
   }
 
   @supports not (color: oklch(0 0 0)) {
-
     .btn:hover {
       background-color: var(--btn-color, var(--fallback-b2));
       border-color: var(--btn-color, var(--fallback-b2));
@@ -824,16 +868,15 @@ html {
     --glass-border-opacity: 15%;
   }
 
-  .btn-outline.btn-primary:hover {
+  .btn-outline.btn-secondary:hover {
     --tw-text-opacity: 1;
-    color: var(--fallback-pc,oklch(var(--pc)/var(--tw-text-opacity)));
+    color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
   }
 
   @supports (color: color-mix(in oklab, black, black)) {
-
-    .btn-outline.btn-primary:hover {
-      background-color: color-mix(in oklab, var(--fallback-p,oklch(var(--p)/1)) 90%, black);
-      border-color: color-mix(in oklab, var(--fallback-p,oklch(var(--p)/1)) 90%, black);
+    .btn-outline.btn-secondary:hover {
+      background-color: color-mix(in oklab, var(--fallback-s,oklch(var(--s)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-s,oklch(var(--s)/1)) 90%, black);
     }
   }
 
@@ -848,127 +891,82 @@ html {
   }
 
   @supports (color: color-mix(in oklab, black, black)) {
-
     .btn:is(input[type="checkbox"]:checked):hover, .btn:is(input[type="radio"]:checked):hover {
       background-color: color-mix(in oklab, var(--fallback-p,oklch(var(--p)/1)) 90%, black);
       border-color: color-mix(in oklab, var(--fallback-p,oklch(var(--p)/1)) 90%, black);
     }
   }
 }
-.label {
-  display: flex;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.input {
-  flex-shrink: 1;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  height: 3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  font-size: 1rem;
-  line-height: 2;
-  line-height: 1.5rem;
-  border-radius: var(--rounded-btn, 0.5rem);
-  border-width: 1px;
-  border-color: transparent;
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)));
-}
-.input[type="number"]::-webkit-inner-spin-button,
-.input-md[type="number"]::-webkit-inner-spin-button {
-  margin-top: -1rem;
-  margin-bottom: -1rem;
-  margin-inline-end: -1rem;
-}
+
 .link {
   cursor: pointer;
   text-decoration-line: underline;
 }
-.radio {
-  flex-shrink: 0;
-  --chkbg: var(--bc);
-  height: 1.5rem;
-  width: 1.5rem;
-  cursor: pointer;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  border-radius: 9999px;
-  border-width: 1px;
-  border-color: var(--fallback-bc,oklch(var(--bc)/var(--tw-border-opacity)));
-  --tw-border-opacity: 0.2;
-}
-.btm-nav > * .label {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
+
 .btn:active:hover,
   .btn:active:focus {
   animation: button-pop 0s ease-out;
   transform: scale(var(--btn-focus-scale, 0.97));
 }
-@supports not (color: oklch(0 0 0)) {
 
+@supports not (color: oklch(0 0 0)) {
   .btn {
     background-color: var(--btn-color, var(--fallback-b2));
     border-color: var(--btn-color, var(--fallback-b2));
   }
 
-  .btn-primary {
-    --btn-color: var(--fallback-p);
+  .btn-secondary {
+    --btn-color: var(--fallback-s);
   }
 }
-@supports (color: color-mix(in oklab, black, black)) {
 
-  .btn-outline.btn-primary.btn-active {
-    background-color: color-mix(in oklab, var(--fallback-p,oklch(var(--p)/1)) 90%, black);
-    border-color: color-mix(in oklab, var(--fallback-p,oklch(var(--p)/1)) 90%, black);
+@supports (color: color-mix(in oklab, black, black)) {
+  .btn-outline.btn-secondary.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-s,oklch(var(--s)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-s,oklch(var(--s)/1)) 90%, black);
   }
 }
+
 .btn:focus-visible {
   outline-style: solid;
   outline-width: 2px;
   outline-offset: 2px;
 }
-.btn-primary {
-  --tw-text-opacity: 1;
-  color: var(--fallback-pc,oklch(var(--pc)/var(--tw-text-opacity)));
-  outline-color: var(--fallback-p,oklch(var(--p)/1));
-}
-@supports (color: oklch(0 0 0)) {
 
-  .btn-primary {
-    --btn-color: var(--p);
+@supports (color: oklch(0 0 0)) {
+  .btn-secondary {
+    --btn-color: var(--s);
   }
 }
+
+.btn-secondary {
+  --tw-text-opacity: 1;
+  color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
+  outline-color: var(--fallback-s,oklch(var(--s)/1));
+}
+
 .btn.glass {
   --tw-shadow: 0 0 #0000;
   --tw-shadow-colored: 0 0 #0000;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   outline-color: currentColor;
 }
+
 .btn.glass.btn-active {
   --glass-opacity: 25%;
   --glass-border-opacity: 15%;
 }
-.btn-outline.btn-primary {
+
+.btn-outline.btn-secondary {
   --tw-text-opacity: 1;
-  color: var(--fallback-p,oklch(var(--p)/var(--tw-text-opacity)));
+  color: var(--fallback-s,oklch(var(--s)/var(--tw-text-opacity)));
 }
-.btn-outline.btn-primary.btn-active {
+
+.btn-outline.btn-secondary.btn-active {
   --tw-text-opacity: 1;
-  color: var(--fallback-pc,oklch(var(--pc)/var(--tw-text-opacity)));
+  color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
 }
+
 .btn.btn-disabled,
   .btn[disabled],
   .btn:disabled {
@@ -978,6 +976,7 @@ html {
   color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
   --tw-text-opacity: 0.2;
 }
+
 .btn:is(input[type="checkbox"]:checked),
 .btn:is(input[type="radio"]:checked) {
   --tw-border-opacity: 1;
@@ -987,11 +986,12 @@ html {
   --tw-text-opacity: 1;
   color: var(--fallback-pc,oklch(var(--pc)/var(--tw-text-opacity)));
 }
+
 .btn:is(input[type="checkbox"]:checked):focus-visible, .btn:is(input[type="radio"]:checked):focus-visible {
   outline-color: var(--fallback-p,oklch(var(--p)/1));
 }
-@keyframes button-pop {
 
+@keyframes button-pop {
   0% {
     transform: scale(var(--btn-focus-scale, 0.98));
   }
@@ -1004,8 +1004,8 @@ html {
     transform: scale(1);
   }
 }
-@keyframes checkmark {
 
+@keyframes checkmark {
   0% {
     background-position-y: 5px;
   }
@@ -1018,132 +1018,30 @@ html {
     background-position-y: 0;
   }
 }
-.input input:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-.input[list]::-webkit-calendar-picker-indicator {
-  line-height: 1em;
-}
-.input:focus,
-  .input:focus-within {
-  box-shadow: none;
-  border-color: var(--fallback-bc,oklch(var(--bc)/0.2));
-  outline-style: solid;
-  outline-width: 2px;
-  outline-offset: 2px;
-  outline-color: var(--fallback-bc,oklch(var(--bc)/0.2));
-}
-.input-disabled,
-  .input:disabled,
-  .input[disabled] {
-  cursor: not-allowed;
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-border-opacity)));
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)));
-  color: var(--fallback-bc,oklch(var(--bc)/0.4));
-}
-.input-disabled::-moz-placeholder, .input:disabled::-moz-placeholder, .input[disabled]::-moz-placeholder {
-  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-placeholder-opacity)));
-  --tw-placeholder-opacity: 0.2;
-}
-.input-disabled::placeholder,
-  .input:disabled::placeholder,
-  .input[disabled]::placeholder {
-  color: var(--fallback-bc,oklch(var(--bc)/var(--tw-placeholder-opacity)));
-  --tw-placeholder-opacity: 0.2;
-}
-.input::-webkit-date-and-time-value {
-  text-align: inherit;
-}
+
 .link:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
+
 .link:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
-.mockup-browser .mockup-browser-toolbar .input {
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  height: 1.75rem;
-  width: 24rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity)));
-  padding-left: 2rem;
-  direction: ltr;
-}
-.mockup-browser .mockup-browser-toolbar .input:before {
-  content: "";
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  aspect-ratio: 1 / 1;
-  height: 0.75rem;
-  --tw-translate-y: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  border-radius: 9999px;
-  border-width: 2px;
-  border-color: currentColor;
-  opacity: 0.6;
-}
-.mockup-browser .mockup-browser-toolbar .input:after {
-  content: "";
-  position: absolute;
-  left: 1.25rem;
-  top: 50%;
-  height: 0.5rem;
-  --tw-translate-y: 25%;
-  --tw-rotate: -45deg;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  border-radius: 9999px;
-  border-width: 1px;
-  border-color: currentColor;
-  opacity: 0.6;
-}
-@keyframes modal-pop {
 
+@keyframes modal-pop {
   0% {
     opacity: 0;
   }
 }
-@keyframes progress-loading {
 
+@keyframes progress-loading {
   50% {
     background-position-x: -115%;
   }
 }
-.radio:focus {
-  box-shadow: none;
-}
-.radio:focus-visible {
-  outline-style: solid;
-  outline-width: 2px;
-  outline-offset: 2px;
-  outline-color: var(--fallback-bc,oklch(var(--bc)/1));
-}
-.radio:checked,
-  .radio[aria-checked="true"] {
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-bc,oklch(var(--bc)/var(--tw-bg-opacity)));
-  background-image: none;
-  animation: radiomark var(--animation-input, 0.2s) ease-out;
-  box-shadow: 0 0 0 4px var(--fallback-b1,oklch(var(--b1)/1)) inset,
-      0 0 0 4px var(--fallback-b1,oklch(var(--b1)/1)) inset;
-}
-.radio:disabled {
-  cursor: not-allowed;
-  opacity: 0.2;
-}
-@keyframes radiomark {
 
+@keyframes radiomark {
   0% {
     box-shadow: 0 0 0 12px var(--fallback-b1,oklch(var(--b1)/1)) inset,
       0 0 0 12px var(--fallback-b1,oklch(var(--b1)/1)) inset;
@@ -1159,8 +1057,8 @@ html {
       0 0 0 4px var(--fallback-b1,oklch(var(--b1)/1)) inset;
   }
 }
-@keyframes rating-pop {
 
+@keyframes rating-pop {
   0% {
     transform: translateY(-0.125em);
   }
@@ -1173,8 +1071,8 @@ html {
     transform: translateY(0);
   }
 }
-@keyframes skeleton {
 
+@keyframes skeleton {
   from {
     background-position: 150%;
   }
@@ -1183,8 +1081,8 @@ html {
     background-position: -50%;
   }
 }
-@keyframes toast-pop {
 
+@keyframes toast-pop {
   0% {
     transform: scale(0.9);
     opacity: 0;
@@ -1195,116 +1093,38 @@ html {
     opacity: 1;
   }
 }
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
 }
+
 .mt-3 {
   margin-top: 0.75rem;
 }
-.flex {
-  display: flex;
-}
+
 .max-w-full {
   max-width: 100%;
 }
-.cursor-pointer {
-  cursor: pointer;
-}
-.items-center {
-  align-items: center;
-}
-.justify-between {
-  justify-content: space-between;
-}
-.gap-4 {
-  gap: 1rem;
-}
-.space-y-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
-}
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-.border {
-  border-width: 1px;
-}
-.border-gray-100 {
-  --tw-border-opacity: 1;
-  border-color: rgb(243 244 246 / var(--tw-border-opacity));
-}
-.bg-white {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-.p-4 {
-  padding: 1rem;
-}
+
 .p-6 {
   padding: 1.5rem;
 }
+
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
 }
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
+
 .font-bold {
   font-weight: 700;
 }
-.font-medium {
-  font-weight: 500;
-}
-.text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity));
-}
-.text-gray-900 {
-  --tw-text-opacity: 1;
-  color: rgb(17 24 39 / var(--tw-text-opacity));
-}
+
 .underline {
   text-decoration-line: underline;
 }
-.shadow-sm {
-  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-.hover\:border-gray-200:hover {
-  --tw-border-opacity: 1;
-  border-color: rgb(229 231 235 / var(--tw-border-opacity));
-}
-.has-\[\:checked\]\:border-blue-500:has(:checked) {
-  --tw-border-opacity: 1;
-  border-color: rgb(59 130 246 / var(--tw-border-opacity));
-}
-.has-\[\:checked\]\:ring-1:has(:checked) {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-.has-\[\:checked\]\:ring-blue-500:has(:checked) {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity));
-}
-@media (min-width: 640px) {
 
+@media (min-width: 640px) {
   .sm\:px-4 {
     padding-left: 1rem;
     padding-right: 1rem;
