@@ -7,12 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Repositories\" />
 		<Folder Include="wwwroot\js\" />
 		<Folder Include="wwwroot\images\" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.16" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.16" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
 	</ItemGroup>
 
