@@ -23,5 +23,7 @@ namespace ProyectoASPNET.Models
         public string Direccion { get; set; }
         [Column("TIPOUSUARIO")]
         public string TipoUsuario { get; set; }
+        [Column("CIUDAD")]
+        public int Ciudad { get; set; }
     }
 }

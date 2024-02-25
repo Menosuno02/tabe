@@ -18,5 +18,6 @@ namespace ProyectoASPNET.Data
         public DbSet<TipoUsuario> TipoUsuarios { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ValoracionRestaurante> ValoracionRestaurantes { get; set; }
+        public DbSet<Ciudad> Ciudades { get; set; }
     }
 }

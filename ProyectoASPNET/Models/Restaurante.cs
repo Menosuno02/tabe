@@ -14,11 +14,9 @@ namespace ProyectoASPNET.Models
         [Column("DIRECCION")]
         public string Direccion { get; set; }
         [Column("CIUDAD")]
-        public string Ciudad { get; set; }
+        public int Ciudad { get; set; }
         [Column("TELEFONO")]
         public string Telefono { get; set; }
-        [Column("DESCRIPCION")]
-        public string Descripcion { get; set; }
         [Column("HORARIO")]
         public string Horario { get; set; }
         [Column("LOGO")]
