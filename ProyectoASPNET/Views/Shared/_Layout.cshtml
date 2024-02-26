@@ -22,9 +22,9 @@
                         class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-primary text-primary-content rounded-box w-52">
                         <li><a>Item 1</a></li>
                         <li>
-                            <a>Parent</a>
+                            <a>Restaurantes</a>
                             <ul class="p-2">
-                                <li><a>Submenu 1</a></li>
+                                <li><a asp-controller="Restaurantes" asp-action="Index">Restaurantes</a></li>
                                 <li><a>Submenu 2</a></li>
                             </ul>
                         </li>
@@ -42,7 +42,7 @@
                     <details>
                         <summary>Parent</summary>
                         <ul class="p-2 bg-primary text-primary-content">
-                            <li><a>Submenu 1</a></li>
+                            <li><a asp-controller="Restaurantes" asp-action="Index">Restaurantes</a></li>
                             <li><a>Submenu 2</a></li>
                         </ul>
                     </details>
@@ -58,7 +58,7 @@
     <div class="container mx-auto sm:px-4 max-w-full p-6">
         @RenderBody()
     </div>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </body>
 
 </html>

@@ -7,10 +7,8 @@ namespace ProyectoASPNET.Models
     public class ProductoPedido
 
     {
-        [Key]
         [Column("IDPEDIDO")]
         public int IdPedido { get; set; }
-        [Key]
         [Column("IDPRODUCTO")]
         public int IdProducto { get; set; }
         [Column("CANTIDAD")]

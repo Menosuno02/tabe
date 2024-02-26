@@ -1,0 +1,52 @@
+﻿@model List<Producto>
+
+@{
+    List<CategoriaProducto> categorias = ViewData["CATEGORIAS"] as List<CategoriaProducto>;
+}
+
+<div class="text-center mt-2">
+    <h1 class="text-3xl font-bold text-gray-900">Restaurantes</h1>
+</div>
+
+<div class="flex">
+    <form class="px-6 mt-6 w-1/4" method="post">
+        <input type="hidden" name="id" value="@ViewData["RESTAURANTE"]" />
+        @foreach (CategoriaProducto categoria in categorias)
+        {
+            <div class="w-full">
+                <button class="btn btn-primary w-full btn-sm flex my-1" name="categoria" value="@categoria.IdCategoriaProducto">@categoria.Nombre</button>
+            </div>
+        }
+    </form>
+    <div class="w-3/4">
+        @if (Model.Count() == 0)
+        {
+            <h1 class="text-center mt-10 text-2xl font-bold">Productos no encontrados</h1>
+        }
+        <div class="flex flex-wrap">
+            @foreach (Producto rest in Model)
+            {
+                <div class="w-1/4 p-6">
+                    <a asp-controller="Restaurantes" asp-action="Productos" asp-route-id="@rest.IdRestaurante">
+                        <div class="card card-compact bg-base-100 shadow-xl mb-3">
+                            <figure>
+                                <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />
+                            </figure>
+                            <div class="card-body">
+                                <h2 class="card-title">
+                                    @rest.Nombre
+                                </h2>
+                                <div class="badge badge-primary">@rest.Descripcion</div>
+                                <p>@rest.Descripcion</p>
+                                <p>@rest.Precio€</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+

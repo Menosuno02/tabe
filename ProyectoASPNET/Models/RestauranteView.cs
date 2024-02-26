@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoASPNET.Models
 {
-    [Table("RESTAURANTES")]
-    public class Restaurante
+    [Table("V_RESTAURANTES")]
+    public class RestauranteView
     {
         [Key]
         [Column("IDRESTAURANTE")]
@@ -14,7 +14,7 @@ namespace ProyectoASPNET.Models
         [Column("DIRECCION")]
         public string Direccion { get; set; }
         [Column("CIUDAD")]
-        public int Ciudad { get; set; }
+        public string Ciudad { get; set; }
         [Column("TELEFONO")]
         public string Telefono { get; set; }
         [Column("HORARIO")]
@@ -25,7 +25,9 @@ namespace ProyectoASPNET.Models
         public string Imagen { get; set; }
         [Column("TIEMPOENTREGA")]
         public int TiempoEntega { get; set; }
-        [Column("IDCATEGORIA")]
-        public int IdCategoriaRestaurante { get; set; }
+        [Column("NOMBRECATEGORIA")]
+        public string CategoriaRestaurante { get; set; }
+        [Column("VALORACION")]
+        public int Valoracion { get; set; }
     }
 }

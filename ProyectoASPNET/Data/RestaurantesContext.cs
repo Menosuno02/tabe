@@ -14,10 +14,20 @@ namespace ProyectoASPNET.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<ProductoCategorias> ProductoCategorias { get; set; }
         public DbSet<ProductoPedido> ProductoPedidos { get; set; }
-        public DbSet<Restaurante> Restaurantes { get; set; }
+        public DbSet<RestauranteView> Restaurantes { get; set; }
         public DbSet<TipoUsuario> TipoUsuarios { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<ValoracionRestaurante> ValoracionRestaurantes { get; set; }
         public DbSet<Ciudad> Ciudades { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductoCategorias>()
+                .HasKey(pc => new { pc.IdProducto, pc.IdCategoria });
+            modelBuilder.Entity<ProductoPedido>()
+                .HasKey(pp => new { pp.IdPedido, pp.IdProducto });
+            modelBuilder.Entity<ValoracionRestaurante>()
+                .HasKey(vr => new { vr.IdRestaurante, vr.IdUsuario });
+        }
     }
 }
