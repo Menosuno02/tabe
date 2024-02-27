@@ -30,7 +30,7 @@ namespace ProyectoASPNET.Controllers
         public async Task<IActionResult> Productos(int id)
         {
             List<Producto> productos = await this.repo.GetProductosRestaurante(id);
-            ViewData["RESTAURANTE"] = id;
+            ViewData["RESTAURANTE"] = await this.repo.FindRestaurante(id);
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriaProductos();
             return View(productos);
         }
@@ -38,9 +38,18 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         public async Task<IActionResult> Productos(int id, int categoria)
         {
-            List<Producto> productos = await this.repo.GetProductoCategorias(id, categoria);
-            ViewData["RESTAURANTE"] = id;
+            List<Producto> productos = new List<Producto>();
+            if (categoria == 0)
+            {
+                productos = await this.repo.GetProductosRestaurante(id);
+            }
+            else
+            {
+                productos = await this.repo.GetProductoCategorias(id, categoria);
+            }
+            ViewData["RESTAURANTE"] = await this.repo.FindRestaurante(id);
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriaProductos();
+            ViewData["SELECTED"] = categoria;
             return View(productos);
         }
     }

@@ -14,7 +14,7 @@ namespace ProyectoASPNET.Models
         [Column("DESCRIPCION")]
         public string Descripcion { get; set; }
         [Column("PRECIO")]
-        public double Precio { get; set; }
+        public decimal Precio { get; set; }
         [Column("IMAGEN")]
         public string Imagen { get; set; }
         [Column("IDRESTAURANTE")]

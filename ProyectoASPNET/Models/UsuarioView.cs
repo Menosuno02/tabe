@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoASPNET.Models
 {
-    [Table("USUARIOS")]
-    public class Usuario
+    [Table("V_USUARIOS")]
+    public class UsuarioView
     {
         [Key]
         [Column("IDUSUARIO")]
@@ -23,7 +23,5 @@ namespace ProyectoASPNET.Models
         public string Direccion { get; set; }
         [Column("TIPOUSUARIO")]
         public string TipoUsuario { get; set; }
-        [Column("CIUDAD")]
-        public int Ciudad { get; set; }
     }
 }

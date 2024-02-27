@@ -2,51 +2,84 @@
 
 @{
     List<CategoriaProducto> categorias = ViewData["CATEGORIAS"] as List<CategoriaProducto>;
+    RestauranteView restaurante = ViewData["RESTAURANTE"] as RestauranteView;
 }
 
-<div class="text-center mt-2">
-    <h1 class="text-3xl font-bold text-gray-900">Restaurantes</h1>
-</div>
-
-<div class="flex">
-    <form class="px-6 mt-6 w-1/4" method="post">
-        <input type="hidden" name="id" value="@ViewData["RESTAURANTE"]" />
-        @foreach (CategoriaProducto categoria in categorias)
-        {
-            <div class="w-full">
-                <button class="btn btn-primary w-full btn-sm flex my-1" name="categoria" value="@categoria.IdCategoriaProducto">@categoria.Nombre</button>
-            </div>
-        }
-    </form>
-    <div class="w-3/4">
-        @if (Model.Count() == 0)
-        {
-            <h1 class="text-center mt-10 text-2xl font-bold">Productos no encontrados</h1>
-        }
-        <div class="flex flex-wrap">
-            @foreach (Producto rest in Model)
-            {
-                <div class="w-1/4 p-6">
-                    <a asp-controller="Restaurantes" asp-action="Productos" asp-route-id="@rest.IdRestaurante">
-                        <div class="card card-compact bg-base-100 shadow-xl mb-3">
-                            <figure>
-                                <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" />
-                            </figure>
-                            <div class="card-body">
-                                <h2 class="card-title">
-                                    @rest.Nombre
-                                </h2>
-                                <div class="badge badge-primary">@rest.Descripcion</div>
-                                <p>@rest.Descripcion</p>
-                                <p>@rest.Precio€</p>
-                            </div>
-                        </div>
-                    </a>
+<figure>
+    <img class="object-cover w-full h-40" src="~/images/imag_restaurantes/@restaurante.Imagen" />
+</figure>
+<div class="sm:px-4 p-6">
+    <h1 class="text-5xl font-bold text-gray-900 px-6 mt-4">@restaurante.Nombre</h1>
+    <div class="flex flex-wrap">
+        <form class="px-6 mt-6 w-full md:w-1/5" method="post">
+            <input type="hidden" name="id" value="@restaurante.IdRestaurante" />
+            <div class="rounded-lg border border-gray-100 bg-gray-100 p-1 text-center">
+                <div class="w-full">
+                    @if (ViewData["SELECTED"] != null && ViewData["SELECTED"].ToString() == "0")
+                    {
+                        <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
+                                name="categoria" value="0">
+                            Todas
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative text-center" name="categoria" value="0">
+                            Todas
+                        </button>
+                    }
                 </div>
+                @foreach (CategoriaProducto categoria in categorias)
+                {
+                    <div class="w-full">
+                        @if (ViewData["SELECTED"] != null && ViewData["SELECTED"].ToString() == categoria.IdCategoriaProducto.ToString())
+                        {
+                            <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
+                                    name="categoria" value="@categoria.IdCategoriaProducto">
+                                @categoria.Nombre
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative text-center" name="categoria" value="@categoria.IdCategoriaProducto">
+                                @categoria.Nombre
+                            </button>
+                        }
+
+                    </div>
+                }
+            </div>
+
+        </form>
+        <div class="w-full md:w-4/5">
+            @if (Model.Count() == 0)
+            {
+                <h1 class="text-center mt-10 text-2xl font-bold">Productos no encontrados</h1>
             }
+            <div class="flex flex-wrap">
+                @foreach (Producto prod in Model)
+                {
+                    <div class="lg:w-1/2 p-6">
+                        <a asp-controller="Restaurantes">
+                            <div class="card card-compact lg:h-40 card-side bg-base-100 shadow-xl">
+                                <figure><img class="object-cover h-full" src="~/images/imag_productos/@prod.Imagen" /></figure>
+                                <div class="card-body">
+                                    <h2 class="card-title">@prod.Nombre</h2>
+                                    <p>@prod.Descripcion</p>
+                                    <div class="card-actions justify-end">
+                                        <button class="btn btn-primary btn-circle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
         </div>
     </div>
+
 </div>
-
-
-
