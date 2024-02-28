@@ -59,10 +59,12 @@
             <div class="flex flex-wrap">
                 @foreach (Producto prod in Model)
                 {
-                    <div class="lg:w-1/2 p-6">
-                        <a asp-controller="Restaurantes">
-                            <div class="card card-compact lg:h-40 card-side bg-base-100 shadow-xl">
-                                <figure><img class="object-cover h-full" src="~/images/imag_productos/@prod.Imagen" /></figure>
+                    <div class="lg:w-1/2 p-6 w-full">
+                        <a>
+                            <div class="card card-compact h-40 card-side bg-base-100 shadow-xl">
+                                <figure>
+                                    <img class="object-cover h-full" src="~/images/imag_productos/@prod.Imagen" />
+                                </figure>
                                 <div class="card-body">
                                     <h2 class="card-title">@prod.Nombre</h2>
                                     <p>@prod.Descripcion</p>

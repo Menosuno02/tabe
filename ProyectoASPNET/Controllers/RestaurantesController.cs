@@ -32,6 +32,7 @@ namespace ProyectoASPNET.Controllers
             List<Producto> productos = await this.repo.GetProductosRestaurante(id);
             ViewData["RESTAURANTE"] = await this.repo.FindRestaurante(id);
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriaProductos();
+            ViewData["SELECTED"] = 0;
             return View(productos);
         }
 

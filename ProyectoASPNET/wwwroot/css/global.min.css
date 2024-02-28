@@ -2194,6 +2194,10 @@ html {
   padding: 0.5rem;
 }
 
+.p-4 {
+  padding: 1rem;
+}
+
 .p-6 {
   padding: 1.5rem;
 }
@@ -2354,10 +2358,6 @@ html {
 
   .lg\:hidden {
     display: none;
-  }
-
-  .lg\:h-40 {
-    height: 10rem;
   }
 
   .lg\:w-1\/2 {
