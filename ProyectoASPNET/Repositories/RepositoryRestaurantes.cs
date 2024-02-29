@@ -43,6 +43,19 @@ AS
 	WHERE PC.IDCATEGORIA = @CATEGORIA
 	AND P.IDRESTAURANTE = @RESTAURANTE
 GO
+
+CREATE OR ALTER PROCEDURE SP_CREATE_USUARIO
+(@NOMBRE NVARCHAR(100), @APELLIDOS NVARCHAR(100),
+@CORREO NVARCHAR(100), @CONTRASENYA NVARCHAR(100),
+@TELEFONO NVARCHAR(9), @DIRECCION NVARCHAR(200))
+AS
+	DECLARE @IDUSUARIO INT
+	SELECT @IDUSUARIO = MAX(IDUSUARIO) + 1
+	FROM USUARIOS
+	INSERT INTO USUARIOS VALUES
+	(@IDUSUARIO, @NOMBRE, @APELLIDOS, @CORREO,
+	@CONTRASENYA, @TELEFONO, @DIRECCION, 1)
+GO
 */
 #endregion
 
@@ -83,6 +96,7 @@ public class RepositoryRestaurantes
     }
     #endregion
 
+    #region CATEGORIAS_RESTAURANTES
     public async Task<List<CategoriaRestaurante>> GetCategoriasRestaurantes()
     {
         var consulta = from datos in this.context.CategoriaRestaurantes
@@ -90,22 +104,29 @@ public class RepositoryRestaurantes
                        select datos;
         return await consulta.ToListAsync();
     }
+    #endregion
 
+    #region CATEGORIAS_PRODUCTOS
     public async Task<List<CategoriaProducto>> GetCategoriaProductos()
     {
         var consulta = from datos in this.context.CategoriasProducto
                        select datos;
         return await consulta.ToListAsync();
     }
+    #endregion
 
+    #region PRODUCTOS
     public async Task<List<Producto>> GetProductosRestaurante(int restaurante)
     {
         var consulta = from datos in this.context.Productos
                        where datos.IdRestaurante == restaurante
                        select datos;
-        return await consulta.ToListAsync();
+        return await this.context.Productos
+            .Where(datos => datos.IdRestaurante == restaurante)
+            .ToListAsync();
     }
 
+    // Productos según la categoría
     public async Task<List<Producto>> GetProductoCategorias(int restaurante, int categoria)
     {
         string sql = "SP_PRODUCTOS_CATEGORIA @RESTAURANTE, @CATEGORIA";
@@ -114,5 +135,29 @@ public class RepositoryRestaurantes
         var consulta = this.context.Productos.FromSqlRaw(sql, paramRestaurante, paramCategoria);
         return await consulta.ToListAsync();
     }
+    #endregion
+
+    #region USUARIOS
+    public async Task<UsuarioView> LoginUsuario(string email, string password)
+    {
+        var consulta = from datos in this.context.Usuarios
+                       where datos.Correo == email && datos.Contrasenya == password
+                       select datos;
+        return await consulta.FirstOrDefaultAsync();
+    }
+
+    public async Task RegisterUsuario(UsuarioView usuario)
+    {
+        string sql = "SP_CREATE_USUARIO @NOMBRE, @APELLIDOS, @CORREO, @CONTRASENYA, @TELEFONO, @DIRECCION";
+        SqlParameter paramNombre = new SqlParameter("@NOMBRE", usuario.Nombre);
+        SqlParameter paramApellidos = new SqlParameter("@APELLIDOS", usuario.Apellidos);
+        SqlParameter paramCorreo = new SqlParameter("@CORREO", usuario.Correo);
+        SqlParameter paramContrasenya = new SqlParameter("@CONTRASENYA", usuario.Contrasenya);
+        SqlParameter paramTelefono = new SqlParameter("@TELEFONO", usuario.Telefono);
+        SqlParameter paramDireccion = new SqlParameter("@DIRECCION", usuario.Direccion);
+        await this.context.Database
+            .ExecuteSqlRawAsync(sql, paramNombre, paramApellidos, paramCorreo, paramContrasenya, paramTelefono, paramDireccion);
+    }
+    #endregion
 
 }

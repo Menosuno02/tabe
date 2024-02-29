@@ -10,7 +10,7 @@
             <input type="hidden" name="id" value="@Model.Restaurante.IdRestaurante" />
             <div class="rounded-lg border border-gray-100 bg-gray-100 p-1 text-center">
                 <div class="w-full">
-                    @if (Model.SelectedCategoria != null && Model.SelectedCategoria.ToString() == "0")
+                    @if (Model.SelectedCategoria.ToString() == "0")
                     {
                         <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
                                 name="categoria" value="0">
@@ -27,7 +27,7 @@
                 @foreach (CategoriaProducto categoria in Model.CategoriasProductos)
                 {
                     <div class="w-full">
-                        @if (Model.SelectedCategoria != null && Model.SelectedCategoria.ToString() == categoria.IdCategoriaProducto.ToString())
+                        @if (Model.SelectedCategoria.ToString() == categoria.IdCategoriaProducto.ToString())
                         {
                             <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
                                     name="categoria" value="@categoria.IdCategoriaProducto">

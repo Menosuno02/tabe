@@ -22,6 +22,6 @@ namespace ProyectoASPNET.Models
         [Column("DIRECCION")]
         public string Direccion { get; set; }
         [Column("TIPOUSUARIO")]
-        public string TipoUsuario { get; set; }
+        public int TipoUsuario { get; set; }
     }
 }
