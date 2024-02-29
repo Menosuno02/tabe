@@ -58,7 +58,7 @@
                 <li>
                     <details>
                         <summary>Parent</summary>
-                        <ul class="p-2 bg-primary text-primary-content z-50">
+                        <ul class="p-2 bg-primary text-primary-content z-50 top-10">
                             <li><a asp-controller="Restaurantes" asp-action="Index">Restaurantes</a></li>
                             <li><a>Submenu 2</a></li>
                         </ul>
@@ -67,9 +67,11 @@
                 <li><a>Item 3</a></li>
             </ul>
         </div>
-        <div class="navbar-end">
-            <a asp-controller="Auth" asp-action="Login" class="btn">Iniciar sesión</a>
-            <a asp-controller="Auth" asp-action="Register" class="btn">Registrarse</a>
+        <div class="navbar-end hidden lg:flex">
+            <div class="join">
+                <a asp-controller="Auth" asp-action="Login" class="btn join-item">Iniciar sesión</a>
+                <a asp-controller="Auth" asp-action="Register" class="btn join-item">Registrarse</a>
+            </div>
         </div>
     </div>
 

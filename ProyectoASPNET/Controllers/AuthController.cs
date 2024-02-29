@@ -21,11 +21,11 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            UsuarioView usuario = await this.repo.LoginUsuario(email, password);
+            Usuario usuario = await this.repo.LoginUsuario(email, password);
             if (usuario != null)
             {
                 HttpContext.Session.SetObject("USER", usuario.IdUsuario);
-                return RedirectToAction("Restaurantes", "Index");
+                return RedirectToAction("Index", "Restaurantes");
             }
             else
             {
@@ -41,7 +41,7 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(UsuarioView usuario)
+        public IActionResult Register(Usuario usuario)
         {
             return RedirectToAction("Login");
         }

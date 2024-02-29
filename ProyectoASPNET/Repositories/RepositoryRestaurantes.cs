@@ -22,16 +22,6 @@ AS
 	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA
 GO
 
-CREATE OR ALTER VIEW V_USUARIOS
-AS
-	SELECT U.IDUSUARIO, U.NOMBRE, U.APELLIDOS,
-	U.CORREO, U.CONTRASENYA, U.TELEFONO, U.DIRECCION,
-	T.NOMBRETIPO
-	FROM USUARIOS U
-	INNER JOIN TIPOS_USUARIOS T
-	ON U.TIPOUSUARIO = T.IDTIPO
-GO
-
 CREATE OR ALTER PROCEDURE SP_PRODUCTOS_CATEGORIA
 (@RESTAURANTE INT, @CATEGORIA INT)
 AS
@@ -71,7 +61,7 @@ public class RepositoryRestaurantes
     #region RESTAURANTES
     public async Task<List<RestauranteView>> GetRestaurantes()
     {
-        var consulta = from datos in this.context.Restaurantes
+        var consulta = from datos in this.context.RestaurantesView
                        orderby datos.Valoracion descending
                        select datos;
         return await consulta.ToListAsync();
@@ -79,7 +69,7 @@ public class RepositoryRestaurantes
 
     public async Task<RestauranteView> FindRestaurante(int id)
     {
-        var consulta = from datos in this.context.Restaurantes
+        var consulta = from datos in this.context.RestaurantesView
                        where datos.IdRestaurante == id
                        select datos;
         return await consulta.FirstOrDefaultAsync();
@@ -87,7 +77,7 @@ public class RepositoryRestaurantes
 
     public async Task<List<RestauranteView>> FilterRestaurantes(string categoria, int rating)
     {
-        var consulta = from datos in this.context.Restaurantes
+        var consulta = from datos in this.context.RestaurantesView
                        where (datos.Valoracion >= rating && categoria == "Todas") ||
                        (datos.Valoracion >= rating && datos.CategoriaRestaurante == categoria)
                        orderby datos.Valoracion descending
@@ -138,7 +128,7 @@ public class RepositoryRestaurantes
     #endregion
 
     #region USUARIOS
-    public async Task<UsuarioView> LoginUsuario(string email, string password)
+    public async Task<Usuario> LoginUsuario(string email, string password)
     {
         var consulta = from datos in this.context.Usuarios
                        where datos.Correo == email && datos.Contrasenya == password
@@ -146,7 +136,7 @@ public class RepositoryRestaurantes
         return await consulta.FirstOrDefaultAsync();
     }
 
-    public async Task RegisterUsuario(UsuarioView usuario)
+    public async Task RegisterUsuario(Usuario usuario)
     {
         string sql = "SP_CREATE_USUARIO @NOMBRE, @APELLIDOS, @CORREO, @CONTRASENYA, @TELEFONO, @DIRECCION";
         SqlParameter paramNombre = new SqlParameter("@NOMBRE", usuario.Nombre);

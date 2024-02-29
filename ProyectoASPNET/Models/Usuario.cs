@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoASPNET.Models
 {
-    [Table("V_USUARIOS")]
-    public class UsuarioView
+    [Table("USUARIOS")]
+    public class Usuario
     {
         [Key]
         [Column("IDUSUARIO")]

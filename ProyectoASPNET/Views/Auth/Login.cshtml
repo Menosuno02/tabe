@@ -38,19 +38,17 @@
 @if (ViewData["MENSAJE"] != null)
 {
     @section scripts {
-        <script>errormodal.showModal()</script>
+    <script>errorModal.showModal()</script>
     }
 }
 
-<h2>@ViewData["MENSAJE"]</h2>
-
-<dialog id="errormodal" class="modal modal-bottom sm:modal-middle">
+<dialog id="errorModal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box">
-        <h3 class="font-bold text-lg">Hello!</h3>
-        <p class="py-4">Press ESC key or click the button below to close</p>
+        <h3 class="font-bold text-lg">Error al iniciar sesión :(</h3>
+        <p class="py-4">No existe un usuario con este correo o la contraseña es incorrecta</p>
         <div class="modal-action">
             <form method="dialog">
-                <button class="btn">Close</button>
+                <button class="btn btn-primary font-medium">Cerrar</button>
             </form>
         </div>
     </div>
