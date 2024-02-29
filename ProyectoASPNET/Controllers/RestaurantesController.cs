@@ -29,29 +29,30 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Productos(int id)
         {
-            List<Producto> productos = await this.repo.GetProductosRestaurante(id);
-            ViewData["RESTAURANTE"] = await this.repo.FindRestaurante(id);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriaProductos();
-            ViewData["SELECTED"] = 0;
-            return View(productos);
+            ProductosActionModel model = new ProductosActionModel
+            {
+                Productos = await this.repo.GetProductosRestaurante(id),
+                Restaurante = await this.repo.FindRestaurante(id),
+                CategoriasProductos = await this.repo.GetCategoriaProductos(),
+                SelectedCategoria = 0
+            };
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Productos(int id, int categoria)
         {
-            List<Producto> productos = new List<Producto>();
+            ProductosActionModel model = new ProductosActionModel
+            {
+                Restaurante = await this.repo.FindRestaurante(id),
+                CategoriasProductos = await this.repo.GetCategoriaProductos(),
+                SelectedCategoria = categoria
+            };
             if (categoria == 0)
-            {
-                productos = await this.repo.GetProductosRestaurante(id);
-            }
+                model.Productos = await this.repo.GetProductosRestaurante(id);
             else
-            {
-                productos = await this.repo.GetProductoCategorias(id, categoria);
-            }
-            ViewData["RESTAURANTE"] = await this.repo.FindRestaurante(id);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriaProductos();
-            ViewData["SELECTED"] = categoria;
-            return View(productos);
+                model.Productos = await this.repo.GetProductoCategorias(id, categoria);
+            return View(model);
         }
     }
 }

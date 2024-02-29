@@ -1,21 +1,16 @@
-﻿@model List<Producto>
-
-@{
-    List<CategoriaProducto> categorias = ViewData["CATEGORIAS"] as List<CategoriaProducto>;
-    RestauranteView restaurante = ViewData["RESTAURANTE"] as RestauranteView;
-}
+﻿@model ProductosActionModel
 
 <figure>
-    <img class="object-cover w-full h-40" src="~/images/imag_restaurantes/@restaurante.Imagen" />
+    <img class="object-cover w-full h-40" src="~/images/imag_restaurantes/@Model.Restaurante.Imagen" />
 </figure>
 <div class="sm:px-4 p-6">
-    <h1 class="text-5xl font-bold text-gray-900 px-6 mt-4">@restaurante.Nombre</h1>
+    <h1 class="text-5xl font-bold text-gray-900 px-6 mt-4">@Model.Restaurante.Nombre</h1>
     <div class="flex flex-wrap">
         <form class="px-6 mt-6 w-full md:w-1/5" method="post">
-            <input type="hidden" name="id" value="@restaurante.IdRestaurante" />
+            <input type="hidden" name="id" value="@Model.Restaurante.IdRestaurante" />
             <div class="rounded-lg border border-gray-100 bg-gray-100 p-1 text-center">
                 <div class="w-full">
-                    @if (ViewData["SELECTED"] != null && ViewData["SELECTED"].ToString() == "0")
+                    @if (Model.SelectedCategoria != null && Model.SelectedCategoria.ToString() == "0")
                     {
                         <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
                                 name="categoria" value="0">
@@ -29,10 +24,10 @@
                         </button>
                     }
                 </div>
-                @foreach (CategoriaProducto categoria in categorias)
+                @foreach (CategoriaProducto categoria in Model.CategoriasProductos)
                 {
                     <div class="w-full">
-                        @if (ViewData["SELECTED"] != null && ViewData["SELECTED"].ToString() == categoria.IdCategoriaProducto.ToString())
+                        @if (Model.SelectedCategoria != null && Model.SelectedCategoria.ToString() == categoria.IdCategoriaProducto.ToString())
                         {
                             <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
                                     name="categoria" value="@categoria.IdCategoriaProducto">
@@ -52,12 +47,12 @@
 
         </form>
         <div class="w-full md:w-4/5">
-            @if (Model.Count() == 0)
+            @if (Model.Productos.Count() == 0)
             {
                 <h1 class="text-center mt-10 text-2xl font-bold">Productos no encontrados</h1>
             }
             <div class="flex flex-wrap">
-                @foreach (Producto prod in Model)
+                @foreach (Producto prod in Model.Productos)
                 {
                     <div class="lg:w-1/2 p-6 w-full">
                         <a>

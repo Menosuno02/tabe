@@ -13,6 +13,11 @@
         * {
             font-family: UberMove !important;
         }
+
+        /* FIX */
+        .card.image-full:before {
+            background-color: rgba(0, 0, 0, 0);
+        }
     </style>
 </head>
 
@@ -29,7 +34,7 @@
                         </svg>
                     </div>
                     <ul tabindex="0"
-                        class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-primary text-primary-content rounded-box w-52">
+                        class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-primary text-primary-content rounded-box w-52">
                         <li><a>Item 1</a></li>
                         <li>
                             <a>Restaurantes</a>
@@ -42,7 +47,7 @@
                     </ul>
                 </div>
             </div>
-            <a class="btn btn-ghost"><span class="text-xl">Tabe</span></a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-ghost"><span class="text-xl">Tabe</span></a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
@@ -50,7 +55,7 @@
                 <li>
                     <details>
                         <summary>Parent</summary>
-                        <ul class="p-2 bg-primary text-primary-content">
+                        <ul class="p-2 bg-primary text-primary-content z-50">
                             <li><a asp-controller="Restaurantes" asp-action="Index">Restaurantes</a></li>
                             <li><a>Submenu 2</a></li>
                         </ul>
@@ -60,7 +65,8 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <a class="btn">Iniciar sesión</a>
+            <a asp-controller="Auth" asp-action="Login" class="btn">Iniciar sesión</a>
+            <a asp-controller="Auth" asp-action="Register" class="btn">Registrarse</a>
         </div>
     </div>
 

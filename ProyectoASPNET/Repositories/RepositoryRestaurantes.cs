@@ -74,23 +74,12 @@ public class RepositoryRestaurantes
 
     public async Task<List<RestauranteView>> FilterRestaurantes(string categoria, int rating)
     {
-        if (categoria == "Todas")
-        {
-            var consulta = from datos in this.context.Restaurantes
-                           where datos.Valoracion >= rating
-                           orderby datos.Valoracion descending
-                           select datos;
-            return await consulta.ToListAsync();
-        }
-        else
-        {
-            var consulta = from datos in this.context.Restaurantes
-                           where datos.CategoriaRestaurante == categoria
-                            && datos.Valoracion >= rating
-                           orderby datos.Valoracion descending
-                           select datos;
-            return await consulta.ToListAsync();
-        }
+        var consulta = from datos in this.context.Restaurantes
+                       where (datos.Valoracion >= rating && categoria == "Todas") ||
+                       (datos.Valoracion >= rating && datos.CategoriaRestaurante == categoria)
+                       orderby datos.Valoracion descending
+                       select datos;
+        return await consulta.ToListAsync();
     }
     #endregion
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProyectoASPNET.Models;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -10,7 +11,7 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(Object user)
+        public IActionResult Login(string email, string password)
         {
             return View();
         }
@@ -18,6 +19,12 @@ namespace ProyectoASPNET.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(UsuarioView usuario)
+        {
+            return RedirectToAction("Login");
         }
     }
 }
