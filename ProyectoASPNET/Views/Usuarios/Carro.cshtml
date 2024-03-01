@@ -1,0 +1,18 @@
+﻿@model List<ProductoCesta>
+
+<div class="card w-96 bg-base-100 shadow-xl">
+    <h1>Tu cesta</h1>
+    @if (Model != null)
+    {
+        <div class="card-body">
+            @foreach(ProductoCesta prod in Model)
+            {
+                
+            }
+        </div>
+    }
+    else
+    {
+        <h2>No hay productos en tu cesta</h2>
+    }
+</div>

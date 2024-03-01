@@ -21,7 +21,7 @@
                     </div>
 
                     <div class="flex flex-wrap items-center justify-between">
-                        <p class="text-sm text-gray-500">
+                        <p class="text-sm text-gray-500 mb-2.5">
                             ¿No tienes cuenta?
                             <a asp-controller="Auth" asp-action="Register" class="text-gray-700 underline">Regístrate</a>
                         </p>
@@ -35,13 +35,6 @@
     </div>
 </div>
 
-@if (ViewData["MENSAJE"] != null)
-{
-    @section scripts {
-    <script>errorModal.showModal()</script>
-    }
-}
-
 <dialog id="errorModal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box">
         <h3 class="font-bold text-lg">Error al iniciar sesión :(</h3>
@@ -53,3 +46,18 @@
         </div>
     </div>
 </dialog>
+
+@section styles {
+    <style>
+        .card.image-full:before {
+            background-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+}
+
+@if (ViewData["MENSAJE"] != null)
+{
+    @section scripts {
+    <script>errorModal.showModal()</script>
+    }
+}

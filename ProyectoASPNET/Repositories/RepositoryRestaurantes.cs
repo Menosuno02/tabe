@@ -111,9 +111,12 @@ public class RepositoryRestaurantes
         var consulta = from datos in this.context.Productos
                        where datos.IdRestaurante == restaurante
                        select datos;
+        return await consulta.ToListAsync();
+        /*
         return await this.context.Productos
             .Where(datos => datos.IdRestaurante == restaurante)
             .ToListAsync();
+        */
     }
 
     // Productos según la categoría
@@ -149,5 +152,4 @@ public class RepositoryRestaurantes
             .ExecuteSqlRawAsync(sql, paramNombre, paramApellidos, paramCorreo, paramContrasenya, paramTelefono, paramDireccion);
     }
     #endregion
-
 }

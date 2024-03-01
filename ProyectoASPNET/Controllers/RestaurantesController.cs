@@ -1,15 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Extensions;
+using ProyectoASPNET.Helpers;
 
 namespace ProyectoASPNET.Controllers
 {
     public class RestaurantesController : Controller
     {
         private RepositoryRestaurantes repo;
+        private HelperCesta helperCesta;
 
-        public RestaurantesController(RepositoryRestaurantes repo)
+        public RestaurantesController
+            (RepositoryRestaurantes repo,
+            HelperCesta helperCesta)
         {
             this.repo = repo;
+            this.helperCesta = helperCesta;
         }
 
         public async Task<IActionResult> Index()
@@ -40,8 +46,22 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Productos(int id, int categoria)
+        public async Task<IActionResult> Productos
+            (string form, int id, int categoria,
+            int cantidad, int idProducto, decimal precio, string nomproducto)
         {
+            if (form == "cesta")
+            {
+                helperCesta.UpdateCesta(new ProductoCesta
+                {
+                    IdProducto = idProducto,
+                    Nombre = nomproducto,
+                    Cantidad = cantidad,
+                    Precio = precio * cantidad
+                });
+                ViewData["CESTA"] = HttpContext.Session.GetObject
+                    <List<ProductoCesta>>("CESTA");
+            }
             ProductosActionModel model = new ProductosActionModel
             {
                 Restaurante = await this.repo.FindRestaurante(id),

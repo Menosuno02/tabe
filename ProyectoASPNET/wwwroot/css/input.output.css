@@ -2295,6 +2295,10 @@ html {
   grid-column: span 6 / span 6;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -2304,12 +2308,24 @@ html {
   margin-bottom: 0px;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-2\.5 {
+  margin-bottom: 0.625rem;
+}
+
 .mb-3 {
   margin-bottom: 0.75rem;
 }
 
 .me-1 {
   margin-inline-end: 0.25rem;
+}
+
+.me-5 {
+  margin-inline-end: 1.25rem;
 }
 
 .mt-1 {
@@ -2347,6 +2363,13 @@ html {
   -webkit-line-clamp: 1;
 }
 
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .block {
   display: block;
 }
@@ -2367,6 +2390,14 @@ html {
   display: none;
 }
 
+.h-1\/2 {
+  height: 50%;
+}
+
+.h-10 {
+  height: 2.5rem;
+}
+
 .h-32 {
   height: 8rem;
 }
@@ -2379,8 +2410,16 @@ html {
   height: 10rem;
 }
 
+.h-44 {
+  height: 11rem;
+}
+
 .h-5 {
   height: 1.25rem;
+}
+
+.h-56 {
+  height: 14rem;
 }
 
 .h-\[calc\(100vh-4\.22rem\)\] {
@@ -2403,6 +2442,10 @@ html {
   width: 75%;
 }
 
+.w-32 {
+  width: 8rem;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -2417,6 +2460,10 @@ html {
 
 .w-52 {
   width: 13rem;
+}
+
+.w-96 {
+  width: 24rem;
 }
 
 .w-full {
@@ -2439,6 +2486,10 @@ html {
   max-width: 36rem;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
@@ -2455,6 +2506,10 @@ html {
   align-items: center;
 }
 
+.justify-start {
+  justify-content: flex-start;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -2469,6 +2524,12 @@ html {
 
 .gap-6 {
   gap: 1.5rem;
+}
+
+.space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-4 > :not([hidden]) ~ :not([hidden]) {
@@ -2495,6 +2556,16 @@ html {
 
 .rounded-none {
   border-radius: 0px;
+}
+
+.rounded-l {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.rounded-r {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
 }
 
 .border {
@@ -2529,6 +2600,10 @@ html {
 .bg-primary {
   --tw-bg-opacity: 1;
   background-color: var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)));
+}
+
+.bg-transparent {
+  background-color: transparent;
 }
 
 .bg-violet-200 {
@@ -2630,11 +2705,6 @@ html {
   line-height: 1;
 }
 
-.text-6xl {
-  font-size: 3.75rem;
-  line-height: 1;
-}
-
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -2658,13 +2728,16 @@ html {
   font-weight: 500;
 }
 
-.leading-relaxed {
-  line-height: 1.625;
+.font-semibold {
+  font-weight: 600;
 }
 
-.text-amber-100 {
-  --tw-text-opacity: 1;
-  color: rgb(254 243 199 / var(--tw-text-opacity));
+.font-thin {
+  font-weight: 100;
+}
+
+.leading-relaxed {
+  line-height: 1.625;
 }
 
 .text-black {
@@ -2675,6 +2748,11 @@ html {
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
 .text-gray-700 {
@@ -2707,11 +2785,6 @@ html {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-amber-400 {
-  --tw-text-opacity: 1;
-  color: rgb(251 191 36 / var(--tw-text-opacity));
-}
-
 .underline {
   text-decoration-line: underline;
 }
@@ -2738,6 +2811,11 @@ html {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
 @media (min-width: 640px) {
   .sm\:modal-middle {
     place-items: center;
@@ -2757,6 +2835,21 @@ html {
   }
 }
 
+.hover\:bg-gray-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+
+.hover\:text-black:hover {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.hover\:text-gray-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+
 .hover\:text-gray-700:hover {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
@@ -2764,6 +2857,11 @@ html {
 
 .focus\:relative:focus {
   position: relative;
+}
+
+.focus\:text-black:focus {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .focus\:outline-none:focus {

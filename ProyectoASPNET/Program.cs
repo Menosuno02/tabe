@@ -11,6 +11,8 @@ builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<HelperPathProvider>();
+builder.Services.AddSingleton<HelperCesta>();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddControllersWithViews();
 

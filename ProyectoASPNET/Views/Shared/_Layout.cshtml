@@ -16,12 +16,8 @@
         * {
             font-family: UberMove !important;
         }
-
-        /* FIX */
-        .card.image-full:before {
-            background-color: rgba(0, 0, 0, 0);
-        }
     </style>
+    @RenderSection("styles", false)
 </head>
 
 <body>
@@ -68,6 +64,13 @@
             </ul>
         </div>
         <div class="navbar-end hidden lg:flex">
+            <a asp-controller="Usuarios" asp-action="Carro"
+               class="btn btn-ghost btn-circle me-5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                    <path d="M1.75 1.002a.75.75 0 1 0 0 1.5h1.835l1.24 5.113A3.752 3.752 0 0 0 2 11.25c0 .414.336.75.75.75h10.5a.75.75 0 0 0 0-1.5H3.628A2.25 2.25 0 0 1 5.75 9h6.5a.75.75 0 0 0 .73-.578l.846-3.595a.75.75 0 0 0-.578-.906 44.118 44.118 0 0 0-7.996-.91l-.348-1.436a.75.75 0 0 0-.73-.573H1.75ZM5 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
+                </svg>
+
+            </a>
             <div class="join">
                 <a asp-controller="Auth" asp-action="Login" class="btn join-item">Iniciar sesión</a>
                 <a asp-controller="Auth" asp-action="Register" class="btn join-item">Registrarse</a>
@@ -79,6 +82,9 @@
         @RenderBody()
     </div>
     <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     @RenderSection("scripts", false)
 </body>
