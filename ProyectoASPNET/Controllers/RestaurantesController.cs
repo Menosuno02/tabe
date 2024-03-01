@@ -48,16 +48,14 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         public async Task<IActionResult> Productos
             (string form, int id, int categoria,
-            int cantidad, int idProducto, decimal precio, string nomproducto)
+            int cantidad, int idProducto)
         {
             if (form == "cesta")
             {
                 helperCesta.UpdateCesta(new ProductoCesta
                 {
                     IdProducto = idProducto,
-                    Nombre = nomproducto,
-                    Cantidad = cantidad,
-                    Precio = precio * cantidad
+                    Cantidad = cantidad
                 });
                 ViewData["CESTA"] = HttpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");

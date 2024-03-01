@@ -14,7 +14,7 @@
         <h2>
             @foreach (ProductoCesta prod in productosCesta)
             {
-                <li>@prod.IdProducto, @prod.Cantidad, @prod.Nombre, @prod.Precio</li>
+                <li>@prod.IdProducto, @prod.Cantidad</li>
             }
         </h2>
     }
@@ -27,7 +27,7 @@
                 <div class="w-full">
                     @if (Model.SelectedCategoria.ToString() == "0")
                     {
-                        <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
+                        <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-11 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
                                 name="categoria" value="0">
                             Todas
                         </button>
@@ -44,7 +44,7 @@
                     <div class="w-full">
                         @if (Model.SelectedCategoria.ToString() == categoria.IdCategoriaProducto.ToString())
                         {
-                            <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-14 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
+                            <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-10 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
                                     name="categoria" value="@categoria.IdCategoriaProducto">
                                 @categoria.Nombre
                             </button>
@@ -120,8 +120,6 @@
                                     </div>
                                     <input type="hidden" name="form" value="cesta" />
                                     <input type="hidden" name="idproducto" value="@prod.IdProducto" />
-                                    <input type="hidden" name="nomproducto" value="@prod.Nombre" />
-                                    <input type="hidden" name="precio" value="@prod.Precio" />
                                     <button class="btn btn-primary font-medium">
                                         Añadir a cesta
                                     </button>

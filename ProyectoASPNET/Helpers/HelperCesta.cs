@@ -34,7 +34,7 @@ namespace ProyectoASPNET.Helpers
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");
                 if (cesta
-                    .Where(prod => prod.IdProducto == prod.IdProducto)
+                    .Where(p => p.IdProducto == prod.IdProducto)
                     .Count() == 0)
                 {
                     cesta.Add(prod);
@@ -42,19 +42,22 @@ namespace ProyectoASPNET.Helpers
                 else
                 {
                     cesta
-                        .FirstOrDefault(prod => prod.IdProducto == prod.IdProducto)
+                        .FirstOrDefault(p => p.IdProducto == prod.IdProducto)
                         .Cantidad += prod.Cantidad;
-                    int cantidad = cesta
-                        .FirstOrDefault(prod => prod.IdProducto == prod.IdProducto)
-                        .Cantidad;
-                    decimal precio = cantidad * prod.Precio;
-                    cesta
-                       .FirstOrDefault(prod => prod.IdProducto == prod.IdProducto)
-                       .Precio = precio;
-                    precio = cesta
-                       .FirstOrDefault(prod => prod.IdProducto == prod.IdProducto)
-                       .Precio;
                 }
+                httpContext.Session.SetObject("CESTA", cesta);
+            }
+        }
+
+        public void DeleteProductoCesta(int idproducto)
+        {
+            HttpContext httpContext = this.httpContextAccessor.HttpContext;
+            if (httpContext.Session.GetObject
+                    <List<ProductoCesta>>("CESTA") != null)
+            {
+                List<ProductoCesta> cesta = httpContext.Session.GetObject
+                    <List<ProductoCesta>>("CESTA");
+                cesta.RemoveAll(p => p.IdProducto == idproducto);
                 httpContext.Session.SetObject("CESTA", cesta);
             }
         }

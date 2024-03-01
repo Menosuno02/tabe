@@ -1,5 +1,7 @@
 ﻿@{
     string baseUri = Context.Request.Scheme + "://" + Context.Request.Host;
+    int idUsuario = Context.Session.GetObject<int>("USER");
+    int tipoUsuario = Context.Session.GetObject<int>("TIPOUSER");
 }
 
 <!doctype html>
@@ -34,47 +36,150 @@
                     </div>
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-primary text-primary-content rounded-box w-52">
-                        <li><a>Item 1</a></li>
                         <li>
-                            <a>Restaurantes</a>
+                            <a asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
+                        @if (idUsuario != 0)
+                        {
+                            @if (tipoUsuario == 1)
+                            {
+                                <li>
+                                    <a>Restaurantes</a>
+                                    <ul class="p-2">
+                                        <li>
+                                            <a asp-controller="Restaurantes" asp-action="Index">
+                                                Restaurantes
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>Submenu 2</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a asp-controller="Usuarios" asp-action="Cesta">Cesta</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a>Admin</a>
+                                    <ul class="p-2">
+                                        <li>
+                                            <a asp-controller="Restaurantes" asp-action="Index">
+                                                Restaurantes
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>Productos</a>
+                                        </li>
+                                        <li>
+                                            <a>Usuarios</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        <li>
+                            <a>Usuario</a>
                             <ul class="p-2">
-                                <li><a asp-controller="Restaurantes" asp-action="Index">Restaurantes</a></li>
-                                <li><a>Submenu 2</a></li>
+                                @if (idUsuario == 0)
+                                {
+                                    <li>
+                                        <a asp-controller="Auth" asp-action="Login">
+                                            Iniciar sesión
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Auth" asp-action="Register">
+                                            Registrarse
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a asp-controller="Auth" asp-action="Login">
+                                            Perfil
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Auth" asp-action="Logout">
+                                            Cerrar sesión
+                                        </a>
+                                    </li>
+                                }
+
                             </ul>
                         </li>
-                        <li><a>Item 3</a></li>
                     </ul>
                 </div>
             </div>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-ghost"><span class="text-xl">Tabe</span></a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-ghost">
+                <span class="text-xl">Tabe</span>
+            </a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a>Item 1</a></li>
-                <li>
-                    <details>
-                        <summary>Parent</summary>
-                        <ul class="p-2 bg-primary text-primary-content z-50 top-10">
-                            <li><a asp-controller="Restaurantes" asp-action="Index">Restaurantes</a></li>
-                            <li><a>Submenu 2</a></li>
-                        </ul>
-                    </details>
-                </li>
-                <li><a>Item 3</a></li>
+                @if (idUsuario != 0)
+                {
+                    <li>
+                        <details>
+                            <summary>Restaurantes</summary>
+                            <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                                <li>
+                                    <a asp-controller="Restaurantes" asp-action="Index">
+                                        Restaurantes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>Submenu 2</a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>Usuario</summary>
+                            <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                                <li>
+                                    <a asp-controller="Restaurantes" asp-action="Index">
+                                        Perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Auth" asp-action="Logout">
+                                        Cerrar sesión
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                }
             </ul>
         </div>
         <div class="navbar-end hidden lg:flex">
-            <a asp-controller="Usuarios" asp-action="Carro"
-               class="btn btn-ghost btn-circle me-5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
-                    <path d="M1.75 1.002a.75.75 0 1 0 0 1.5h1.835l1.24 5.113A3.752 3.752 0 0 0 2 11.25c0 .414.336.75.75.75h10.5a.75.75 0 0 0 0-1.5H3.628A2.25 2.25 0 0 1 5.75 9h6.5a.75.75 0 0 0 .73-.578l.846-3.595a.75.75 0 0 0-.578-.906 44.118 44.118 0 0 0-7.996-.91l-.348-1.436a.75.75 0 0 0-.73-.573H1.75ZM5 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
-                </svg>
+            @if (idUsuario == 0)
+            {
+                <div class="join">
+                    <a asp-controller="Auth" asp-action="Login" class="btn font-medium join-item">
+                        Iniciar sesión
+                    </a>
+                    <a asp-controller="Auth" asp-action="Register" class="btn font-medium join-item">
+                        Registrarse
+                    </a>
+                </div>
+            }
+            else
+            {
+                <a asp-controller="Usuarios" asp-action="Cesta"
+                   class="btn btn-ghost btn-circle me-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                        <path d="M1.75 1.002a.75.75 0 1 0 0 1.5h1.835l1.24 5.113A3.752 3.752 0 0 0 2 11.25c0 .414.336.75.75.75h10.5a.75.75 0 0 0 0-1.5H3.628A2.25 2.25 0 0 1 5.75 9h6.5a.75.75 0 0 0 .73-.578l.846-3.595a.75.75 0 0 0-.578-.906 44.118 44.118 0 0 0-7.996-.91l-.348-1.436a.75.75 0 0 0-.73-.573H1.75ZM5 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
+                    </svg>
 
-            </a>
-            <div class="join">
-                <a asp-controller="Auth" asp-action="Login" class="btn join-item">Iniciar sesión</a>
-                <a asp-controller="Auth" asp-action="Register" class="btn join-item">Registrarse</a>
-            </div>
+                </a>
+            }
         </div>
     </div>
 

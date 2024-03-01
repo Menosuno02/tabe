@@ -128,6 +128,14 @@ public class RepositoryRestaurantes
         var consulta = this.context.Productos.FromSqlRaw(sql, paramRestaurante, paramCategoria);
         return await consulta.ToListAsync();
     }
+
+    public async Task<Producto> FindProducto(int idproducto)
+    {
+        var consulta = from datos in this.context.Productos
+                       where datos.IdProducto == idproducto
+                       select datos;
+        return await consulta.FirstOrDefaultAsync();
+    }
     #endregion
 
     #region USUARIOS

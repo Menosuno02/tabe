@@ -17,16 +17,59 @@ namespace ProyectoASPNET.Controllers
             this.helperCesta = helperCesta;
         }
 
-        public async Task<IActionResult> Carro()
+        public async Task<IActionResult> Cesta()
         {
             decimal total = 0;
-            List<ProductoCesta> cesta = new List<ProductoCesta>();
-            foreach (ProductoCesta prodCesta in helperCesta.GetCesta())
+            List<ProductoCestaView> cestaView = new List<ProductoCestaView>();
+            List<ProductoCesta> cesta = helperCesta.GetCesta();
+            if (cesta != null)
             {
-                total += prodCesta.Precio;
+                foreach (ProductoCesta prodCesta in cesta)
+                {
+                    Producto prod = await this.repo.FindProducto(prodCesta.IdProducto);
+                    cestaView.Add(new ProductoCestaView
+                    {
+                        IdProducto = prodCesta.IdProducto,
+                        Nombre = prod.Nombre,
+                        Precio = prod.Precio * prodCesta.Cantidad,
+                        Cantidad = prodCesta.Cantidad,
+                        Imagen = prod.Imagen
+                    });
+                    total += prod.Precio * prodCesta.Cantidad;
+                }
             }
             ViewData["TOTAL"] = total;
-            return View(cesta);
+            return View(cestaView);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Cesta(string form, int idproducto)
+        {
+            if (form == "borrar")
+            {
+                this.helperCesta.DeleteProductoCesta(idproducto);
+            }
+            decimal total = 0;
+            List<ProductoCestaView> cestaView = new List<ProductoCestaView>();
+            List<ProductoCesta> cesta = helperCesta.GetCesta();
+            if (cesta != null)
+            {
+                foreach (ProductoCesta prodCesta in cesta)
+                {
+                    Producto prod = await this.repo.FindProducto(prodCesta.IdProducto);
+                    cestaView.Add(new ProductoCestaView
+                    {
+                        IdProducto = prodCesta.IdProducto,
+                        Nombre = prod.Nombre,
+                        Precio = prod.Precio * prodCesta.Cantidad,
+                        Cantidad = prodCesta.Cantidad,
+                        Imagen = prod.Imagen
+                    });
+                    total += prod.Precio * prodCesta.Cantidad;
+                }
+            }
+            ViewData["TOTAL"] = total;
+            return View(cestaView);
         }
     }
 }

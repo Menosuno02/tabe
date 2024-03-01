@@ -25,6 +25,7 @@ namespace ProyectoASPNET.Controllers
             if (usuario != null)
             {
                 HttpContext.Session.SetObject("USER", usuario.IdUsuario);
+                HttpContext.Session.SetObject("TIPOUSER", usuario.TipoUsuario);
                 return RedirectToAction("Index", "Restaurantes");
             }
             else
@@ -45,6 +46,13 @@ namespace ProyectoASPNET.Controllers
         {
             await this.repo.RegisterUsuario(usuario);
             return RedirectToAction("Login");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.SetObject("USER", 0);
+            HttpContext.Session.SetObject("TIPOUSER", 0);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
