@@ -69,7 +69,7 @@ namespace ProyectoASPNET.Controllers
             if (categoria == 0)
                 model.Productos = await this.repo.GetProductosRestauranteAsync(id);
             else
-                model.Productos = await this.repo.GetProductoCategoriasAsync(id, categoria);
+                model.Productos = await this.repo.GetProductosByCategoriaAsync(id, categoria);
             return View(model);
         }
     }

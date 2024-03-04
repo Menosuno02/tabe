@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Diagnostics.Metrics;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET.Data;
@@ -84,6 +86,20 @@ public class RepositoryRestaurantes
             .OrderByDescending(r => r.Valoracion)
             .ToListAsync();
     }
+
+    public async Task<RestauranteView> CreateRestauranteViewAsync(RestauranteView restaurante)
+    {
+        await this.context.RestaurantesView.AddAsync(restaurante);
+        await this.context.SaveChangesAsync();
+        return restaurante;
+    }
+
+    public async Task DeleteRestauranteAsync(int id)
+    {
+        RestauranteView restaurante = await FindRestauranteAsync(id);
+        this.context.RestaurantesView.Remove(restaurante);
+        await this.context.SaveChangesAsync();
+    }
     #endregion
 
     #region CATEGORIAS_RESTAURANTES
@@ -103,6 +119,11 @@ public class RepositoryRestaurantes
     #endregion
 
     #region PRODUCTOS
+    public async Task<List<Producto>> GetProductosAsync()
+    {
+        return await this.context.Productos.ToListAsync();
+    }
+
     public async Task<List<Producto>> GetProductosRestauranteAsync(int id)
     {
         return await this.context.Productos
@@ -110,14 +131,28 @@ public class RepositoryRestaurantes
             .ToListAsync();
     }
 
-    // Productos según la categoría
-    public async Task<List<Producto>> GetProductoCategoriasAsync(int restaurante, int categoria)
+    public async Task<List<Producto>> GetProductosByCategoriaAsync(int restaurante, int categoria)
     {
         string sql = "SP_PRODUCTOS_CATEGORIA @RESTAURANTE, @CATEGORIA";
         SqlParameter paramRestaurante = new SqlParameter("@RESTAURANTE", restaurante);
         SqlParameter paramCategoria = new SqlParameter("@CATEGORIA", categoria);
         var consulta = this.context.Productos.FromSqlRaw(sql, paramRestaurante, paramCategoria);
         return await consulta.ToListAsync();
+        return await this.context.Productos.Join(this.context.ProductoCategorias
+            .Where(pc => pc.IdCategoria == categoria),
+            p => p.IdProducto,
+            pc => pc.IdProducto,
+            (p, pc) => new Producto
+            {
+                IdProducto = p.IdProducto,
+                Nombre = p.Nombre,
+                Descripcion = p.Descripcion,
+                Precio = p.Precio,
+                Imagen = p.Imagen,
+                IdRestaurante = p.IdRestaurante
+            })
+            .Where(pc => pc.IdRestaurante == restaurante)
+            .ToListAsync();
     }
 
     public async Task<Producto> FindProductoAsync(int id)
@@ -125,6 +160,20 @@ public class RepositoryRestaurantes
         return await this.context.Productos
             .Where(p => p.IdProducto == id)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<Producto> CreateProductoAsync(Producto producto)
+    {
+        await this.context.Productos.AddAsync(producto);
+        await this.context.SaveChangesAsync();
+        return producto;
+    }
+
+    public async Task DeleteProductoAsync(int id)
+    {
+        Producto producto = await FindProductoAsync(id);
+        this.context.Productos.Remove(producto);
+        await this.context.SaveChangesAsync();
     }
     #endregion
 
@@ -155,14 +204,15 @@ public class RepositoryRestaurantes
         }
     }
 
-    public async Task RegisterUsuarioAsync(string password, Usuario user)
+    public async Task<Usuario> RegisterUsuarioAsync(string password, Usuario user)
     {
         user.IdUsuario = await GetMaxIdUsuarioAsync();
         user.Salt = HelperTools.GenerateSalt();
         user.Contrasenya = HelperCryptography.EncryptPassword
             (password, user.Salt);
-        this.context.Usuarios.Add(user);
+        await this.context.Usuarios.AddAsync(user);
         await this.context.SaveChangesAsync();
+        return user;
         /*
         string sql = "SP_CREATE_USUARIO @NOMBRE, @APELLIDOS, @CORREO, @CONTRASENYA, @TELEFONO, @DIRECCION, @SALT";
         SqlParameter paramNombre = new SqlParameter("@NOMBRE", user.Nombre);

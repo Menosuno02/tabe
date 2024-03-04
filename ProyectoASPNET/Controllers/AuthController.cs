@@ -44,7 +44,7 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(string contrasenya, Usuario usuario)
         {
-            await this.repo.RegisterUsuarioAsync(contrasenya, usuario);
+            Usuario user = await this.repo.RegisterUsuarioAsync(contrasenya, usuario);
             return RedirectToAction("Login");
         }
 
