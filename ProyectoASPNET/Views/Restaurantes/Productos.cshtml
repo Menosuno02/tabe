@@ -72,19 +72,20 @@
                     <div class="lg:w-1/2 p-6 w-full">
                         <a>
                             <div class="card card-compact h-44 card-side bg-base-100 shadow-xl">
-                                <figure>
-                                    <img class="object-cover h-full" src="~/images/imag_productos/@prod.Imagen" />
+                                <figure class="w-4/12">
+                                    <img class="object-cover h-full max-w-36" src="~/images/imag_productos/@prod.Imagen" />
                                 </figure>
-                                <div class="card-body">
+                                <div class="card-body w-8/12">
                                     <h2 class="card-title">@prod.Nombre</h2>
-                                    <p class="h-full line-clamp-2 overflow-hidden">@prod.Descripcion</p>
+                                    <p>@prod.Descripcion</p>
                                     <div class="card-actions max-w-full justify-between">
                                         <div class="justify-start h-1/2 mt-3">
                                             <span class="text-gray-600">@prod.Precio€</span>
                                         </div>
                                         <div class="justify-end">
                                             <button onclick="@("modal" + prod.IdProducto + ".showModal()")"
-                                                    class="btn btn-primary btn-circle">
+                                                    class="btn btn-primary btn-circle"
+                                                    data-id="@prod.IdProducto" data-nombre="@prod.Nombre" data-desc="@prod.Descripcion" data-imagen="@prod.Imagen">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
                                                     <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                                 </svg>
@@ -105,14 +106,14 @@
                                 <form class="flex flex-wrap space-x-2" method="post">
                                     <div class="custom-number-input h-10 w-32">
                                         <div class="flex h-10 w-full rounded-lg relative bg-transparent mt-1">
-                                            <button type="button" data-action="decrement"
+                                            <button type="button" data-action="decrement" data-id="@prod.IdProducto"
                                                     class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-l cursor-pointer outline-none">
                                                 <span class="m-auto text-2xl font-thin">−</span>
                                             </button>
-                                            <input id="cantidad" type="text"
+                                            <input id="@("cantidad" + prod.IdProducto)" type="text"
                                                    class="w-20 outline-none focus:outline-none text-center bg-gray-100 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
                                                    name="cantidad" value="0">
-                                            <button type="button" data-action="increment"
+                                            <button type="button" data-action="increment" data-id="@prod.IdProducto"
                                                     class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-r cursor-pointer">
                                                 <span class="m-auto text-2xl font-thin">+</span>
                                             </button>
@@ -125,7 +126,7 @@
                                     </button>
                                 </form>
                                 <form method="dialog">
-                                    <button class="btn">Cancelar</button>
+                                    <button class="btn btn-cancelar" data-id="@prod.IdProducto">Cancelar</button>
                                 </form>
                             </div>
                         </div>
@@ -134,28 +135,25 @@
             </div>
         </div>
     </div>
-
 </div>
-
-@section styles {
-    <style>
-        input[type='number']::-webkit-inner-spin-button,
-        input[type='number']::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-    </style>
-}
 
 @section scripts {
     <script>
         $(function () {
             $("button[data-action='decrement']").on("click", function () {
-                if (parseInt($("#cantidad").val()) > 0)
-                    $("#cantidad").val(parseInt($("#cantidad").val()) - 1);
+                let id = $(this).data("id");
+                if (parseInt($("#cantidad" + id).val()) > 0)
+                    $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) - 1);
             });
+
             $("button[data-action='increment']").on("click", function () {
-                $("#cantidad").val(parseInt($("#cantidad").val()) + 1);
+                let id = $(this).data("id");
+                $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) + 1);
+            });
+
+            $("button.btn-cancelar").on("click", function () {
+                let id = $(this).data("id");
+                $("#cantidad" + id).val(0);
             });
         });
     </script>
