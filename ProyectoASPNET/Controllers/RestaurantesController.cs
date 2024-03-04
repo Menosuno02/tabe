@@ -20,16 +20,16 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<RestauranteView> restaurantes = await this.repo.GetRestaurantes();
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantes();
+            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesAsync();
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
             return View(restaurantes);
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(string categoria, int rating)
         {
-            List<RestauranteView> restaurantes = await this.repo.FilterRestaurantes(categoria, rating);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantes();
+            List<RestauranteView> restaurantes = await this.repo.FilterRestaurantesAsync(categoria, rating);
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
             return View(restaurantes);
         }
 
@@ -37,9 +37,9 @@ namespace ProyectoASPNET.Controllers
         {
             ProductosActionModel model = new ProductosActionModel
             {
-                Productos = await this.repo.GetProductosRestaurante(id),
-                Restaurante = await this.repo.FindRestaurante(id),
-                CategoriasProductos = await this.repo.GetCategoriaProductos(),
+                Productos = await this.repo.GetProductosRestauranteAsync(id),
+                Restaurante = await this.repo.FindRestauranteAsync(id),
+                CategoriasProductos = await this.repo.GetCategoriaProductosAsync(),
                 SelectedCategoria = 0
             };
             return View(model);
@@ -62,14 +62,14 @@ namespace ProyectoASPNET.Controllers
             }
             ProductosActionModel model = new ProductosActionModel
             {
-                Restaurante = await this.repo.FindRestaurante(id),
-                CategoriasProductos = await this.repo.GetCategoriaProductos(),
+                Restaurante = await this.repo.FindRestauranteAsync(id),
+                CategoriasProductos = await this.repo.GetCategoriaProductosAsync(),
                 SelectedCategoria = categoria
             };
             if (categoria == 0)
-                model.Productos = await this.repo.GetProductosRestaurante(id);
+                model.Productos = await this.repo.GetProductosRestauranteAsync(id);
             else
-                model.Productos = await this.repo.GetProductoCategorias(id, categoria);
+                model.Productos = await this.repo.GetProductoCategoriasAsync(id, categoria);
             return View(model);
         }
     }

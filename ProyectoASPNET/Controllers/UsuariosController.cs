@@ -26,7 +26,7 @@ namespace ProyectoASPNET.Controllers
             {
                 foreach (ProductoCesta prodCesta in cesta)
                 {
-                    Producto prod = await this.repo.FindProducto(prodCesta.IdProducto);
+                    Producto prod = await this.repo.FindProductoAsync(prodCesta.IdProducto);
                     cestaView.Add(new ProductoCestaView
                     {
                         IdProducto = prodCesta.IdProducto,
@@ -56,7 +56,7 @@ namespace ProyectoASPNET.Controllers
             {
                 foreach (ProductoCesta prodCesta in cesta)
                 {
-                    Producto prod = await this.repo.FindProducto(prodCesta.IdProducto);
+                    Producto prod = await this.repo.FindProductoAsync(prodCesta.IdProducto);
                     cestaView.Add(new ProductoCestaView
                     {
                         IdProducto = prodCesta.IdProducto,

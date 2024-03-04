@@ -16,7 +16,9 @@ namespace ProyectoASPNET.Models
         [Column("CORREO")]
         public string Correo { get; set; }
         [Column("CONTRASENYA")]
-        public string Contrasenya { get; set; }
+        public byte[] Contrasenya { get; set; }
+        [Column("SALT")]
+        public string Salt { get; set; }
         [Column("TELEFONO")]
         public string Telefono { get; set; }
         [Column("DIRECCION")]

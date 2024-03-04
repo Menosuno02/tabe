@@ -21,7 +21,7 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            Usuario usuario = await this.repo.LoginUsuario(email, password);
+            Usuario usuario = await this.repo.LoginUsuarioAsync(email, password);
             if (usuario != null)
             {
                 HttpContext.Session.SetObject("USER", usuario.IdUsuario);
@@ -42,9 +42,9 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(Usuario usuario)
+        public async Task<IActionResult> Register(string contrasenya, Usuario usuario)
         {
-            await this.repo.RegisterUsuario(usuario);
+            await this.repo.RegisterUsuarioAsync(contrasenya, usuario);
             return RedirectToAction("Login");
         }
 
