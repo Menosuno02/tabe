@@ -1,0 +1,136 @@
+﻿@model CestaView
+
+<div class="flex flex-wrap mx-auto py-8 sm:py-12 w-10/12">
+    @if (Model.Cesta != null && Model.Cesta.Count() > 0)
+    {
+        <div class="mx-auto lg:w-5/12">
+            <div class="mx-auto max-w-3xl">
+                <header class="text-center">
+                    <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Tu cesta</h1>
+                </header>
+                <div class="mt-8">
+                    <ul class="space-y-4">
+                        @foreach (ProductoCestaView prod in Model.Cesta)
+                        {
+                            <li class="flex items-center gap-4">
+                                <img src="~/images/imag_productos/@prod.Imagen"
+                                     class="size-24 rounded object-cover" />
+                                <div>
+                                    <h3 class="text-sm text-gray-900">@prod.Nombre</h3>
+                                    <dl class="mt-0.5 space-y-px text-[11px] text-gray-600">
+                                        <div>
+                                            <span class="inline">Precio: @prod.Precio€</span>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div class="flex flex-1 items-center justify-end gap-2">
+                                    <input type="number" value="@prod.Cantidad" data-idproducto="@prod.IdProducto"
+                                           class="input-cantidad h-8 w-12 rounded border-gray-200 bg-gray-50 p-0 text-center text-xs text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
+                                    <form method="post">
+                                        <input type="hidden" name="form" value="borrar" />
+                                        <input type="hidden" name="idproducto" value="@prod.IdProducto" />
+                                        <button class="text-gray-600 transition hover:text-red-600 mt-1.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                                <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="mt-8 flex justify-end border-t border-gray-100 pt-8">
+                        <div class="w-screen max-w-lg">
+                            <dl class="space-y-0.5 text-sm text-gray-700">
+                                <div class="flex justify-between text-base font-medium">
+                                    <dt class="ps-60">Total</dt>
+                                    <dd class="font-bold">@Model.Total€</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mx-auto lg:w-5/12 lg:mt-0 mt-10">
+            <div class="mx-auto max-w-3xl">
+                <header class="text-center">
+                    <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Datos de pago</h1>
+                </header>
+                <form method="post" class="mx-auto mb-0 mt-8 w-full space-y-4">
+                    <input type="hidden" name="form" value="pagar" />
+                    <div class="flex flex-wrap">
+                        <div class="w-full">
+                            <label class="block text-sm font-bold text-gray-700">Dirección</label>
+                            <input type="text" disabled value="@Model.Direccion" name="email"
+                                   class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                        </div>
+                        <div class="w-full mt-4">
+                            <label class="block text-sm font-bold text-gray-700">Teléfono</label>
+                            <input type="text" disabled value="@Model.Telefono" name="password"
+                                   class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                        </div>
+                        <div class="w-full mt-8">
+                            <label class="block text-sm font-bold text-gray-700">Número Tarjeta</label>
+                            <input type="text" name="numero" placeholder="1234123412341234" pattern="^[0-9]{12}$" maxlength="12" required
+                                   class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                        </div>
+                        <div class="w-full mt-4">
+                            <label class="block text-sm font-bold text-gray-700">Titular Tarjeta</label>
+                            <input type="text" name="titular" value="@Model.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" required />
+                        </div>
+                        <div class="w-full mt-4">
+                            <label class="block text-sm font-bold text-gray-700">Fecha Caducidad</label>
+                            <input datepicker datepicker-autohide datepicker- datepicker-format="mm/yy" type="text" name="vencimiento" placeholder="MM/YY" maxlength="5" pattern="^[0-9]{2}/[0-9]{2}$"
+                                   class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" required />
+                        </div>
+                        <div class="w-full mt-4">
+                            <label class="block text-sm font-bold text-gray-700">Código Seguridad</label>
+                            <input type="text" name="vencimiento" placeholder="123" maxlength="3" pattern="^[0-9]{3}$" required
+                                   class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end mt-2">
+                        <button class="btn btn-primary px-5 py-3 text-sm font-medium">
+                            Realizar pago
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mx-auto">
+            <header class="text-center">
+                <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Tu cesta</h1>
+            </header>
+            <div class="mt-8 text-center">
+                <h3 class="text-xl font-bold text-gray-900">
+                    No hay productos en tu cesta
+                </h3>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts {
+    <script>
+        $(function () {
+            $(":input.input-cantidad").on("change", function () {
+                let id = $(this).data("idproducto");
+                let cantidad = $(this).val();
+                $.ajax({
+                    type: "get",
+                    url: "/Cesta/UpdateCesta?idproducto=" + id + "&cantidad=" + cantidad,
+                    success: function (data) {
+                        window.location.reload();
+                    }
+                })
+            });
+        });
+    </script>
+}

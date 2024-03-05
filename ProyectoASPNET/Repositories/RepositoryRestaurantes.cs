@@ -1,12 +1,9 @@
 ﻿using System.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Diagnostics.Metrics;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProyectoASPNET;
 
@@ -133,11 +130,13 @@ public class RepositoryRestaurantes
 
     public async Task<List<Producto>> GetProductosByCategoriaAsync(int restaurante, int categoria)
     {
+        /*
         string sql = "SP_PRODUCTOS_CATEGORIA @RESTAURANTE, @CATEGORIA";
         SqlParameter paramRestaurante = new SqlParameter("@RESTAURANTE", restaurante);
         SqlParameter paramCategoria = new SqlParameter("@CATEGORIA", categoria);
         var consulta = this.context.Productos.FromSqlRaw(sql, paramRestaurante, paramCategoria);
         return await consulta.ToListAsync();
+        */
         return await this.context.Productos.Join(this.context.ProductoCategorias
             .Where(pc => pc.IdCategoria == categoria),
             p => p.IdProducto,
@@ -226,6 +225,11 @@ public class RepositoryRestaurantes
             .ExecuteSqlRawAsync(sql, paramNombre, paramApellidos, paramCorreo,
             paramContrasenya, paramTelefono, paramDireccion, paramSalt);
         */
+    }
+
+    public async Task<Usuario> FindUsuarioAsync(int id)
+    {
+        return await this.context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == id);
     }
     #endregion
 }

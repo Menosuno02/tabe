@@ -57,8 +57,6 @@ namespace ProyectoASPNET.Controllers
                     IdProducto = idProducto,
                     Cantidad = cantidad
                 });
-                ViewData["CESTA"] = HttpContext.Session.GetObject
-                    <List<ProductoCesta>>("CESTA");
             }
             ProductosActionModel model = new ProductosActionModel
             {

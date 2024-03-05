@@ -50,8 +50,8 @@ namespace ProyectoASPNET.Controllers
 
         public IActionResult Logout()
         {
-            HttpContext.Session.SetObject("USER", 0);
-            HttpContext.Session.SetObject("TIPOUSER", 0);
+            HttpContext.Session.Remove("USER");
+            HttpContext.Session.Remove("TIPUSER");
             return RedirectToAction("Index", "Home");
         }
     }

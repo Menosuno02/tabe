@@ -17,7 +17,6 @@ namespace ProyectoASPNET.Helpers
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
             return httpContext.Session.GetObject
                 <List<ProductoCesta>>("CESTA");
-
         }
 
         public void UpdateCesta(ProductoCesta prod)
@@ -60,6 +59,23 @@ namespace ProyectoASPNET.Helpers
                 cesta.RemoveAll(p => p.IdProducto == idproducto);
                 httpContext.Session.SetObject("CESTA", cesta);
             }
+        }
+
+        public void UpdateProductoCesta(int idproducto, int cantidad)
+        {
+            if (cantidad == 0)
+                DeleteProductoCesta(idproducto);
+            else
+            {
+                HttpContext httpContext = this.httpContextAccessor.HttpContext;
+                List<ProductoCesta> cesta = httpContext.Session.GetObject
+                <List<ProductoCesta>>("CESTA");
+                cesta
+                .FirstOrDefault(p => p.IdProducto == idproducto)
+                .Cantidad = cantidad;
+                httpContext.Session.SetObject("CESTA", cesta);
+            }
+
         }
     }
 }

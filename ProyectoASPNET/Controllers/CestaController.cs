@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
 
 namespace ProyectoASPNET.Controllers
 {
-    public class UsuariosController : Controller
+    public class CestaController : Controller
     {
         private RepositoryRestaurantes repo;
         private HelperCesta helperCesta;
 
-        public UsuariosController
+        public CestaController
             (RepositoryRestaurantes repo,
             HelperCesta helperCesta)
         {
@@ -17,7 +18,7 @@ namespace ProyectoASPNET.Controllers
             this.helperCesta = helperCesta;
         }
 
-        public async Task<IActionResult> Cesta()
+        private async Task<CestaView> GetDatosCesta()
         {
             decimal total = 0;
             List<ProductoCestaView> cestaView = new List<ProductoCestaView>();
@@ -38,38 +39,43 @@ namespace ProyectoASPNET.Controllers
                     total += prod.Precio * prodCesta.Cantidad;
                 }
             }
-            ViewData["TOTAL"] = total;
+            int id = HttpContext.Session.GetObject<int>("USER");
+            Usuario usuario = await this.repo.FindUsuarioAsync(id);
+            return new CestaView
+            {
+                Cesta = cestaView,
+                Total = total,
+                Nombre = usuario.Nombre + " " + usuario.Apellidos,
+                Direccion = usuario.Direccion,
+                Telefono = usuario.Telefono
+            };
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            CestaView cestaView = await GetDatosCesta();
             return View(cestaView);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Cesta(string form, int idproducto)
+        public async Task<IActionResult> Index(string form, int idproducto)
         {
             if (form == "borrar")
             {
                 this.helperCesta.DeleteProductoCesta(idproducto);
             }
-            decimal total = 0;
-            List<ProductoCestaView> cestaView = new List<ProductoCestaView>();
-            List<ProductoCesta> cesta = helperCesta.GetCesta();
-            if (cesta != null)
+            else if (form == "pagar")
             {
-                foreach (ProductoCesta prodCesta in cesta)
-                {
-                    Producto prod = await this.repo.FindProductoAsync(prodCesta.IdProducto);
-                    cestaView.Add(new ProductoCestaView
-                    {
-                        IdProducto = prodCesta.IdProducto,
-                        Nombre = prod.Nombre,
-                        Precio = prod.Precio * prodCesta.Cantidad,
-                        Cantidad = prodCesta.Cantidad,
-                        Imagen = prod.Imagen
-                    });
-                    total += prod.Precio * prodCesta.Cantidad;
-                }
+                return RedirectToAction("Index", "Restaurantes");
             }
-            ViewData["TOTAL"] = total;
+            CestaView cestaView = await GetDatosCesta();
             return View(cestaView);
+        }
+
+        public IActionResult UpdateCesta(int idproducto, int cantidad)
+        {
+            this.helperCesta.UpdateProductoCesta(idproducto, cantidad);
+            return RedirectToAction("Index");
         }
     }
 }
