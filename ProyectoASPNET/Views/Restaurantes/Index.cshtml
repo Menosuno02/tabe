@@ -2,11 +2,11 @@
 
 @{
     List<CategoriaRestaurante> categorias = ViewData["CATEGORIAS"] as List<CategoriaRestaurante>;
-
 }
 
 <div class="sm:px-4 p-6">
     <form class="sm:px-6" method="post">
+        @Html.AntiForgeryToken()
         <div class="flex flex-wrap">
             <label class="form-control w-full">
                 <div class="flex flex-wrap justify-center">
@@ -63,7 +63,7 @@
                                 <div class="w-1/2">
                                     <div class="card-actions justify-end">
                                         @{
-                                            int valoracion = (int)((decimal)rest.Valoracion / 5 * 100);
+                                            int valoracion = (int)(rest.Valoracion / 5 * 100);
                                         }
                                         <div class="badge badge-outline">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 me-1">
@@ -81,5 +81,4 @@
             </div>
         }
     </div>
-
 </div>

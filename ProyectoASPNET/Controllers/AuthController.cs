@@ -19,6 +19,7 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string email, string password)
         {
             Usuario usuario = await this.repo.LoginUsuarioAsync(email, password);
@@ -42,6 +43,7 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(string contrasenya, Usuario usuario)
         {
             Usuario user = await this.repo.RegisterUsuarioAsync(contrasenya, usuario);
@@ -51,7 +53,8 @@ namespace ProyectoASPNET.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("USER");
-            HttpContext.Session.Remove("TIPUSER");
+            HttpContext.Session.Remove("TIPOUSER");
+            HttpContext.Session.Remove("CESTA");
             return RedirectToAction("Index", "Home");
         }
     }

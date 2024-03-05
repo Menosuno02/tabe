@@ -6,10 +6,12 @@ namespace ProyectoASPNET.Helpers
     public class HelperCesta
     {
         IHttpContextAccessor httpContextAccessor;
+        RepositoryRestaurantes repo;
 
-        public HelperCesta(IHttpContextAccessor httpContextAccessor)
+        public HelperCesta(IHttpContextAccessor httpContextAccessor, RepositoryRestaurantes repo)
         {
             this.httpContextAccessor = httpContextAccessor;
+            this.repo = repo;
         }
 
         public List<ProductoCesta> GetCesta()
@@ -19,7 +21,7 @@ namespace ProyectoASPNET.Helpers
                 <List<ProductoCesta>>("CESTA");
         }
 
-        public void UpdateCesta(ProductoCesta prod)
+        public async Task UpdateCesta(ProductoCesta prod)
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
             if (httpContext.Session.GetObject
@@ -27,6 +29,8 @@ namespace ProyectoASPNET.Helpers
             {
                 List<ProductoCesta> cesta = new List<ProductoCesta> { prod };
                 httpContext.Session.SetObject("CESTA", cesta);
+                Producto productoPivot = await this.repo.FindProductoAsync(prod.IdProducto);
+                httpContext.Session.SetObject("RESTAURANTE", productoPivot.IdRestaurante);
             }
             else
             {
@@ -57,14 +61,21 @@ namespace ProyectoASPNET.Helpers
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");
                 cesta.RemoveAll(p => p.IdProducto == idproducto);
-                httpContext.Session.SetObject("CESTA", cesta);
+                if (cesta.Count() == 0)
+                {
+                    httpContext.Session.Remove("CESTA");
+                    httpContext.Session.Remove("RESTAURANTE");
+                }
+                else
+                {
+                    httpContext.Session.SetObject("CESTA", cesta);
+                }
             }
         }
 
         public void UpdateProductoCesta(int idproducto, int cantidad)
         {
-            if (cantidad == 0)
-                DeleteProductoCesta(idproducto);
+            if (cantidad == 0) DeleteProductoCesta(idproducto);
             else
             {
                 HttpContext httpContext = this.httpContextAccessor.HttpContext;
@@ -75,7 +86,26 @@ namespace ProyectoASPNET.Helpers
                 .Cantidad = cantidad;
                 httpContext.Session.SetObject("CESTA", cesta);
             }
+        }
 
+        public async Task CreatePedido()
+        {
+            HttpContext httpContext = this.httpContextAccessor.HttpContext;
+            if (httpContext.Session.GetObject
+                    <List<ProductoCesta>>("CESTA") != null)
+            {
+                List<ProductoCesta> cesta = httpContext.Session.GetObject
+                    <List<ProductoCesta>>("CESTA");
+                int user = httpContext.Session.GetObject<int>("USER");
+                int idrestaurante = httpContext.Session.GetObject<int>("RESTAURANTE");
+                Pedido pedido = await this.repo.CreatePedidoAsync(user, idrestaurante);
+                foreach (ProductoCesta producto in cesta)
+                {
+                    await this.repo.CreateProductoPedidoAsync(pedido.IdPedido, producto.IdProducto, producto.Cantidad);
+                }
+                httpContext.Session.Remove("CESTA");
+                httpContext.Session.Remove("RESTAURANTE");
+            }
         }
     }
 }

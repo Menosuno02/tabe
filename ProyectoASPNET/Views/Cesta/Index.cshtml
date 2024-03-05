@@ -28,6 +28,7 @@
                                     <input type="number" value="@prod.Cantidad" data-idproducto="@prod.IdProducto"
                                            class="input-cantidad h-8 w-12 rounded border-gray-200 bg-gray-50 p-0 text-center text-xs text-gray-600 [-moz-appearance:_textfield] focus:outline-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none" />
                                     <form method="post">
+                                        @Html.AntiForgeryToken()
                                         <input type="hidden" name="form" value="borrar" />
                                         <input type="hidden" name="idproducto" value="@prod.IdProducto" />
                                         <button class="text-gray-600 transition hover:text-red-600 mt-1.5">
@@ -54,12 +55,13 @@
                 </div>
             </div>
         </div>
-        <div class="mx-auto lg:w-5/12 lg:mt-0 mt-10">
+        <div class="mx-auto lg:w-5/12 lg:mt-0 mt-10 border border-gray-300 rounded-2xl p-6">
             <div class="mx-auto max-w-3xl">
                 <header class="text-center">
                     <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Datos de pago</h1>
                 </header>
                 <form method="post" class="mx-auto mb-0 mt-8 w-full space-y-4">
+                    @Html.AntiForgeryToken()
                     <input type="hidden" name="form" value="pagar" />
                     <div class="flex flex-wrap">
                         <div class="w-full">
@@ -108,7 +110,7 @@
             <header class="text-center">
                 <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Tu cesta</h1>
             </header>
-            <div class="mt-8 text-center">
+            <div class="mt-4 text-center">
                 <h3 class="text-xl font-bold text-gray-900">
                     No hay productos en tu cesta
                 </h3>

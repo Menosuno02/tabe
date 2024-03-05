@@ -2,6 +2,11 @@
     string baseUri = Context.Request.Scheme + "://" + Context.Request.Host;
     int idUsuario = Context.Session.GetObject<int>("USER");
     int tipoUsuario = Context.Session.GetObject<int>("TIPOUSER");
+    int numCesta = 0;
+    if (Context.Session.GetObject<List<ProductoCesta>>("CESTA") != null)
+    {
+        numCesta = Context.Session.GetObject<List<ProductoCesta>>("CESTA").Sum(p => p.Cantidad);
+    }
 }
 
 <!doctype html>
@@ -69,13 +74,16 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a asp-controller="Cesta" asp-action="Index">Cesta</a>
+                                    <a asp-controller="Cesta" asp-action="Index">
+                                        Cesta
+                                        <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs text-white top-[1px] end-28 badge badge-error bg-red-600">@numCesta</div>
+                                    </a>
                                 </li>
                             }
                             else
                             {
                                 <li>
-                                    <a>Admin</a>
+                                    <a asp-controller="Admin" asp-action="Index">Admin</a>
                                     <ul class="p-2">
                                         <li>
                                             <a asp-controller="Restaurantes" asp-action="Index">
@@ -135,33 +143,42 @@
             <ul class="menu menu-horizontal px-1">
                 @if (idUsuario != 0)
                 {
-                    <li>
-                        <details>
-                            <summary>Restaurantes</summary>
-                            <ul class="p-2 bg-primary text-primary-content z-50 top-10">
-                                <li>
-                                    <a asp-controller="Restaurantes" asp-action="Index">
-                                        Restaurantes
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>Submenu 2</a>
-                                </li>
-                            </ul>
-                        </details>
-                    </li>
-                    <li>
-                        <details>
-                            <summary>Usuario</summary>
-                            <ul class="p-2 bg-primary text-primary-content z-50 top-10">
-                                <li>
-                                    <a asp-controller="Restaurantes" asp-action="Index">
-                                        Perfil
-                                    </a>
-                                </li>
-                            </ul>
-                        </details>
-                    </li>
+                    @if (tipoUsuario == 1)
+                    {
+                        <li>
+                            <details>
+                                <summary>Restaurantes</summary>
+                                <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                                    <li>
+                                        <a asp-controller="Restaurantes" asp-action="Index">
+                                            Restaurantes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>Submenu 2</a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li>
+                            <details>
+                                <summary>Usuario</summary>
+                                <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                                    <li>
+                                        <a asp-controller="Restaurantes" asp-action="Index">
+                                            Perfil
+                                        </a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="Admin" asp-action="Usuarios">Panel Admin</a>
+                        </li>
+                    }
                 }
             </ul>
         </div>
@@ -184,6 +201,10 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
                         <path d="M1.75 1.002a.75.75 0 1 0 0 1.5h1.835l1.24 5.113A3.752 3.752 0 0 0 2 11.25c0 .414.336.75.75.75h10.5a.75.75 0 0 0 0-1.5H3.628A2.25 2.25 0 0 1 5.75 9h6.5a.75.75 0 0 0 .73-.578l.846-3.595a.75.75 0 0 0-.578-.906 44.118 44.118 0 0 0-7.996-.91l-.348-1.436a.75.75 0 0 0-.73-.573H1.75ZM5 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
                     </svg>
+                    @if (numCesta > 0)
+                    {
+                        <div class="w-5 h-5 text-xs text-white badge badge-error bg-red-600">@numCesta</div>
+                    }
                 </a>
                 <a asp-controller="Auth" asp-action="Logout" class="btn font-medium join-item">
                     Cerrar sesión
@@ -198,7 +219,6 @@
     <script src="~/js/jquery-3.7.1.min.js"></script>
     <script src="~/js/datepicker.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>localStorage.theme = 'light'</script>
     @RenderSection("scripts", false)
 </body>
 

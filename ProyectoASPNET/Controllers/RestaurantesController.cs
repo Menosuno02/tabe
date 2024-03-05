@@ -2,6 +2,7 @@
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -26,6 +27,7 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string categoria, int rating)
         {
             List<RestauranteView> restaurantes = await this.repo.FilterRestaurantesAsync(categoria, rating);
@@ -46,17 +48,28 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Productos
             (string form, int id, int categoria,
             int cantidad, int idProducto)
         {
             if (form == "cesta")
             {
-                helperCesta.UpdateCesta(new ProductoCesta
+                int idrestaurante = HttpContext.Session.GetObject<int>("RESTAURANTE");
+                // Si id (idrestaurante) no es igual al idrestuarante en el Session, nos salta error
+                // Solo podemos tener productos en nuestra cesta de un solo restaurante
+                if (idrestaurante == 0 || idrestaurante == id)
                 {
-                    IdProducto = idProducto,
-                    Cantidad = cantidad
-                });
+                    await helperCesta.UpdateCesta(new ProductoCesta
+                    {
+                        IdProducto = idProducto,
+                        Cantidad = cantidad
+                    });
+                }
+                else
+                {
+                    ViewData["MENSAJE"] = "Error";
+                }
             }
             ProductosActionModel model = new ProductosActionModel
             {

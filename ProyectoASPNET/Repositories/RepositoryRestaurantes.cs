@@ -13,7 +13,7 @@ CREATE OR ALTER VIEW V_RESTAURANTES
 AS
 	SELECT R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO,
 	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA,
-	ISNULL(AVG(V.VALORACION), 0) AS VALORACION
+	CAST(ISNULL(AVG(V.VALORACION), 0) AS DECIMAL(4,2)) AS VALORACION
 	FROM RESTAURANTES R
 	INNER JOIN CATEGORIAS_RESTAURANTES CR
 	ON R.IDCATEGORIA = CR.IDCATEGORIA
@@ -227,9 +227,51 @@ public class RepositoryRestaurantes
         */
     }
 
+    public async Task<List<Usuario>> GetUsuariosAsync()
+    {
+        return await this.context.Usuarios.ToListAsync();
+    }
+
     public async Task<Usuario> FindUsuarioAsync(int id)
     {
         return await this.context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == id);
+    }
+    #endregion
+
+    #region PEDIDOS
+    private async Task<int> GetMaxIdPedidoAsync()
+    {
+        if (this.context.Pedidos.Count() == 0) return 1;
+        return await this.context.Pedidos.MaxAsync(x => x.IdPedido) + 1;
+    }
+
+    public async Task<Pedido> CreatePedidoAsync(int idusuario, int idrestaurante)
+    {
+        Pedido pedido = new Pedido
+        {
+            IdPedido = await GetMaxIdPedidoAsync(),
+            IdUsuario = idusuario,
+            IdRestaurante = idrestaurante,
+            Estado = 2
+        };
+        await this.context.Pedidos.AddAsync(pedido);
+        await this.context.SaveChangesAsync();
+        return pedido;
+    }
+    #endregion
+
+    #region PRODUCTOS_PEDIDO
+    public async Task<ProductoPedido> CreateProductoPedidoAsync(int idpedido, int idproducto, int cantidad)
+    {
+        ProductoPedido productoPedido = new ProductoPedido
+        {
+            IdPedido = idpedido,
+            IdProducto = idproducto,
+            Cantidad = cantidad
+        };
+        await this.context.AddAsync(productoPedido);
+        await this.context.SaveChangesAsync();
+        return productoPedido;
     }
     #endregion
 }

@@ -20,7 +20,7 @@ namespace ProyectoASPNET.Models
         [Column("NOMBRECATEGORIA")]
         public string CategoriaRestaurante { get; set; }
         [Column("VALORACION")]
-        public int Valoracion { get; set; }
+        public decimal Valoracion { get; set; }
         [Column("TIEMPOENTREGA")]
         public string TiempoEntrega { get; set; }
     }

@@ -58,14 +58,16 @@ namespace ProyectoASPNET.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(string form, int idproducto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string form, int? idproducto)
         {
-            if (form == "borrar")
+            if (form == "borrar" && idproducto != null)
             {
-                this.helperCesta.DeleteProductoCesta(idproducto);
+                this.helperCesta.DeleteProductoCesta(idproducto.Value);
             }
             else if (form == "pagar")
             {
+                await this.helperCesta.CreatePedido();
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await GetDatosCesta();

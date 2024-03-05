@@ -1,5 +1,20 @@
 ﻿@model ProductosActionModel
 
+@if (ViewData["MENSAJE"] != null)
+{
+    <dialog id="modal_error" class="modal modal-bottom modal-backdrop modal-open sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Error</h3>
+            <p class="py-4">No puedes añadir productos de restaurantes diferentes</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+}
+
 <figure>
     <img class="object-cover w-full h-40" src="~/images/imag_restaurantes/@Model.Restaurante.Imagen" />
 </figure>
@@ -7,9 +22,10 @@
     <h1 class="text-5xl font-bold text-gray-900 px-6 mt-4">@Model.Restaurante.Nombre</h1>
     <div class="flex flex-wrap">
         <form class="px-6 mt-6 w-full md:w-1/5" method="post">
+            @Html.AntiForgeryToken()
             <input type="hidden" name="form" value="filtro" />
             <input type="hidden" name="id" value="@Model.Restaurante.IdRestaurante" />
-            <div class="rounded-lg border border-gray-100 bg-gray-100 p-1 text-center">
+            <div class="rounded-lg border border-gray-100 bg-gray-100 py-2 px-1 text-center">
                 <div class="w-full">
                     @if (Model.SelectedCategoria.ToString() == "0")
                     {
@@ -89,6 +105,7 @@
                             <img class="rounded-lg object-cover h-64 w-full" src="~/images/imag_productos/@prod.Imagen" />
                             <div class="modal-action h-full flex">
                                 <form class="flex flex-wrap space-x-2" method="post">
+                                    @Html.AntiForgeryToken()
                                     <div class="custom-number-input h-10 w-32">
                                         <div class="flex h-10 w-full rounded-lg relative bg-transparent mt-1">
                                             <button type="button" data-action="decrement" data-id="@prod.IdProducto"

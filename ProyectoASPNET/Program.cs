@@ -5,13 +5,15 @@ using ProyectoASPNET.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAntiforgery();
+
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddTransient<RepositoryRestaurantes>();
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
-builder.Services.AddSingleton<HelperPathProvider>();
-builder.Services.AddSingleton<HelperCesta>();
+builder.Services.AddTransient<HelperPathProvider>();
+builder.Services.AddTransient<HelperCesta>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddControllersWithViews();
@@ -20,7 +22,7 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
 var app = builder.Build();
