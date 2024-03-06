@@ -21,6 +21,45 @@ namespace ProyectoASPNET.Helpers
                 <List<ProductoCesta>>("CESTA");
         }
 
+        public async Task<CestaView> GetDatosCesta()
+        {
+            HttpContext httpContext = this.httpContextAccessor.HttpContext;
+            decimal total = 0;
+            List<ProductoCestaView> cestaView = new List<ProductoCestaView>();
+            List<ProductoCesta> cesta = GetCesta();
+            if (cesta != null)
+            {
+                IEnumerable<int> ids = cesta.Select(p => p.IdProducto);
+                List<Producto> productos =
+                    await this.repo.FindListProductosAsync(cesta.Select(p => p.IdProducto));
+                foreach (Producto producto in productos)
+                {
+                    int cantidad = cesta
+                        .FirstOrDefault(p => p.IdProducto == producto.IdProducto)
+                        .Cantidad;
+                    cestaView.Add(new ProductoCestaView
+                    {
+                        IdProducto = producto.IdProducto,
+                        Nombre = producto.Nombre,
+                        Precio = producto.Precio * cantidad,
+                        Cantidad = cantidad,
+                        Imagen = producto.Imagen
+                    });
+                    total += producto.Precio * cantidad;
+                }
+            }
+            int id = httpContext.Session.GetObject<int>("USER");
+            Usuario usuario = await this.repo.FindUsuarioAsync(id);
+            return new CestaView
+            {
+                Cesta = cestaView,
+                Total = total,
+                Nombre = usuario.Nombre + " " + usuario.Apellidos,
+                Direccion = usuario.Direccion,
+                Telefono = usuario.Telefono
+            };
+        }
+
         public async Task UpdateCesta(ProductoCesta prod)
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
@@ -98,11 +137,8 @@ namespace ProyectoASPNET.Helpers
                     <List<ProductoCesta>>("CESTA");
                 int user = httpContext.Session.GetObject<int>("USER");
                 int idrestaurante = httpContext.Session.GetObject<int>("RESTAURANTE");
-                Pedido pedido = await this.repo.CreatePedidoAsync(user, idrestaurante);
-                foreach (ProductoCesta producto in cesta)
-                {
-                    await this.repo.CreateProductoPedidoAsync(pedido.IdPedido, producto.IdProducto, producto.Cantidad);
-                }
+                Pedido pedido =
+                    await this.repo.CreatePedidoAsync(user, idrestaurante, cesta);
                 httpContext.Session.Remove("CESTA");
                 httpContext.Session.Remove("RESTAURANTE");
             }

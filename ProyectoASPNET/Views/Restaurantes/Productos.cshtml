@@ -24,7 +24,7 @@
         <form class="px-6 mt-6 w-full md:w-1/5" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" name="form" value="filtro" />
-            <input type="hidden" name="id" value="@Model.Restaurante.IdRestaurante" />
+            <input type="hidden" name="idrestaurante" value="@Model.Restaurante.IdRestaurante" />
             <div class="rounded-lg border border-gray-100 bg-gray-100 py-2 px-1 text-center">
                 <div class="w-full">
                     @if (Model.SelectedCategoria.ToString() == "0")
@@ -108,14 +108,14 @@
                                     @Html.AntiForgeryToken()
                                     <div class="custom-number-input h-10 w-32">
                                         <div class="flex h-10 w-full rounded-lg relative bg-transparent mt-1">
-                                            <button type="button" data-action="decrement" data-id="@prod.IdProducto"
+                                            <button type="button" data-action="decrement" data-idproducto="@prod.IdProducto"
                                                     class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-l cursor-pointer outline-none">
                                                 <span class="m-auto text-2xl font-thin">−</span>
                                             </button>
                                             <input id="@("cantidad" + prod.IdProducto)" type="text"
                                                    class="w-20 outline-none focus:outline-none text-center bg-gray-100 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
                                                    name="cantidad" value="0">
-                                            <button type="button" data-action="increment" data-id="@prod.IdProducto"
+                                            <button type="button" data-action="increment" data-idproducto="@prod.IdProducto"
                                                     class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-r cursor-pointer">
                                                 <span class="m-auto text-2xl font-thin">+</span>
                                             </button>
@@ -128,7 +128,7 @@
                                     </button>
                                 </form>
                                 <form method="dialog">
-                                    <button class="btn btn-cancelar" data-id="@prod.IdProducto">Cancelar</button>
+                                    <button class="btn btn-cancelar" data-idproducto="@prod.IdProducto">Cancelar</button>
                                 </form>
                             </div>
                         </div>
@@ -143,18 +143,18 @@
     <script>
         $(function () {
             $("button[data-action='decrement']").on("click", function () {
-                let id = $(this).data("id");
+                let id = $(this).data("idproducto");
                 if (parseInt($("#cantidad" + id).val()) > 0)
                     $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) - 1);
             });
 
             $("button[data-action='increment']").on("click", function () {
-                let id = $(this).data("id");
+                let id = $(this).data("idproducto");
                 $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) + 1);
             });
 
             $("button.btn-cancelar").on("click", function () {
-                let id = $(this).data("id");
+                let id = $(this).data("idproducto");
                 $("#cantidad" + id).val(0);
             });
         });

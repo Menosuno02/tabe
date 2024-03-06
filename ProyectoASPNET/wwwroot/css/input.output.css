@@ -3044,6 +3044,10 @@ input.tab:checked + .tab-content,
   border-radius: 0.25rem;
 }
 
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
 .rounded-3xl {
   border-radius: 1.5rem;
 }
@@ -3062,10 +3066,6 @@ input.tab:checked + .tab-content,
 
 .rounded-none {
   border-radius: 0px;
-}
-
-.rounded-2xl {
-  border-radius: 1rem;
 }
 
 .rounded-l {
@@ -3096,23 +3096,13 @@ input.tab:checked + .tab-content,
   border-color: rgb(229 231 235 / var(--tw-border-opacity));
 }
 
-.border-transparent {
-  border-color: transparent;
-}
-
-.border-gray-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(107 114 128 / var(--tw-border-opacity));
-}
-
-.border-gray-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(156 163 175 / var(--tw-border-opacity));
-}
-
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.border-transparent {
+  border-color: transparent;
 }
 
 .bg-base-100 {
@@ -3265,6 +3255,11 @@ input.tab:checked + .tab-content,
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .ps-60 {
@@ -3749,6 +3744,11 @@ input.tab:checked + .tab-content,
   .lg\:py-12 {
     padding-top: 3rem;
     padding-bottom: 3rem;
+  }
+
+  .lg\:py-6 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 
   .lg\:opacity-40 {

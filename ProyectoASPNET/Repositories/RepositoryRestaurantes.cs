@@ -161,6 +161,13 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
+    public async Task<List<Producto>> FindListProductosAsync(IEnumerable<int> ids)
+    {
+        return await this.context.Productos
+            .Where(p => ids.Contains(p.IdProducto))
+            .ToListAsync();
+    }
+
     public async Task<Producto> CreateProductoAsync(Producto producto)
     {
         await this.context.Productos.AddAsync(producto);
@@ -245,7 +252,8 @@ public class RepositoryRestaurantes
         return await this.context.Pedidos.MaxAsync(x => x.IdPedido) + 1;
     }
 
-    public async Task<Pedido> CreatePedidoAsync(int idusuario, int idrestaurante)
+    public async Task<Pedido> CreatePedidoAsync
+        (int idusuario, int idrestaurante, List<ProductoCesta> cesta)
     {
         Pedido pedido = new Pedido
         {
@@ -255,23 +263,17 @@ public class RepositoryRestaurantes
             Estado = 2
         };
         await this.context.Pedidos.AddAsync(pedido);
+        foreach (ProductoCesta producto in cesta)
+        {
+            await this.context.AddAsync(new ProductoPedido
+            {
+                IdPedido = pedido.IdPedido,
+                IdProducto = producto.IdProducto,
+                Cantidad = producto.Cantidad
+            });
+        }
         await this.context.SaveChangesAsync();
         return pedido;
-    }
-    #endregion
-
-    #region PRODUCTOS_PEDIDO
-    public async Task<ProductoPedido> CreateProductoPedidoAsync(int idpedido, int idproducto, int cantidad)
-    {
-        ProductoPedido productoPedido = new ProductoPedido
-        {
-            IdPedido = idpedido,
-            IdProducto = idproducto,
-            Cantidad = cantidad
-        };
-        await this.context.AddAsync(productoPedido);
-        await this.context.SaveChangesAsync();
-        return productoPedido;
     }
     #endregion
 }

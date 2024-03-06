@@ -35,12 +35,12 @@ namespace ProyectoASPNET.Controllers
             return View(restaurantes);
         }
 
-        public async Task<IActionResult> Productos(int id)
+        public async Task<IActionResult> Productos(int idrestaurante)
         {
             ProductosActionModel model = new ProductosActionModel
             {
-                Productos = await this.repo.GetProductosRestauranteAsync(id),
-                Restaurante = await this.repo.FindRestauranteAsync(id),
+                Productos = await this.repo.GetProductosRestauranteAsync(idrestaurante),
+                Restaurante = await this.repo.FindRestauranteAsync(idrestaurante),
                 CategoriasProductos = await this.repo.GetCategoriaProductosAsync(),
                 SelectedCategoria = 0
             };
@@ -50,19 +50,20 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Productos
-            (string form, int id, int categoria,
-            int cantidad, int idProducto)
+            (string form, int idrestaurante, int categoria,
+            int cantidad, int idproducto)
         {
             if (form == "cesta")
             {
-                int idrestaurante = HttpContext.Session.GetObject<int>("RESTAURANTE");
+                int restauranteSession = HttpContext.Session.GetObject<int>("RESTAURANTE");
                 // Si id (idrestaurante) no es igual al idrestuarante en el Session, nos salta error
                 // Solo podemos tener productos en nuestra cesta de un solo restaurante
-                if (idrestaurante == 0 || idrestaurante == id)
+                if (restauranteSession == 0
+                    || restauranteSession == idrestaurante)
                 {
                     await helperCesta.UpdateCesta(new ProductoCesta
                     {
-                        IdProducto = idProducto,
+                        IdProducto = idproducto,
                         Cantidad = cantidad
                     });
                 }
@@ -73,14 +74,16 @@ namespace ProyectoASPNET.Controllers
             }
             ProductosActionModel model = new ProductosActionModel
             {
-                Restaurante = await this.repo.FindRestauranteAsync(id),
+                Restaurante = await this.repo.FindRestauranteAsync(idrestaurante),
                 CategoriasProductos = await this.repo.GetCategoriaProductosAsync(),
                 SelectedCategoria = categoria
             };
             if (categoria == 0)
-                model.Productos = await this.repo.GetProductosRestauranteAsync(id);
+                model.Productos =
+                    await this.repo.GetProductosRestauranteAsync(idrestaurante);
             else
-                model.Productos = await this.repo.GetProductosByCategoriaAsync(id, categoria);
+                model.Productos =
+                    await this.repo.GetProductosByCategoriaAsync(idrestaurante, categoria);
             return View(model);
         }
     }
