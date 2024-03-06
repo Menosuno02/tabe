@@ -14,6 +14,7 @@ namespace ProyectoASPNET.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<ProductoCategorias> ProductoCategorias { get; set; }
         public DbSet<ProductoPedido> ProductoPedidos { get; set; }
+        public DbSet<ProductoPedidoView> ProductosPedidoView { get; set; }
         public DbSet<RestauranteView> RestaurantesView { get; set; }
         public DbSet<TipoUsuario> TipoUsuarios { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
@@ -27,6 +28,8 @@ namespace ProyectoASPNET.Data
                 .HasKey(pp => new { pp.IdPedido, pp.IdProducto });
             modelBuilder.Entity<ValoracionRestaurante>()
                 .HasKey(vr => new { vr.IdRestaurante, vr.IdUsuario });
+            modelBuilder.Entity<ProductoPedidoView>()
+                .HasKey(ppv => new { ppv.IdPedido, ppv.IdProducto });
         }
     }
 }

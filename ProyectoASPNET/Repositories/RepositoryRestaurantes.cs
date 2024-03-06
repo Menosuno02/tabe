@@ -23,6 +23,20 @@ AS
 	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA
 GO
 
+CREATE OR ALTER VIEW V_PRODUCTOS_PEDIDO AS
+	SELECT P.IDPEDIDO, PR.IDPRODUCTO, R.NOMBRE AS RESTAURANTE,
+	E.NOMBRE AS ESTADO, PR.NOMBRE AS PRODUCTO, PR.PRECIO, PP.CANTIDAD
+	FROM PEDIDOS P
+	INNER JOIN PRODUCTOS_PEDIDO PP
+	ON P.IDPEDIDO = PP.IDPEDIDO
+	INNER JOIN RESTAURANTES R
+	ON P.IDRESTAURANTE = R.IDRESTAURANTE
+	INNER JOIN PRODUCTOS PR
+	ON PR.IDPRODUCTO = PP.IDPRODUCTO
+	INNER JOIN ESTADOS_PEDIDOS E
+	ON P.ESTADO = E.IDESTADO
+GO
+
 CREATE OR ALTER PROCEDURE SP_PRODUCTOS_CATEGORIA
 (@RESTAURANTE INT, @CATEGORIA INT)
 AS
@@ -245,7 +259,7 @@ public class RepositoryRestaurantes
     }
     #endregion
 
-    #region PEDIDOS
+    #region PEDIDOS y PRODUCTOS_PEDIDO
     private async Task<int> GetMaxIdPedidoAsync()
     {
         if (this.context.Pedidos.Count() == 0) return 1;
@@ -260,7 +274,7 @@ public class RepositoryRestaurantes
             IdPedido = await GetMaxIdPedidoAsync(),
             IdUsuario = idusuario,
             IdRestaurante = idrestaurante,
-            Estado = 2
+            Estado = 1
         };
         await this.context.Pedidos.AddAsync(pedido);
         foreach (ProductoCesta producto in cesta)
@@ -274,6 +288,23 @@ public class RepositoryRestaurantes
         }
         await this.context.SaveChangesAsync();
         return pedido;
+    }
+
+    public async Task<List<Pedido>> GetPedidosUsuarioAsync(int idusuario)
+    {
+        // Solo pedidos sin entregar
+        return await this.context.Pedidos
+            .Where(p => p.IdUsuario == idusuario && p.Estado != 4)
+            .ToListAsync();
+    }
+    #endregion
+
+    #region PRODUCTOS_PEDIDO
+    public async Task<List<ProductoPedidoView>> GetProductosPedidoViewAsync(List<int> idpedidos)
+    {
+        return await this.context.ProductosPedidoView
+            .Where(p => idpedidos.Contains(p.IdPedido))
+            .ToListAsync();
     }
     #endregion
 }

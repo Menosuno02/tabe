@@ -14,6 +14,8 @@
 <head>
     <link rel="stylesheet" href="~/css/output.css" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <link href="~/css/flowbite.css" rel="stylesheet" />
     <style>
         @@font-face {
             font-family: UberMove;
@@ -61,17 +63,11 @@
                             @if (tipoUsuario == 1)
                             {
                                 <li>
-                                    <a>Restaurantes</a>
-                                    <ul class="p-2">
-                                        <li>
-                                            <a asp-controller="Restaurantes" asp-action="Index">
-                                                Restaurantes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a>Submenu 2</a>
-                                        </li>
-                                    </ul>
+                                <li>
+                                    <a asp-controller="Restaurantes" asp-action="Index">
+                                        Restaurantes
+                                    </a>
+                                </li>
                                 </li>
                                 <li>
                                     <a asp-controller="Cesta" asp-action="Index">
@@ -119,8 +115,13 @@
                                 else
                                 {
                                     <li>
-                                        <a asp-controller="Auth" asp-action="Login">
+                                        <a asp-controller="Usuario" asp-action="Perfil">
                                             Perfil
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Usuario" asp-action="Pedidos">
+                                            Pedidos
                                         </a>
                                     </li>
                                     <li>
@@ -146,27 +147,22 @@
                     @if (tipoUsuario == 1)
                     {
                         <li>
-                            <details>
-                                <summary>Restaurantes</summary>
-                                <ul class="p-2 bg-primary text-primary-content z-50 top-10">
-                                    <li>
-                                        <a asp-controller="Restaurantes" asp-action="Index">
-                                            Restaurantes
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>Submenu 2</a>
-                                    </li>
-                                </ul>
-                            </details>
+                            <a asp-controller="Restaurantes" asp-action="Index">
+                                Restaurantes
+                            </a>
                         </li>
                         <li>
                             <details>
                                 <summary>Usuario</summary>
                                 <ul class="p-2 bg-primary text-primary-content z-50 top-10">
                                     <li>
-                                        <a asp-controller="Restaurantes" asp-action="Index">
+                                        <a asp-controller="Usuario" asp-action="Perfil">
                                             Perfil
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Usuario" asp-action="Pedidos">
+                                            Pedidos
                                         </a>
                                     </li>
                                 </ul>
@@ -218,7 +214,9 @@
     </div>
     <script src="~/js/jquery-3.7.1.min.js"></script>
     <script src="~/js/datepicker.min.js"></script>
+    <script src="~/js/flowbite.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     @RenderSection("scripts", false)
 </body>
 
