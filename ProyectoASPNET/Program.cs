@@ -7,6 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAntiforgery();
 
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddTransient<RepositoryRestaurantes>();
 builder.Services.AddDbContext<RestaurantesContext>
@@ -15,15 +23,6 @@ builder.Services.AddDbContext<RestaurantesContext>
 builder.Services.AddTransient<HelperPathProvider>();
 builder.Services.AddTransient<HelperCesta>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddDistributedMemoryCache();
-
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-});
 
 var app = builder.Build();
 

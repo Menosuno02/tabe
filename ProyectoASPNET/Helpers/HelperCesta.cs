@@ -63,8 +63,7 @@ namespace ProyectoASPNET.Helpers
         public async Task UpdateCesta(ProductoCesta prod)
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
-            if (httpContext.Session.GetObject
-                    <List<ProductoCesta>>("CESTA") == null)
+            if (httpContext.Session.GetString("CESTA") == null)
             {
                 List<ProductoCesta> cesta = new List<ProductoCesta> { prod };
                 httpContext.Session.SetObject("CESTA", cesta);
@@ -94,8 +93,7 @@ namespace ProyectoASPNET.Helpers
         public void DeleteProductoCesta(int idproducto)
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
-            if (httpContext.Session.GetObject
-                    <List<ProductoCesta>>("CESTA") != null)
+            if (httpContext.Session.GetString("CESTA") != null)
             {
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");
@@ -119,7 +117,7 @@ namespace ProyectoASPNET.Helpers
             {
                 HttpContext httpContext = this.httpContextAccessor.HttpContext;
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
-                <List<ProductoCesta>>("CESTA");
+                    <List<ProductoCesta>>("CESTA");
                 cesta
                 .FirstOrDefault(p => p.IdProducto == idproducto)
                 .Cantidad = cantidad;
@@ -130,8 +128,7 @@ namespace ProyectoASPNET.Helpers
         public async Task CreatePedido()
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
-            if (httpContext.Session.GetObject
-                    <List<ProductoCesta>>("CESTA") != null)
+            if (httpContext.Session.GetString("CESTA") != null)
             {
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");

@@ -34,7 +34,6 @@ namespace ProyectoASPNET.Controllers
                 ViewData["MENSAJE"] = "Error";
                 return View();
             }
-
         }
 
         public IActionResult Register()
