@@ -37,6 +37,16 @@
         select:-webkit-autofill:focus {
             -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
         }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* For IE, Edge and Firefox */
+        .scrollbar-hide {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
     </style>
     @RenderSection("styles", false)
 </head>
@@ -217,7 +227,7 @@
     <script src="~/js/flowbite.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    @RenderSection("scripts", false)
+    @await RenderSectionAsync("scripts", false)
 </body>
 
 </html>

@@ -15,6 +15,7 @@ namespace ProyectoASPNET.Data
         public DbSet<ProductoCategorias> ProductoCategorias { get; set; }
         public DbSet<ProductoPedido> ProductoPedidos { get; set; }
         public DbSet<ProductoPedidoView> ProductosPedidoView { get; set; }
+        public DbSet<Restaurante> Restaurantes { get; set; }
         public DbSet<RestauranteView> RestaurantesView { get; set; }
         public DbSet<TipoUsuario> TipoUsuarios { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }

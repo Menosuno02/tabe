@@ -75,41 +75,69 @@ public class RepositoryRestaurantes
     }
 
     #region RESTAURANTES
-    public async Task<List<RestauranteView>> GetRestaurantesAsync()
+    private async Task<int> GetMaxIdRestaurante()
+    {
+        if (this.context.Restaurantes.Count() == 0) return 1;
+        return await this.context.Restaurantes.MaxAsync(r => r.IdRestaurante) + 1;
+    }
+
+    public async Task<Restaurante> FindRestauranteAsync(int id)
+    {
+        return await this.context.Restaurantes
+            .Where(r => r.IdRestaurante == id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Restaurante> CreateRestauranteAsync(Restaurante restaurante)
+    {
+        restaurante.IdRestaurante = await GetMaxIdRestaurante();
+        await this.context.Restaurantes.AddAsync(restaurante);
+        await this.context.SaveChangesAsync();
+        return restaurante;
+    }
+
+    public async Task EditRestauranteAsync(Restaurante restaurante)
+    {
+        Restaurante restEditar = await this.FindRestauranteAsync(restaurante.IdRestaurante);
+        restEditar.Nombre = restaurante.Nombre;
+        restEditar.Telefono = restaurante.Telefono;
+        restEditar.Direccion = restaurante.Direccion;
+        restEditar.Imagen = restaurante.Imagen;
+        restEditar.CategoriaRestaurante = restaurante.CategoriaRestaurante;
+        restEditar.TiempoEntrega = restaurante.TiempoEntrega;
+        await context.SaveChangesAsync();
+    }
+
+    public async Task DeleteRestauranteAsync(int id)
+    {
+        Restaurante restaurante = await FindRestauranteAsync(id);
+        this.context.Restaurantes.Remove(restaurante);
+        await this.context.SaveChangesAsync();
+    }
+    #endregion
+
+    #region V_RESTAURANTES
+    public async Task<List<RestauranteView>> GetRestaurantesViewAsync()
     {
         return await this.context.RestaurantesView
             .OrderByDescending(r => r.Valoracion)
             .ToListAsync();
     }
 
-    public async Task<RestauranteView> FindRestauranteAsync(int id)
+    public async Task<RestauranteView> FindRestauranteViewAsync(int id)
     {
         return await this.context.RestaurantesView
             .Where(r => r.IdRestaurante == id)
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<RestauranteView>> FilterRestaurantesAsync(string categoria, int rating)
+    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, int rating)
     {
         return await this.context.RestaurantesView
             .Where(r => r.Valoracion >= rating && categoria == "Todas" ||
                        r.Valoracion >= rating && r.CategoriaRestaurante == categoria)
             .OrderByDescending(r => r.Valoracion)
             .ToListAsync();
-    }
-
-    public async Task<RestauranteView> CreateRestauranteViewAsync(RestauranteView restaurante)
-    {
-        await this.context.RestaurantesView.AddAsync(restaurante);
-        await this.context.SaveChangesAsync();
-        return restaurante;
-    }
-
-    public async Task DeleteRestauranteAsync(int id)
-    {
-        RestauranteView restaurante = await FindRestauranteAsync(id);
-        this.context.RestaurantesView.Remove(restaurante);
-        await this.context.SaveChangesAsync();
     }
     #endregion
 
@@ -123,9 +151,23 @@ public class RepositoryRestaurantes
     #endregion
 
     #region CATEGORIAS_PRODUCTOS
-    public async Task<List<CategoriaProducto>> GetCategoriaProductosAsync()
+    public async Task<List<CategoriaProducto>> GetCategoriasProductosAsync()
     {
         return await this.context.CategoriasProducto.ToListAsync();
+    }
+    #endregion
+
+    #region PRODUCTO_CATEGORIAS
+    public async Task<List<string>> GetCategoriasFromProductoAsync(int idprod)
+    {
+        List<int> categ = await this.context.ProductoCategorias
+            .Where(pc => pc.IdProducto == idprod)
+            .Select(pc => pc.IdCategoria)
+            .ToListAsync();
+        return await this.context.CategoriasProducto
+            .Where(cp => categ.Contains(cp.IdCategoriaProducto))
+            .Select(cp => cp.Nombre)
+            .ToListAsync();
     }
     #endregion
 
@@ -187,6 +229,31 @@ public class RepositoryRestaurantes
         await this.context.Productos.AddAsync(producto);
         await this.context.SaveChangesAsync();
         return producto;
+    }
+
+    public async Task EditProductoAsync(Producto producto, int[] categproducto)
+    {
+        Producto prodEditar = await this.FindProductoAsync(producto.IdProducto);
+        prodEditar.Nombre = producto.Nombre;
+        prodEditar.Precio = producto.Precio;
+        prodEditar.Descripcion = producto.Descripcion;
+        prodEditar.Imagen = producto.Imagen;
+        List<ProductoCategorias> pc = await this.context.ProductoCategorias
+                .Where(pc => pc.IdProducto == producto.IdProducto)
+                .ToListAsync();
+        foreach (ProductoCategorias categoria in pc)
+        {
+            this.context.ProductoCategorias.Remove(categoria);
+        }
+        foreach (int categoria in categproducto)
+        {
+            await this.context.ProductoCategorias.AddAsync(new ProductoCategorias
+            {
+                IdCategoria = categoria,
+                IdProducto = producto.IdProducto
+            });
+        }
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteProductoAsync(int id)
@@ -259,7 +326,7 @@ public class RepositoryRestaurantes
     }
     #endregion
 
-    #region PEDIDOS y PRODUCTOS_PEDIDO
+    #region PEDIDOS
     private async Task<int> GetMaxIdPedidoAsync()
     {
         if (this.context.Pedidos.Count() == 0) return 1;
@@ -274,7 +341,8 @@ public class RepositoryRestaurantes
             IdPedido = await GetMaxIdPedidoAsync(),
             IdUsuario = idusuario,
             IdRestaurante = idrestaurante,
-            Estado = 1
+            Estado = 1,
+            Fecha = DateTime.Now
         };
         await this.context.Pedidos.AddAsync(pedido);
         foreach (ProductoCesta producto in cesta)
@@ -299,7 +367,7 @@ public class RepositoryRestaurantes
     }
     #endregion
 
-    #region PRODUCTOS_PEDIDO
+    #region V_PRODUCTOS_PEDIDO
     public async Task<List<ProductoPedidoView>> GetProductosPedidoViewAsync(List<int> idpedidos)
     {
         return await this.context.ProductosPedidoView
