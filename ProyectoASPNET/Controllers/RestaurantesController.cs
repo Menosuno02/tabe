@@ -2,7 +2,6 @@
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
-using Microsoft.AspNetCore.Http;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -19,27 +18,31 @@ namespace ProyectoASPNET.Controllers
             this.helperCesta = helperCesta;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? categoria)
         {
-            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesViewAsync();
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
-            return View(restaurantes);
+            ViewData["CATEGORIAS"] =
+                await this.repo.GetCategoriasRestaurantesAsync();
+            return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(string categoria, int rating)
+        public async Task<IActionResult> _ListRestaurantes(string? categoria)
         {
-            List<RestauranteView> restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria, rating);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
-            return View(restaurantes);
+            List<RestauranteView> restaurantes;
+            if (categoria != null)
+            {
+                restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria);
+            }
+            else
+            {
+                restaurantes = await this.repo.GetRestaurantesViewAsync();
+            }
+            return PartialView("_ListRestaurantes", restaurantes);
         }
 
         public async Task<IActionResult> Productos(int idrestaurante)
         {
             ProductosActionModel model = new ProductosActionModel
             {
-                Productos = await this.repo.GetProductosRestauranteAsync(idrestaurante),
                 Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
                 CategoriasProductos = await this.repo.GetCategoriasProductosAsync(),
                 SelectedCategoria = 0
@@ -50,8 +53,7 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Productos
-            (string form, int idrestaurante, int categoria,
-            int cantidad, int idproducto)
+            (string form, int idrestaurante, int categoria, int cantidad, int idproducto)
         {
             if (form == "cesta")
             {
@@ -59,7 +61,7 @@ namespace ProyectoASPNET.Controllers
                 // Si id (idrestaurante) no es igual al idrestuarante en el Session, nos salta error
                 // Solo podemos tener productos en nuestra cesta de un solo restaurante
                 if (restauranteSession == 0
-                    || restauranteSession == idrestaurante)
+                    || (restauranteSession != 0 && restauranteSession == idrestaurante))
                 {
                     await helperCesta.UpdateCesta(new ProductoCesta
                     {
@@ -69,7 +71,7 @@ namespace ProyectoASPNET.Controllers
                 }
                 else
                 {
-                    ViewData["MENSAJE"] = "Error";
+                    ViewData["ERROR"] = true;
                 }
             }
             ProductosActionModel model = new ProductosActionModel
@@ -78,13 +80,30 @@ namespace ProyectoASPNET.Controllers
                 CategoriasProductos = await this.repo.GetCategoriasProductosAsync(),
                 SelectedCategoria = categoria
             };
-            if (categoria == 0)
-                model.Productos =
-                    await this.repo.GetProductosRestauranteAsync(idrestaurante);
-            else
-                model.Productos =
-                    await this.repo.GetProductosByCategoriaAsync(idrestaurante, categoria);
             return View(model);
+        }
+
+        public async Task<IActionResult> _ListProductos(int idrestaurante, int categoria)
+        {
+            List<Producto> productos;
+            if (categoria == 0)
+                productos = await this.repo.GetProductosRestauranteAsync(idrestaurante);
+            else
+                productos = await this.repo.GetProductosByCategoriaAsync(idrestaurante, categoria);
+            return PartialView("_ListProductos", productos);
+        }
+
+        public async Task<IActionResult> UpdateValoracionRestaurante
+            (int idrestaurante, int idusuario, int valoracion)
+        {
+            await this.repo.UpdateValoracionRestauranteAsync(
+                new ValoracionRestaurante
+                {
+                    IdRestaurante = idrestaurante,
+                    IdUsuario = idusuario,
+                    Valoracion = valoracion
+                });
+            return RedirectToAction("Productos", new { idrestaurante = idrestaurante });
         }
     }
 }

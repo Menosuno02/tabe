@@ -136,11 +136,17 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, int rating)
+    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria)
     {
+        /*
         return await this.context.RestaurantesView
             .Where(r => r.Valoracion >= rating && categoria == "Todas" ||
                        r.Valoracion >= rating && r.CategoriaRestaurante == categoria)
+            .OrderByDescending(r => r.Valoracion)
+            .ToListAsync();
+        */
+        return await this.context.RestaurantesView
+            .Where(r => r.CategoriaRestaurante == categoria)
             .OrderByDescending(r => r.Valoracion)
             .ToListAsync();
     }
@@ -383,6 +389,30 @@ public class RepositoryRestaurantes
         return await this.context.ProductosPedidoView
             .Where(p => idpedidos.Contains(p.IdPedido))
             .ToListAsync();
+    }
+    #endregion
+
+    #region VALORACIONES_RESTAURANTE
+    public async Task<ValoracionRestaurante> GetValoracionRestauranteAsync
+        (int idrestaurante, int idusuario)
+    {
+        return await this.context.ValoracionRestaurantes
+            .Where(v => v.IdRestaurante == idrestaurante && v.IdUsuario == idusuario)
+            .FirstOrDefaultAsync();
+    }
+    public async Task UpdateValoracionRestauranteAsync(ValoracionRestaurante val)
+    {
+        ValoracionRestaurante valBorrar =
+            await this.context.ValoracionRestaurantes
+            .Where(v => v.IdRestaurante == val.IdRestaurante
+                && v.IdUsuario == val.IdUsuario)
+            .FirstOrDefaultAsync();
+        if (valBorrar != null)
+        {
+            this.context.ValoracionRestaurantes.Remove(valBorrar);
+        }
+        await this.context.ValoracionRestaurantes.AddAsync(val);
+        await this.context.SaveChangesAsync();
     }
     #endregion
 }

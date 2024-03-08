@@ -1,0 +1,77 @@
+﻿@model List<Producto>
+
+@if (Model.Count() == 0)
+{
+    <h1 class="text-center mt-10 text-2xl font-bold">Productos no encontrados</h1>
+}
+<div class="flex flex-wrap">
+    @foreach (Producto prod in Model)
+    {
+        <div class="lg:w-1/2 p-6 w-full">
+            <div class="card card-compact h-full sm:h-48 card-side bg-base-100 shadow-xl ">
+                <figure class="w-4/12">
+                    <img class="sm:object-cover h-[192px]" src="~/images/imag_productos/@prod.Imagen" />
+                </figure>
+                <div class="card-body w-8/12">
+                    <h2 data-tooltip-target="tooltip-@prod.IdProducto" class="card-title line-clamp-1">@prod.Nombre</h2>
+                    <div id="tooltip-@prod.IdProducto" role="tooltip"
+                         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        @prod.Nombre
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+                    <p>@prod.Descripcion</p>
+                    <div class="card-actions max-w-full justify-between">
+                        <div class="justify-start h-1/2 mt-3">
+                            <span class="text-gray-600">@prod.Precio€</span>
+                        </div>
+                        <div class="justify-end">
+                            <button onclick="@("modal" + prod.IdProducto + ".showModal()")"
+                                    class="btn btn-primary btn-circle"
+                                    data-id="@prod.IdProducto" data-nombre="@prod.Nombre" data-desc="@prod.Descripcion" data-imagen="@prod.Imagen">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                    <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <dialog id="@("modal" + prod.IdProducto)" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">@prod.Nombre</h3>
+                <p class="py-4">@prod.Descripcion</p>
+                <img class="rounded-xl object-cover h-64 w-full" src="~/images/imag_productos/@prod.Imagen" />
+                <div class="modal-action h-full flex">
+                    <form class="flex flex-wrap space-x-2" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="custom-number-input h-10 w-32">
+                            <div class="flex h-10 w-full rounded-lg relative bg-transparent mt-1">
+                                <button onclick="prueba()" type="button" data-action="decrement" data-idproducto="@prod.IdProducto"
+                                        class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-l cursor-pointer outline-none">
+                                    <span class="m-auto text-2xl font-thin">−</span>
+                                </button>
+                                <input id="@("cantidad" + prod.IdProducto)" type="text"
+                                       class="w-20 outline-none focus:ring-0 border-0 focus:outline-none text-center bg-gray-100 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
+                                       name="cantidad" value="0">
+                                <button type="button" data-action="increment" data-idproducto="@prod.IdProducto"
+                                        class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-r cursor-pointer">
+                                    <span class="m-auto text-2xl font-thin">+</span>
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="form" value="cesta" />
+                        <input type="hidden" name="idproducto" value="@prod.IdProducto" />
+                        <button class="btn btn-primary font-medium">
+                            Añadir a cesta
+                        </button>
+                    </form>
+                    <form method="dialog">
+                        <button class="btn btn-cancelar" data-idproducto="@prod.IdProducto">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+    }
+</div>
