@@ -11,6 +11,10 @@
         <div class="flex flex-col w-full">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
+                    <a asp-controller="Admin" asp-action="CreateProducto"
+                       class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
+                        Crear producto
+                    </a>
                     <div class="border rounded-lg shadow overflow-hidden">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -26,23 +30,23 @@
                                 {
                                     <tr>
                                         <td class="flex justify-center">
-                                            <img src="~/images/imag_productos/@prod.Imagen" class="w-16 md:w-24 max-h-full rounded-3xl text-center px-0.5 py-1.5">
+                                            <img src="~/images/imag_productos/@prod.Imagen" class="object-cover w-16 md:w-24 h-16 md:h-24 max-h-full rounded-3xl text-center px-0.5 py-1.5">
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@prod.Nombre</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@prod.Precio€</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium space-x-2">
-                                            <button type="button"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-green-600 hover:text-green-800 disabled:opacity-50 disabled:pointer-events-none">
+                                            <button data-idproducto="@prod.IdProducto"
+                                                    class="btn-details inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-green-600 hover:text-green-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Detalles
                                             </button>
-                                            <button type="button"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                            <button data-idproducto="@prod.IdProducto"
+                                                    class="btn-edit inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Editar
                                             </button>
-                                            <button type="button"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
+                                            <a asp-controller="Admin" asp-action="DeleteProducto" asp-route-id="@prod.IdProducto"
+                                               class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Borrar
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 }
@@ -54,3 +58,36 @@
         </div>
     </div>
 </div>
+
+<dialog id="modal" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+        <button id="closeModal" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        <h3 id="titleModal" class="font-bold text-lg"></h3>
+        <div id="contentModal" class="py-4"></div>
+    </div>
+</dialog>
+
+@section scripts {
+    <script>
+        $(function () {
+            $(".btn-details").on("click", function () {
+                let id = $(this).data("idproducto");
+                $("#modal").addClass("modal-open");
+                $("#titleModal").text("Detalles Producto");
+                $("#contentModal").load("/Admin/_DetailsProducto?idprod=" + id);
+            });
+
+            $(".btn-edit").on("click", function () {
+                let id = $(this).data("idproducto");
+                $("#modal").addClass("modal-open");
+                $("#titleModal").text("Editar Producto");
+                $("#contentModal").load("/Admin/_EditProducto?idprod=" + id);
+            });
+
+            $("#closeModal").on("click", function () {
+                $("#modal").removeClass("modal-open");
+                $("#contentModal").html("");
+            });
+        });
+    </script>
+}

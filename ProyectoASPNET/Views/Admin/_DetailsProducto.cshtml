@@ -1,0 +1,44 @@
+﻿@model Producto
+
+@{
+    Restaurante rest = await this.repo.FindRestauranteAsync(Model.IdRestaurante);
+    List<string> categorias = await this.repo.GetCategoriasFromProductoAsync(Model.IdProducto);
+}
+
+<div class="py-6 px-8">
+    <form class="grid grid-cols-6 gap-6">
+        <div class="col-span-6 sm:col-span-3">
+            <label class="block text-sm font-bold text-gray-700">ID</label>
+            <input type="text" readonly value="@Model.IdProducto" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+            <label class="block text-sm font-bold text-gray-700">Nombre</label>
+            <input type="text" readonly value="@Model.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+            <label class="block text-sm font-bold text-gray-700">Restaurante</label>
+            <input type="text" readonly value="@rest.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+            <label class="block text-sm font-bold text-gray-700">Precio</label>
+            <input type="text" readonly value="@Model.Precio€" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+        </div>
+        <div class="col-span-6">
+            <label class="block text-sm font-bold text-gray-700">Descripción</label>
+            <input type="tel" readonly value="@Model.Descripcion" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+        </div>
+        <div class="col-span-6">
+            <label class="block text-sm font-bold text-gray-700">Categorías</label>
+            <select name="categproducto" multiple size="@categorias.Count()"
+                    class="scrollbar-hide p-2 pb-1.5 mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                @foreach (string categ in categorias)
+                {
+                    <option>@categ</option>
+                }
+            </select>
+        </div>
+        <div class="col-span-6">
+            <img class="object-cover w-full h-[294px]" src="~/images/imag_productos/@Model.Imagen" />
+        </div>
+    </form>
+</div>

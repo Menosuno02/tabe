@@ -1,0 +1,66 @@
+﻿@model List<Pedido>
+
+@{
+    List<ProductoPedidoView> productos = ViewData["PRODUCTOS"] as List<ProductoPedidoView>;
+}
+
+<div class="py-6 px-12 md:px-24">
+    <h1 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Tus pedidos pendientes</h1>
+    <div class="border-2 rounded-xl" data-accordion="collapse" data-active-classes="bg-purple-100 text-purple-600">
+        @foreach (Pedido pedido in Model.OrderByDescending(p => p.Fecha))
+        {
+            <h2 id="accordion-color-heading-@pedido.IdPedido">
+                <button type="button"
+                        class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-purple-200 hover:bg-purple-100 gap-3"
+                        data-accordion-target="#accordion-color-body-@pedido.IdPedido" aria-expanded="true" aria-controls="accordion-color-body-@pedido.IdPedido">
+                    <span>Pedido #@pedido.IdPedido (ESTADO: @productos.FirstOrDefault(p => p.IdPedido == pedido.IdPedido).Estado)</span>
+                    <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                    </svg>
+                </button>
+            </h2>
+            <div id="accordion-color-body-@pedido.IdPedido" class="hidden" aria-labelledby="accordion-color-heading-@pedido.IdPedido">
+                <div class="p-5 border border-b-0 border-gray-200">
+                    <p class="mb-2 text-gray-600">
+                        <span class="text-2xl text-gray-700">
+                            @productos.FirstOrDefault(p => p.IdPedido == pedido.IdPedido).Restaurante
+                            - @pedido.Fecha
+                        </span>
+                        <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                <thead class="text-xs text-gray-900 bg-gray-100 uppercase">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 rounded-s-lg">Producto</th>
+                                        <th scope="col" class="px-6 py-3">Cantidad</th>
+                                        <th scope="col" class="px-6 py-3 rounded-e-lg">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        List<ProductoPedidoView> productosPedido = productos.Where(p => p.IdPedido == pedido.IdPedido).ToList();
+                                    }
+                                    @foreach (ProductoPedidoView producto in productosPedido)
+                                    {
+                                        decimal total = producto.Cantidad * producto.Precio;
+                                        <tr class="bg-white">
+                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                @producto.Producto
+                                            </th>
+                                            <td class="px-6 py-4">@producto.Cantidad</td>
+                                            <td class="px-6 py-4">@total€</td>
+                                        </tr>
+                                    }
+                                    <tr class="bg-white">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"></th>
+                                        <td class="px-6 py-4"></td>
+                                        <td class="px-6 py-4 font-bold text-gray-700">@productosPedido.Sum(pp => pp.Cantidad * pp.Precio)€</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

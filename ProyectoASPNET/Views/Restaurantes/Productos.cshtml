@@ -1,19 +1,17 @@
 ﻿@model ProductosActionModel
 
-@if (ViewData["MENSAJE"] != null)
-{
-    <dialog id="modal_error" class="modal modal-bottom modal-backdrop modal-open sm:modal-middle">
-        <div class="modal-box">
-            <h3 class="font-bold text-lg">Error</h3>
-            <p class="py-4">No puedes añadir productos de restaurantes diferentes</p>
-            <div class="modal-action">
-                <form method="dialog">
-                    <button class="btn">Cerrar</button>
-                </form>
-            </div>
+
+<dialog id="errorModal" class="modal modal-bottom modal-open sm:modal-middle text-neutral-950">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Error al añadir producto :(</h3>
+        <p class="py-4">No puedes añadir productos de restaurantes diferentes</p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button id="btnmodal" class="btn">Cerrar</button>
+            </form>
         </div>
-    </dialog>
-}
+    </div>
+</dialog>
 
 <figure>
     <img class="object-cover w-full h-40" src="~/images/imag_restaurantes/@Model.Restaurante.Imagen" />
@@ -58,7 +56,6 @@
                                 @categoria.Nombre
                             </button>
                         }
-
                     </div>
                 }
             </div>
@@ -73,12 +70,17 @@
                 @foreach (Producto prod in Model.Productos)
                 {
                     <div class="lg:w-1/2 p-6 w-full">
-                        <div class="card card-compact h-full sm:h-44 card-side bg-base-100 shadow-xl ">
+                        <div class="card card-compact h-full sm:h-48 card-side bg-base-100 shadow-xl ">
                             <figure class="w-4/12">
-                                <img class="sm:object-cover h-full sm:h-[175.99px]" src="~/images/imag_productos/@prod.Imagen" />
+                                <img class="sm:object-cover h-[192px]" src="~/images/imag_productos/@prod.Imagen" />
                             </figure>
                             <div class="card-body w-8/12">
-                                <h2 class="card-title">@prod.Nombre</h2>
+                                <h2 data-tooltip-target="tooltip-@prod.IdProducto" class="card-title line-clamp-1">@prod.Nombre</h2>
+                                <div id="tooltip-@prod.IdProducto" role="tooltip"
+                                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                    @prod.Nombre
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </div>
                                 <p>@prod.Descripcion</p>
                                 <div class="card-actions max-w-full justify-between">
                                     <div class="justify-start h-1/2 mt-3">
@@ -113,7 +115,7 @@
                                                 <span class="m-auto text-2xl font-thin">−</span>
                                             </button>
                                             <input id="@("cantidad" + prod.IdProducto)" type="text"
-                                                   class="w-20 outline-none focus:outline-none text-center bg-gray-100 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
+                                                   class="w-20 outline-none focus:ring-0 border-0 focus:outline-none text-center bg-gray-100 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
                                                    name="cantidad" value="0">
                                             <button type="button" data-action="increment" data-idproducto="@prod.IdProducto"
                                                     class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-r cursor-pointer">
@@ -156,6 +158,10 @@
             $("button.btn-cancelar").on("click", function () {
                 let id = $(this).data("idproducto");
                 $("#cantidad" + id).val(0);
+            });
+
+            $("#btnmodal").on("click", function () {
+                $("#errorModal").removeClass("modal-open");
             });
         });
     </script>

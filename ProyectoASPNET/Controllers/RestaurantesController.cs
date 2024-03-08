@@ -21,7 +21,7 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesAsync();
+            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesViewAsync();
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
             return View(restaurantes);
         }
@@ -30,7 +30,7 @@ namespace ProyectoASPNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string categoria, int rating)
         {
-            List<RestauranteView> restaurantes = await this.repo.FilterRestaurantesAsync(categoria, rating);
+            List<RestauranteView> restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria, rating);
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
             return View(restaurantes);
         }
@@ -40,8 +40,8 @@ namespace ProyectoASPNET.Controllers
             ProductosActionModel model = new ProductosActionModel
             {
                 Productos = await this.repo.GetProductosRestauranteAsync(idrestaurante),
-                Restaurante = await this.repo.FindRestauranteAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriaProductosAsync(),
+                Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
+                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(),
                 SelectedCategoria = 0
             };
             return View(model);
@@ -74,8 +74,8 @@ namespace ProyectoASPNET.Controllers
             }
             ProductosActionModel model = new ProductosActionModel
             {
-                Restaurante = await this.repo.FindRestauranteAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriaProductosAsync(),
+                Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
+                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(),
                 SelectedCategoria = categoria
             };
             if (categoria == 0)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoASPNET.Models
 {
-    [Table("PRODUCTOS_PEDIDOS")]
+    [Table("PRODUCTOS_PEDIDO")]
     public class ProductoPedido
 
     {
