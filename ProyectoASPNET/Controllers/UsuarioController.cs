@@ -13,9 +13,26 @@ namespace ProyectoASPNET.Controllers
             this.repo = repo;
         }
 
-        public IActionResult Perfil()
+        public async Task<IActionResult> Perfil()
         {
-            return View();
+            if (HttpContext.Session.GetString("USER") != null)
+            {
+                int idusuario = HttpContext.Session.GetObject<int>("USER");
+                Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
+                return View(usu);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Perfil(Usuario usuario)
+        {
+            await this.repo.EditUsuarioAsync(usuario);
+            return RedirectToAction("Perfil");
         }
 
         public async Task<IActionResult> Pedidos()

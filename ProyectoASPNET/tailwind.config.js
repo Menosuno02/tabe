@@ -6,6 +6,9 @@ module.exports = {
     ],
     theme: {
         extend: {},
+        colors: {
+            'tabepurple': "#4C38FF"
+        }
     },
     darkMode: 'media',
     plugins: [

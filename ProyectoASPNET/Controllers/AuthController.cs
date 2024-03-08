@@ -43,8 +43,9 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(string contrasenya, Usuario usuario)
+        public async Task<IActionResult> Register(string contrasenya, Usuario usuario, string provincia)
         {
+            usuario.Direccion += ", " + provincia;
             Usuario user = await this.repo.RegisterUsuarioAsync(contrasenya, usuario);
             return RedirectToAction("Login");
         }

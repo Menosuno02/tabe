@@ -82,7 +82,12 @@
                                 <li>
                                     <a asp-controller="Cesta" asp-action="Index">
                                         Cesta
-                                        <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs text-white top-[1px] end-28 badge badge-error bg-red-600">@numCesta</div>
+                                        @if (numCesta > 0)
+                                        {
+                                            <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs text-white top-[1px] end-28 badge badge-error bg-red-600">
+                                                @numCesta
+                                            </div>
+                                        }
                                     </a>
                                 </li>
                             }

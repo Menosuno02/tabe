@@ -1,5 +1,15 @@
-﻿<div class="bg-white">
-    <div class="lg:grid lg:h-[calc(100vh-4rem)] lg:grid-cols-12">
+﻿@{
+    List<string> provincias = new List<string> {
+        "A Coruña", "Alicate","Albacete","Almería","Álava","Asutrias","Ávila","Badajoz","Barcelona",
+    "Bizkaia","Burgos","Cáceres","Cádiz","Cantabria","Castellón","Ceuta","Ciudad Real","Córdoba",
+    "Cuenca","Gipuzkoa","Girona","Granada","Guadalajara","Guelva","Huesca","Islas Baleares","Jaén",
+    "La Rioja","Las Palmas","León","Lleida","Lugo","Madrid","Málaga","Melilla","Murcia","Navarra",
+    "Ourense","Palencia","Pontevedra","Salamanca","Santa Cruz de Tenerife","Segovia","Soria",
+    "Tarragona","Teruel","Toledo","Valencia","Valladolid","Zamora","Zaragoza"};
+}
+
+<div class="bg-white">
+    <div class="lg:grid h-[calc(100vh-4rem)] lg:grid-cols-12">
         <div class="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
             <img src="~/images/general/register.png" class="absolute inset-0 h-full w-full object-cover opacity-80 lg:opacity-40" />
             <div class="hidden lg:relative lg:block lg:p-12 ">
@@ -44,11 +54,20 @@
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <label class="block text-sm font-bold text-gray-700">Teléfono</label>
-                        <input type="text" name="telefono" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                        <input type="text" name="telefono" pattern="^\d{9}$" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
                     </div>
-                    <div class="col-span-6">
-                        <label class="block text-sm font-bold text-gray-700">Dirección</label>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label class="block text-sm font-bold text-gray-700">Dirección, ciudad</label>
                         <input type="text" name="direccion" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                    </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <label class="block text-sm font-bold text-gray-700">Provincia</label>
+                        <select name="provincia" class="p-2 pb-1.5 mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                            @foreach (string provincia in provincias)
+                            {
+                                <option value="@provincia">@provincia</option>
+                            }
+                        </select>
                     </div>
                     <input type="hidden" name="tipousuario" value="1" />
                     <div class="col-span-6">

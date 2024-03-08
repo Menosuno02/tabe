@@ -11,10 +11,20 @@
         <div class="flex flex-col w-full">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
-                    <a asp-controller="Admin" asp-action="CreateProducto"
-                       class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
-                        Crear producto
-                    </a>
+                    @if (ViewData["IDRESTAURANTE"] != null)
+                    {
+                        <a asp-controller="Admin" asp-action="CreateProducto" asp-route-idrestaurante="@ViewData["IDRESTAURANTE"]"
+                           class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
+                            Crear producto
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Admin" asp-action="CreateProducto"
+                           class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
+                            Crear producto
+                        </a>
+                    }
                     <div class="border rounded-lg shadow overflow-hidden">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">

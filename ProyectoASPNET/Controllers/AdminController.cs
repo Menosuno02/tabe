@@ -77,6 +77,7 @@ namespace ProyectoASPNET.Controllers
             if (id != null)
             {
                 productos = await this.repo.GetProductosRestauranteAsync(id.Value);
+                ViewData["IDRESTAURANTE"] = id.Value;
             }
             else
             {
@@ -85,21 +86,24 @@ namespace ProyectoASPNET.Controllers
             return View(productos);
         }
 
-        /*
-        public async Task<IActionResult> CreateRestaurante()
+        public async Task<IActionResult> CreateProducto(int? idrestaurante)
         {
-            List<CategoriaRestaurante> categorias = await this.repo.GetCategoriasRestaurantesAsync();
-            return View(categorias);
+            if (idrestaurante != null)
+            {
+                ViewData["RESTAURANTE"] = await this.repo.FindRestauranteAsync(idrestaurante.Value);
+                return View();
+            }
+            List<Restaurante> restaurantes = await this.repo.GetRestaurantesAsync();
+            return View(restaurantes);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateRestaurante(Restaurante rest)
+        public async Task<IActionResult> CreateProducto(Producto prod)
         {
-            await this.repo.CreateRestauranteAsync(rest);
-            return RedirectToAction("Restaurantes");
+            await this.repo.CreateProductoAsync(prod);
+            return RedirectToAction("Productos");
         }
-        */
 
         public async Task<IActionResult> _DetailsProducto(int idprod)
         {

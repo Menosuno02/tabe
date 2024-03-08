@@ -81,6 +81,11 @@ public class RepositoryRestaurantes
         return await this.context.Restaurantes.MaxAsync(r => r.IdRestaurante) + 1;
     }
 
+    public async Task<List<Restaurante>> GetRestaurantesAsync()
+    {
+        return await this.context.Restaurantes.ToListAsync();
+    }
+
     public async Task<Restaurante> FindRestauranteAsync(int id)
     {
         return await this.context.Restaurantes
@@ -172,6 +177,12 @@ public class RepositoryRestaurantes
     #endregion
 
     #region PRODUCTOS
+    private async Task<int> GetMaxIdProducto()
+    {
+        if (this.context.Productos.Count() == 0) return 1;
+        return await this.context.Productos.MaxAsync(r => r.IdProducto) + 1;
+    }
+
     public async Task<List<Producto>> GetProductosAsync()
     {
         return await this.context.Productos.ToListAsync();
@@ -226,6 +237,7 @@ public class RepositoryRestaurantes
 
     public async Task<Producto> CreateProductoAsync(Producto producto)
     {
+        producto.IdProducto = await this.GetMaxIdProducto();
         await this.context.Productos.AddAsync(producto);
         await this.context.SaveChangesAsync();
         return producto;
@@ -300,19 +312,6 @@ public class RepositoryRestaurantes
         await this.context.Usuarios.AddAsync(user);
         await this.context.SaveChangesAsync();
         return user;
-        /*
-        string sql = "SP_CREATE_USUARIO @NOMBRE, @APELLIDOS, @CORREO, @CONTRASENYA, @TELEFONO, @DIRECCION, @SALT";
-        SqlParameter paramNombre = new SqlParameter("@NOMBRE", user.Nombre);
-        SqlParameter paramApellidos = new SqlParameter("@APELLIDOS", user.Apellidos);
-        SqlParameter paramCorreo = new SqlParameter("@CORREO", user.Correo);
-        SqlParameter paramContrasenya = new SqlParameter("@CONTRASENYA", user.Contrasenya);
-        SqlParameter paramTelefono = new SqlParameter("@TELEFONO", user.Telefono);
-        SqlParameter paramDireccion = new SqlParameter("@DIRECCION", user.Direccion);
-        SqlParameter paramSalt = new SqlParameter("@SALT", user.Salt);
-        await this.context.Database
-            .ExecuteSqlRawAsync(sql, paramNombre, paramApellidos, paramCorreo,
-            paramContrasenya, paramTelefono, paramDireccion, paramSalt);
-        */
     }
 
     public async Task<List<Usuario>> GetUsuariosAsync()
@@ -323,6 +322,17 @@ public class RepositoryRestaurantes
     public async Task<Usuario> FindUsuarioAsync(int id)
     {
         return await this.context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == id);
+    }
+
+    public async Task EditUsuarioAsync(Usuario usu)
+    {
+        Usuario usuEditar = await this.FindUsuarioAsync(usu.IdUsuario);
+        usuEditar.Nombre = usu.Nombre;
+        usuEditar.Apellidos = usu.Apellidos;
+        usuEditar.Direccion = usu.Direccion;
+        usuEditar.Telefono = usu.Telefono;
+        usuEditar.Correo = usu.Correo;
+        await context.SaveChangesAsync();
     }
     #endregion
 
