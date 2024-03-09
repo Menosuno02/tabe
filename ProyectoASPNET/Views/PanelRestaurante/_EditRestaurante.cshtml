@@ -1,0 +1,67 @@
+﻿@model Restaurante
+
+@{
+    List<CategoriaRestaurante> categorias = ViewData["CATEGORIAS"] as List<CategoriaRestaurante>;
+}
+
+@using (Html.BeginForm("_EditRestaurante", "PanelRestaurante"))
+{
+    <div class="py-6 px-8">
+        <div class="grid grid-cols-6 gap-6">
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="idrestaurante" value="@Model.IdRestaurante" />
+                <div class="col-span-6 sm:col-span-3">
+                    <label class="block text-sm font-bold text-gray-700">Nombre</label>
+                    <input type="text" name="nombre" value="@Model.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label class="block text-sm font-bold text-gray-700">Categoría</label>
+                    <select name="categoriarestaurante"
+                            class="p-2 pb-1.5 mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                        @foreach (CategoriaRestaurante categ in categorias)
+                        {
+                            if (categ.IdCategoriaRestaurante == Model.CategoriaRestaurante)
+                            {
+                                <option selected value="@categ.IdCategoriaRestaurante">@categ.Nombre</option>
+                            } else
+                            {
+                                <option value="@categ.IdCategoriaRestaurante">@categ.Nombre</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-span-6">
+                    <label class="block text-sm font-bold text-gray-700">Teléfono</label>
+                    <input type="tel" maxlength="9" name="telefono" value="@Model.Telefono"
+                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label class="block text-sm font-bold text-gray-700">Dirección</label>
+                    <input type="text" name="direccion" value="@Model.Direccion"
+                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <label class="block text-sm font-bold text-gray-700">Imagen</label>
+                    <input type="text" name="imagen" value="@Model.Imagen"
+                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                </div>
+                <div class="col-span-6">
+                    <label class="block text-sm font-bold text-gray-700">Tiempo Entrega</label>
+                    <input type="number" name="tiempoentrega" value="@Model.TiempoEntrega"
+                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                </div>
+                <div class="col-span-6">
+                    <label class="block text-sm font-bold text-gray-700">Correo</label>
+                    <input type="text" name="correo" value="@Model.Correo"
+                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                </div>
+                <div class="col-span-6">
+                    <button id="btnEditPost" class="btn btn-primary font-medium w-full">
+                        Editar restaurante
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+}

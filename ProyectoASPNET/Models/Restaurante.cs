@@ -11,6 +11,8 @@ namespace ProyectoASPNET.Models
         public int IdRestaurante { get; set; }
         [Column("NOMBRE")]
         public string Nombre { get; set; }
+        [Column("CORREO")]
+        public string Correo { get; set; }
         [Column("DIRECCION")]
         public string Direccion { get; set; }
         [Column("TELEFONO")]

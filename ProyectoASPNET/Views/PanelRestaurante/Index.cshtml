@@ -1,0 +1,64 @@
+﻿@model string
+
+<div role="tablist" class="tabs tabs-boxed w-11/12 mx-auto mt-3">
+    <button role="tab" class="tab" value="_EditRestaurante">Editar</button>
+    <button role="tab" class="tab" value="_PedidosRestaurante">Pedidos</button>
+    <button role="tab" class="tab" value="_ProductosRestaurante">Productos</button>
+    <button role="tab" class="tab" value="_CategoriasRestaurante">Categorías</button>
+</div>
+<div id="contentPanel" class="sm:px-4 px-6"></div>
+
+@section scripts {
+    @if (ViewData["NOMVISTA"] != null)
+    {
+        <script>
+            $(function () {
+                $("button.tab[value=@ViewData["NOMVISTA"]]").addClass("tab-active");
+                $("#contentPanel").load("/PanelRestaurante/@ViewData["NOMVISTA"]");
+            });
+        </script>
+    }
+    <script>
+        function createProducto() {
+            $(function () {
+                $("#modal").addClass("modal-open");
+                $("#titleModal").text("Crear Producto");
+                $("#contentModal").load("/PanelRestaurante/_CreateProducto");
+            });
+        }
+
+        function detailsProducto(e) {
+            $(function () {
+                let id = e.dataset.idproducto;
+                $("#modal").addClass("modal-open");
+                $("#titleModal").text("Detalles Producto");
+                $("#contentModal").load("/PanelRestaurante/_DetailsProducto?idprod=" + id);
+            });
+        }
+
+        function editProducto(e) {
+            $(function () {
+                let id = e.dataset.idproducto;
+                $("#modal").addClass("modal-open");
+                $("#titleModal").text("Editar Producto");
+                $("#contentModal").load("/PanelRestaurante/_EditProducto?idprod=" + id);
+            });
+        }
+
+        function cerrarModal() {
+            $(function () {
+                $("#modal").removeClass("modal-open");
+                $("#contentModal").html("");
+            });
+        }
+
+        $(function () {
+            $("button.tab").on("click", function () {
+                $("button.tab").removeClass("tab-active");
+                $(this).addClass("tab-active");
+                let val = $(this).val();
+                $("#contentPanel").load("/PanelRestaurante/" + val);
+            });
+        });
+    </script>
+}

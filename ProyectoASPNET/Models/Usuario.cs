@@ -11,8 +11,6 @@ namespace ProyectoASPNET.Models
         public int IdUsuario { get; set; }
         [Column("NOMBRE")]
         public string Nombre { get; set; }
-        [Column("APELLIDOS")]
-        public string Apellidos { get; set; }
         [Column("CORREO")]
         public string Correo { get; set; }
         [Column("CONTRASENYA")]

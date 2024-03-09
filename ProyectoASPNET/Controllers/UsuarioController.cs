@@ -37,18 +37,16 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Pedidos()
         {
-            if (HttpContext.Session.GetString("USER") != null)
+            if (HttpContext.Session.GetString("USER") == null ||
+                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
             {
-                int idusuario = HttpContext.Session.GetObject<int>("USER");
-                List<Pedido> pedidos = await this.repo.GetPedidosUsuarioAsync(idusuario);
-                List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
-                ViewData["PRODUCTOS"] = await this.repo.GetProductosPedidoViewAsync(idPedidos);
-                return View(pedidos);
+                return RedirectToAction("CheckRoutes", "Auth");
             }
-            else
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+            int idusuario = HttpContext.Session.GetObject<int>("USER");
+            List<Pedido> pedidos = await this.repo.GetPedidosUsuarioAsync(idusuario);
+            List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
+            ViewData["PRODUCTOS"] = await this.repo.GetProductosPedidoViewAsync(idPedidos);
+            return View(pedidos);
         }
     }
 }

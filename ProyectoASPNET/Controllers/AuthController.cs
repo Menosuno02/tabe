@@ -13,8 +13,25 @@ namespace ProyectoASPNET.Controllers
             this.repo = repo;
         }
 
+        public IActionResult CheckRoutes()
+        {
+            if (HttpContext.Session.GetString("USER") == null)
+                return RedirectToAction("Login", "Auth");
+            int tipoUsuario = HttpContext.Session.GetObject<int>("TIPOUSER");
+            if (tipoUsuario == 1)
+                return RedirectToAction("Index", "Restaurantes");
+            else if (tipoUsuario == 2)
+                return RedirectToAction("Index", "PanelAdmin");
+            else
+                return RedirectToAction("Index", "PanelRestaurante");
+        }
+
         public IActionResult Login()
         {
+            if (HttpContext.Session.GetString("USER") != null)
+            {
+                return RedirectToAction("CheckRoutes");
+            }
             return View();
         }
 
@@ -27,7 +44,7 @@ namespace ProyectoASPNET.Controllers
             {
                 HttpContext.Session.SetObject("USER", usuario.IdUsuario);
                 HttpContext.Session.SetObject("TIPOUSER", usuario.TipoUsuario);
-                return RedirectToAction("Index", "Restaurantes");
+                return RedirectToAction("CheckRoutes");
             }
             else
             {
@@ -43,10 +60,14 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(string contrasenya, Usuario usuario, string provincia)
+        public async Task<IActionResult> Register(Usuario usuario, string contrasenya, string provincia)
         {
+            if (HttpContext.Session.GetString("USER") != null)
+            {
+                return RedirectToAction("CheckRoutes");
+            }
             usuario.Direccion += ", " + provincia;
-            Usuario user = await this.repo.RegisterUsuarioAsync(contrasenya, usuario);
+            Usuario user = await this.repo.RegisterUsuarioAsync(usuario, contrasenya);
             return RedirectToAction("Login");
         }
 

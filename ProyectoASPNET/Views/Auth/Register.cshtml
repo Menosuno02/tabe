@@ -36,13 +36,9 @@
                 <form method="post" class="mt-8 grid grid-cols-6 gap-6">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="idusuario" value="0" />
-                    <div class="col-span-6 sm:col-span-3">
+                    <div class="col-span-6">
                         <label class="block text-sm font-bold text-gray-700">Nombre</label>
                         <input type="text" name="nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
-                    </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <label class="block text-sm font-bold text-gray-700">Apellidos</label>
-                        <input type="text" name="apellidos" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
                     </div>
                     <div class="col-span-6">
                         <label class="inline-block text-sm font-bold text-gray-700">Email</label>

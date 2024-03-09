@@ -35,13 +35,9 @@
         <input type="hidden" name="contrasenya" value="@Model.Contrasenya" />
         <input type="hidden" name="salt" value="@Model.Salt" />
         <input type="hidden" name="tipousuario" value="@Model.TipoUsuario" />
-        <div class="col-span-6 sm:col-span-3">
+        <div class="col-span-6">
             <label class="block text-sm font-bold text-gray-700">Nombre</label>
             <input type="text" readonly name="nombre" value="@Model.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
-        </div>
-        <div class="col-span-6 sm:col-span-3">
-            <label class="block text-sm font-bold text-gray-700">Apellidos</label>
-            <input type="text" readonly name="apellidos" value="@Model.Apellidos" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
         </div>
         <div class="col-span-6">
             <label class="inline-block text-sm font-bold text-gray-700">Email</label>

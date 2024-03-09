@@ -20,6 +20,11 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("USER") == null ||
+                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
             CestaView cestaView = await helperCesta.GetDatosCesta();
             return View(cestaView);
         }
@@ -43,6 +48,11 @@ namespace ProyectoASPNET.Controllers
 
         public IActionResult UpdateCesta(int idproducto, int cantidad)
         {
+            if (HttpContext.Session.GetString("USER") == null ||
+                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
             this.helperCesta.UpdateProductoCesta(idproducto, cantidad);
             return RedirectToAction("Index");
         }

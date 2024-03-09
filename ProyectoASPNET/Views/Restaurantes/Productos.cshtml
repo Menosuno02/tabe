@@ -10,11 +10,9 @@
 }
 
 @{
-
     int idrestaurante = Model.Restaurante.IdRestaurante;
     int idusuario = Context.Session.GetObject<int>("USER");
-    ValoracionRestaurante val =
-    await this.repo.GetValoracionRestauranteAsync(idrestaurante, idusuario);
+    ValoracionRestaurante val = await this.repo.GetValoracionRestauranteAsync(idrestaurante, idusuario);
     int value = 1;
     if (val != null) value = val.Valoracion;
 }
@@ -75,37 +73,18 @@
             <input type="hidden" name="idrestaurante" value="@Model.Restaurante.IdRestaurante" />
             <div class="rounded-lg border border-gray-100 bg-gray-100 py-2 px-1 text-center">
                 <div class="w-full">
-                    @if (Model.SelectedCategoria.ToString() == "0")
-                    {
-                        <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-11 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
-                                name="categoria" value="0">
-                            Todas
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative text-center" name="categoria" value="0">
-                            Todas
-                        </button>
-                    }
+                    <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-10 xl:px-16 py-2 text-sm text-primary shadow-sm focus:relative"
+                            name="categoria" value="0">
+                        Todas
+                    </button>
                 </div>
                 @foreach (CategoriaProducto categoria in Model.CategoriasProductos)
                 {
                     <div class="w-full">
-                        @if (Model.SelectedCategoria.ToString() == categoria.IdCategoriaProducto.ToString())
-                        {
-                            <button class="inline-block rounded-md bg-white px-14 md:px-4 lg:px-10 xl:px-20 py-2 text-sm text-primary shadow-sm focus:relative"
-                                    name="categoria" value="@categoria.IdCategoriaProducto">
-                                @categoria.Nombre
-                            </button>
-                        }
-                        else
-                        {
-                            <button class="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative text-center"
-                                    name="categoria" value="@categoria.IdCategoriaProducto">
-                                @categoria.Nombre
-                            </button>
-                        }
+                        <button class="inline-block rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative text-center"
+                                name="categoria" value="@categoria.IdCategoriaProducto">
+                            @categoria.Nombre
+                        </button>
                     </div>
                 }
             </div>
@@ -116,27 +95,25 @@
 
 @section scripts {
     <script>
-        function prueba() {
-            alert("EEE");
-        }
-
-        function incrementarCantidad() {
+        function incrementarCantidad(e) {
+            let id = e.dataset.idproducto;
             $(function () {
-                $("button[data-action='decrement']").on("click", function () {
-                    let id = $(this).data("idproducto");
-                    if (parseInt($("#cantidad" + id).val()) > 0)
-                        $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) - 1);
-                });
+                $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) + 1);
             });
         }
 
-        function incrementarCantidad() {
+        function decrementarCantidad(e) {
+            let id = e.dataset.idproducto;
             $(function () {
-                $("button[data-action='decrement']").on("click", function () {
-                    let id = $(this).data("idproducto");
-                    if (parseInt($("#cantidad" + id).val()) > 0)
-                        $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) - 1);
-                });
+                if (parseInt($("#cantidad" + id).val()) > 0)
+                    $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) - 1);
+            });
+        }
+
+        function cancelarProd(e) {
+            let id = e.dataset.idproducto;
+            $(function () {
+                $("#cantidad" + id).val(0);
             });
         }
 
@@ -146,25 +123,15 @@
                 + @Model.Restaurante.IdRestaurante + "&categoria=0");
 
             $("button[name=categoria]").on("click", function () {
+                $("button[name=categoria]")
+                    .removeClass("bg-white px-14 md:px-4 lg:px-10 xl:px-16 text-primary shadow-sm")
+                    .addClass("px-4 text-gray-500 hover:text-gray-700 text-center");
+                $(this)
+                    .addClass("bg-white px-14 md:px-4 lg:px-10 xl:px-16 text-primary shadow-sm")
+                    .removeClass("px-4 text-gray-500 hover:text-gray-700 text-center");
                 let categoria = $(this).val();
                 $("#contentProductos").load("/Restaurantes/_ListProductos?idrestaurante="
                     + @Model.Restaurante.IdRestaurante + "&categoria=" + categoria);
-            });
-
-            $("button[data-action='decrement']").on("click", function () {
-                let id = $(this).data("idproducto");
-                if (parseInt($("#cantidad" + id).val()) > 0)
-                    $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) - 1);
-            });
-
-            $("button[data-action='increment']").on("click", function () {
-                let id = $(this).data("idproducto");
-                $("#cantidad" + id).val(parseInt($("#cantidad" + id).val()) + 1);
-            });
-
-            $("button.btn-cancelar").on("click", function () {
-                let id = $(this).data("idproducto");
-                $("#cantidad" + id).val(0);
             });
 
             $("#btnError").on("click", function () {

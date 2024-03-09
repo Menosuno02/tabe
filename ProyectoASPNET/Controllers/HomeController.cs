@@ -6,6 +6,10 @@ namespace ProyectoASPNET.Controllers
     {
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("USER") != null)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
             return View();
         }
     }

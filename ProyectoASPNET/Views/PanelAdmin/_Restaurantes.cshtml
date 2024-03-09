@@ -1,20 +1,14 @@
 ﻿@model List<RestauranteView>
 
-<div role="tablist" class="tabs tabs-boxed w-11/12 mx-auto mt-2">
-    <a asp-controller="Admin" asp-action="Restaurantes" role="tab" class="tab tab-active">Restaurantes</a>
-    <a asp-controller="Admin" asp-action="Usuarios" role="tab" class="tab">Usuarios</a>
-    <a asp-controller="Admin" asp-action="Productos" role="tab" class="tab">Productos</a>
-</div>
-
 <div class="sm:px-4 p-6">
     <div class="flex flex-wrap lg:px-16">
         <div class="flex flex-col w-full">
             <div class="-m-1.5 overflow-x-auto">
                 <div class="p-1.5 min-w-full inline-block align-middle">
-                    <a asp-controller="Admin" asp-action="CreateRestaurante"
-                       class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
+                    <button onclick="createRestaurante()"
+                            class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
                         Crear restaurante
-                    </a>
+                    </button>
                     <div class="border rounded-lg shadow overflow-hidden">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -35,19 +29,19 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@restaurante.Direccion</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@restaurante.Valoracion/5</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium space-x-2">
-                                            <a asp-controller="Admin" asp-action="Productos" asp-route-id="@restaurante.IdRestaurante"
-                                               class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-purple-600 hover:text-purple-800 disabled:opacity-50 disabled:pointer-events-none">
+                                            <button data-idrestaurante="@restaurante.IdRestaurante" onclick="productosRestaurante(this)"
+                                                    class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-purple-600 hover:text-purple-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Productos
-                                            </a>
-                                            <button data-idrestaurante="@restaurante.IdRestaurante"
+                                            </button>
+                                            <button data-idrestaurante="@restaurante.IdRestaurante" onclick="detailsRestaurante(this)"
                                                     class="btn-details inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-green-600 hover:text-green-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Detalles
                                             </button>
-                                            <button data-idrestaurante="@restaurante.IdRestaurante"
+                                            <button data-idrestaurante="@restaurante.IdRestaurante" onclick="editRestaurante(this)"
                                                     class="btn-edit inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Editar
                                             </button>
-                                            <a asp-controller="Admin" asp-action="DeleteRestaurante" asp-route-id="@restaurante.IdRestaurante"
+                                            <a asp-controller="PanelAdmin" asp-action="DeleteRestaurante" asp-route-id="@restaurante.IdRestaurante"
                                                class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Borrar
                                             </a>
@@ -62,36 +56,3 @@
         </div>
     </div>
 </div>
-
-<dialog id="modal" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box">
-        <button id="closeModal" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        <h3 id="titleModal" class="font-bold text-lg"></h3>
-        <div id="contentModal" class="py-4"></div>
-    </div>
-</dialog>
-
-@section scripts {
-    <script>
-        $(function () {
-            $(".btn-details").on("click", function () {
-                let id = $(this).data("idrestaurante");
-                $("#modal").addClass("modal-open");
-                $("#titleModal").text("Detalles Restaurante");
-                $("#contentModal").load("/Admin/_DetailsRestaurante?idrest=" + id);
-            });
-
-            $(".btn-edit").on("click", function () {
-                let id = $(this).data("idrestaurante");
-                $("#modal").addClass("modal-open");
-                $("#titleModal").text("Editar Restaurante");
-                $("#contentModal").load("/Admin/_EditRestaurante?idrest=" + id);
-            });
-
-            $("#closeModal").on("click", function () {
-                $("#modal").removeClass("modal-open");
-                $("#contentModal").html("");
-            });
-        });
-    </script>
-}

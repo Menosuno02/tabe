@@ -11,7 +11,7 @@ namespace ProyectoASPNET;
 /*
 CREATE OR ALTER VIEW V_RESTAURANTES
 AS
-	SELECT R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO,
+	SELECT R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO, R.CORREO,
 	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA,
 	CAST(ISNULL(AVG(V.VALORACION), 0) AS DECIMAL(4,2)) AS VALORACION
 	FROM RESTAURANTES R
@@ -19,7 +19,7 @@ AS
 	ON R.IDCATEGORIA = CR.IDCATEGORIA
 	LEFT JOIN VALORACIONES_RESTAURANTE V
 	ON R.IDRESTAURANTE = V.IDRESTAURANTE
-	GROUP BY R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO,
+	GROUP BY R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO, R.CORREO,
 	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA
 GO
 
@@ -93,10 +93,19 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Restaurante> CreateRestauranteAsync(Restaurante restaurante)
+    public async Task<Restaurante> CreateRestauranteAsync(Restaurante restaurante, string password)
     {
         restaurante.IdRestaurante = await GetMaxIdRestaurante();
         await this.context.Restaurantes.AddAsync(restaurante);
+        Usuario usuRestaurante = new Usuario
+        {
+            Nombre = restaurante.Nombre,
+            Correo = restaurante.Correo,
+            Telefono = restaurante.Telefono,
+            Direccion = restaurante.Direccion,
+            TipoUsuario = 3
+        };
+        await this.RegisterUsuarioAsync(usuRestaurante, password);
         await this.context.SaveChangesAsync();
         return restaurante;
     }
@@ -104,20 +113,68 @@ public class RepositoryRestaurantes
     public async Task EditRestauranteAsync(Restaurante restaurante)
     {
         Restaurante restEditar = await this.FindRestauranteAsync(restaurante.IdRestaurante);
+        Usuario usuEditar = await this.GetUsuarioFromRestauranteAsync(restEditar.Correo); // Buscar con correo antiguo
+        usuEditar.Telefono = restaurante.Telefono;
+        usuEditar.Direccion = restaurante.Direccion;
+        usuEditar.Correo = restaurante.Correo;
         restEditar.Nombre = restaurante.Nombre;
         restEditar.Telefono = restaurante.Telefono;
         restEditar.Direccion = restaurante.Direccion;
         restEditar.Imagen = restaurante.Imagen;
         restEditar.CategoriaRestaurante = restaurante.CategoriaRestaurante;
         restEditar.TiempoEntrega = restaurante.TiempoEntrega;
+        restEditar.Correo = restaurante.Correo;
         await context.SaveChangesAsync();
     }
 
     public async Task DeleteRestauranteAsync(int id)
     {
+        List<Producto> productos = await this.context.Productos
+            .Where(p => p.IdRestaurante == id)
+            .ToListAsync();
+        foreach (Producto producto in productos)
+        {
+            this.context.ProductoCategorias.RemoveRange
+                (await this.context.ProductoCategorias
+                .Where(pc => pc.IdProducto == producto.IdProducto)
+                .ToListAsync());
+            this.context.ProductoPedidos.RemoveRange
+                (await this.context.ProductoPedidos
+                .Where(pc => pc.IdProducto == producto.IdProducto)
+                .ToListAsync());
+        }
+        await this.context.SaveChangesAsync();
+        this.context.Productos.RemoveRange(productos);
+        this.context.Pedidos.RemoveRange
+            (await this.context.Pedidos
+            .Where(p => p.IdRestaurante == id)
+            .ToListAsync());
+        this.context.ValoracionRestaurantes.RemoveRange
+            (await this.context.ValoracionRestaurantes
+            .Where(v => v.IdRestaurante == id)
+            .ToListAsync());
+        await this.context.SaveChangesAsync();
         Restaurante restaurante = await FindRestauranteAsync(id);
+        this.context.Usuarios.Remove
+            (await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.Correo == restaurante.Correo));
+        await this.context.SaveChangesAsync();
         this.context.Restaurantes.Remove(restaurante);
         await this.context.SaveChangesAsync();
+    }
+
+    public async Task<Restaurante> GetRestauranteFromLoggedUserAsync(int id)
+    {
+        Usuario usuario = await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.IdUsuario == id);
+        return await this.context.Restaurantes
+            .FirstOrDefaultAsync(r => r.Correo == usuario.Correo);
+    }
+
+    public async Task<Usuario> GetUsuarioFromRestauranteAsync(string restCorreo)
+    {
+        return await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.Correo == restCorreo);
     }
     #endregion
 
@@ -277,6 +334,15 @@ public class RepositoryRestaurantes
     public async Task DeleteProductoAsync(int id)
     {
         Producto producto = await FindProductoAsync(id);
+        this.context.ProductoCategorias.RemoveRange
+            (await this.context.ProductoCategorias
+            .Where(pc => pc.IdProducto == id)
+            .ToListAsync());
+        this.context.ProductoPedidos.RemoveRange
+            (await this.context.ProductoPedidos
+            .Where(pc => pc.IdProducto == id)
+            .ToListAsync());
+        await this.context.SaveChangesAsync();
         this.context.Productos.Remove(producto);
         await this.context.SaveChangesAsync();
     }
@@ -309,7 +375,7 @@ public class RepositoryRestaurantes
         }
     }
 
-    public async Task<Usuario> RegisterUsuarioAsync(string password, Usuario user)
+    public async Task<Usuario> RegisterUsuarioAsync(Usuario user, string password)
     {
         user.IdUsuario = await GetMaxIdUsuarioAsync();
         user.Salt = HelperTools.GenerateSalt();
@@ -334,7 +400,6 @@ public class RepositoryRestaurantes
     {
         Usuario usuEditar = await this.FindUsuarioAsync(usu.IdUsuario);
         usuEditar.Nombre = usu.Nombre;
-        usuEditar.Apellidos = usu.Apellidos;
         usuEditar.Direccion = usu.Direccion;
         usuEditar.Telefono = usu.Telefono;
         usuEditar.Correo = usu.Correo;
@@ -380,6 +445,32 @@ public class RepositoryRestaurantes
         return await this.context.Pedidos
             .Where(p => p.IdUsuario == idusuario && p.Estado != 4)
             .ToListAsync();
+    }
+
+    public async Task<List<Pedido>> GetPedidosRestauranteAsync(int idusuario)
+    {
+        Usuario usuario = await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.IdUsuario == idusuario);
+        Restaurante rest = await this.context.Restaurantes
+            .FirstOrDefaultAsync(r => r.Correo == usuario.Correo);
+        return await this.context.Pedidos
+            .Where(p => p.IdRestaurante == rest.IdRestaurante)
+            .ToListAsync();
+    }
+    #endregion
+
+    #region ESTADOS_PEDIDO
+    public async Task<List<EstadoPedido>> GetEstadoPedidosAsync()
+    {
+        return await this.context.EstadoPedidos.ToListAsync();
+    }
+
+    public async Task UpdateEstadoPedido(int idpedido, int estado)
+    {
+        Pedido pedido = await this.context.Pedidos
+            .FirstOrDefaultAsync(p => p.IdPedido == idpedido);
+        pedido.Estado = estado;
+        await this.context.SaveChangesAsync();
     }
     #endregion
 

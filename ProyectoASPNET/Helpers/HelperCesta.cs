@@ -54,7 +54,7 @@ namespace ProyectoASPNET.Helpers
             {
                 Cesta = cestaView,
                 Total = total,
-                Nombre = usuario.Nombre + " " + usuario.Apellidos,
+                Nombre = usuario.Nombre,
                 Direccion = usuario.Direccion,
                 Telefono = usuario.Telefono
             };

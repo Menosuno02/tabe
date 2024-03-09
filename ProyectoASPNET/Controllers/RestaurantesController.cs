@@ -20,6 +20,11 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Index(string? categoria)
         {
+            if (HttpContext.Session.GetString("USER") == null ||
+                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
             ViewData["CATEGORIAS"] =
                 await this.repo.GetCategoriasRestaurantesAsync();
             return View();
@@ -41,11 +46,15 @@ namespace ProyectoASPNET.Controllers
 
         public async Task<IActionResult> Productos(int idrestaurante)
         {
+            if (HttpContext.Session.GetString("USER") == null ||
+                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
             ProductosActionModel model = new ProductosActionModel
             {
                 Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(),
-                SelectedCategoria = 0
+                CategoriasProductos = await this.repo.GetCategoriasProductosAsync()
             };
             return View(model);
         }
@@ -53,7 +62,7 @@ namespace ProyectoASPNET.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Productos
-            (string form, int idrestaurante, int categoria, int cantidad, int idproducto)
+            (string form, int idrestaurante, int cantidad, int idproducto)
         {
             if (form == "cesta")
             {
@@ -69,16 +78,12 @@ namespace ProyectoASPNET.Controllers
                         Cantidad = cantidad
                     });
                 }
-                else
-                {
-                    ViewData["ERROR"] = true;
-                }
+                else ViewData["ERROR"] = true;
             }
             ProductosActionModel model = new ProductosActionModel
             {
                 Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(),
-                SelectedCategoria = categoria
+                CategoriasProductos = await this.repo.GetCategoriasProductosAsync()
             };
             return View(model);
         }
@@ -96,6 +101,11 @@ namespace ProyectoASPNET.Controllers
         public async Task<IActionResult> UpdateValoracionRestaurante
             (int idrestaurante, int idusuario, int valoracion)
         {
+            if (HttpContext.Session.GetString("USER") == null ||
+                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
             await this.repo.UpdateValoracionRestauranteAsync(
                 new ValoracionRestaurante
                 {
