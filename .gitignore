@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/ProyectoASPNET/wwwroot/css/input.output.css
+/ProyectoASPNET/appsettings.Development.json
