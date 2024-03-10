@@ -57,9 +57,9 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> _CreateRestaurante(Restaurante rest, string password, IFormFile fileimagen)
+        public async Task<IActionResult> _CreateRestaurante(Restaurante rest, string contrasenya, IFormFile fileimagen)
         {
-            await this.repo.CreateRestauranteAsync(rest, password, fileimagen);
+            await this.repo.CreateRestauranteAsync(rest, contrasenya, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Restaurantes" });
         }
 
@@ -147,6 +147,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync();
             if (idrestaurante != null)
             {
                 ViewData["RESTAURANTE"] = await this.repo.FindRestauranteAsync(idrestaurante.Value);
@@ -158,9 +159,9 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> _CreateProducto(Producto prod, IFormFile fileimagen)
+        public async Task<IActionResult> _CreateProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
-            await this.repo.CreateProductoAsync(prod, fileimagen);
+            await this.repo.CreateProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
         }
 

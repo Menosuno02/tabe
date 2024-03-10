@@ -122,8 +122,11 @@ public class RepositoryRestaurantes
 
     public async Task EditRestauranteAsync(Restaurante restaurante, IFormFile imagen)
     {
-        restaurante.Imagen =
-            await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+        if (imagen != null)
+        {
+            restaurante.Imagen =
+                await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+        }
         restaurante.Direccion = await helperGoogleApi.GetValidatedDireccionAsync(restaurante.Direccion);
         Restaurante restEditar = await this.FindRestauranteAsync(restaurante.IdRestaurante);
         Usuario usuEditar = await this.GetUsuarioFromRestauranteAsync(restEditar.Correo); // Buscar con correo antiguo
@@ -310,20 +313,32 @@ public class RepositoryRestaurantes
             .ToListAsync();
     }
 
-    public async Task<Producto> CreateProductoAsync(Producto producto, IFormFile imagen)
+    public async Task<Producto> CreateProductoAsync(Producto producto, int[] categproducto, IFormFile imagen)
     {
         producto.IdProducto = await this.GetMaxIdProducto();
         producto.Imagen =
             await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
         await this.context.Productos.AddAsync(producto);
         await this.context.SaveChangesAsync();
+        foreach (int categoria in categproducto)
+        {
+            await this.context.ProductoCategorias.AddAsync(new ProductoCategorias
+            {
+                IdCategoria = categoria,
+                IdProducto = producto.IdProducto
+            });
+        }
+        await this.context.SaveChangesAsync();
         return producto;
     }
 
     public async Task EditProductoAsync(Producto producto, int[] categproducto, IFormFile imagen)
     {
-        producto.Imagen =
-            await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
+        if (imagen != null)
+        {
+            producto.Imagen =
+                await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
+        }
         Producto prodEditar = await this.FindProductoAsync(producto.IdProducto);
         prodEditar.Nombre = producto.Nombre;
         prodEditar.Precio = producto.Precio;
@@ -484,7 +499,7 @@ public class RepositoryRestaurantes
         return await this.context.EstadoPedidos.ToListAsync();
     }
 
-    public async Task UpdateEstadoPedido(int idpedido, int estado)
+    public async Task UpdateEstadoPedidoAsync(int idpedido, int estado)
     {
         Pedido pedido = await this.context.Pedidos
             .FirstOrDefaultAsync(p => p.IdPedido == idpedido);

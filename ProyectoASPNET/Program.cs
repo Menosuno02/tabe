@@ -24,9 +24,9 @@ builder.Services.AddDbContext<RestaurantesContext>
 
 builder.Services.AddTransient<HelperPathProvider>();
 builder.Services.AddTransient<HelperCesta>();
+builder.Services.AddTransient<HelperUploadFiles>();
+
 string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
-
-
 builder.Services.AddTransient<HelperGoogleApiDirections>
     (h => new HelperGoogleApiDirections(googleApiKey, h.GetRequiredService<IHttpClientFactory>()));
 

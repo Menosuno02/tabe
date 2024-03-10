@@ -49,7 +49,7 @@ namespace ProyectoASPNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> _PedidosRestaurante(int idpedido, int estado)
         {
-            await this.repo.UpdateEstadoPedido(idpedido, estado);
+            await this.repo.UpdateEstadoPedidoAsync(idpedido, estado);
             return RedirectToAction("Index", new { nomvista = "_PedidosRestaurante" });
         }
 
@@ -98,14 +98,15 @@ namespace ProyectoASPNET.Controllers
             }
             int idusuario = HttpContext.Session.GetObject<int>("USER");
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync();
             return PartialView("_CreateProducto", rest);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> _CreateProducto(Producto prod, IFormFile fileimagen)
+        public async Task<IActionResult> _CreateProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
-            await this.repo.CreateProductoAsync(prod, fileimagen);
+            await this.repo.CreateProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_ProductosRestaurante" });
         }
 
