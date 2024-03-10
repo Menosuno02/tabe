@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Models;
 
 namespace ProyectoASPNET.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (HttpContext.Session.GetString("USER") != null)
             {

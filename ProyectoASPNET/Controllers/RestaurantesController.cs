@@ -9,13 +9,16 @@ namespace ProyectoASPNET.Controllers
     {
         private RepositoryRestaurantes repo;
         private HelperCesta helperCesta;
+        private HelperGoogleApiDirections helperDistanceMatrix;
 
         public RestaurantesController
             (RepositoryRestaurantes repo,
-            HelperCesta helperCesta)
+            HelperCesta helperCesta,
+            HelperGoogleApiDirections helperDistanceMatrix)
         {
             this.repo = repo;
             this.helperCesta = helperCesta;
+            this.helperDistanceMatrix = helperDistanceMatrix;
         }
 
         public async Task<IActionResult> Index(string? categoria)
@@ -41,6 +44,23 @@ namespace ProyectoASPNET.Controllers
             {
                 restaurantes = await this.repo.GetRestaurantesViewAsync();
             }
+            int idusuario = HttpContext.Session.GetObject<int>("USER");
+            Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
+            string direccionUsu = usu.Direccion;
+
+            /*
+            foreach (RestauranteView rest in restaurantes)
+            {
+                rest.InfoEntrega =
+                    await this.helperDistanceMatrix
+                    .GetDistanceMatrixInfoAsync(rest.Direccion, direccionUsu);
+            }
+            */
+
+            var tasks = restaurantes
+                .Select(async r => r.InfoEntrega = await this.helperDistanceMatrix
+                    .GetDistanceMatrixInfoAsync(r.Direccion, direccionUsu));
+            await Task.WhenAll(tasks);
             return PartialView("_ListRestaurantes", restaurantes);
         }
 

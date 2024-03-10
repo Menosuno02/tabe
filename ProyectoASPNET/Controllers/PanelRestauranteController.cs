@@ -68,9 +68,9 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> _EditRestaurante(Restaurante rest)
+        public async Task<IActionResult> _EditRestaurante(Restaurante rest, IFormFile fileimagen)
         {
-            await this.repo.EditRestauranteAsync(rest);
+            await this.repo.EditRestauranteAsync(rest, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_EditRestaurante" });
         }
 
@@ -103,9 +103,9 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> _CreateProducto(Producto prod)
+        public async Task<IActionResult> _CreateProducto(Producto prod, IFormFile fileimagen)
         {
-            await this.repo.CreateProductoAsync(prod);
+            await this.repo.CreateProductoAsync(prod, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_ProductosRestaurante" });
         }
 
@@ -134,9 +134,9 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> _EditProducto(Producto prod, int[] categproducto)
+        public async Task<IActionResult> _EditProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
-            await this.repo.EditProductoAsync(prod, categproducto);
+            await this.repo.EditProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_ProductosRestaurante" });
         }
 

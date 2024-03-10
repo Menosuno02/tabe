@@ -1,5 +1,7 @@
 ﻿@model List<RestauranteView>
 
+<h1>@ViewData["MENSAJE"]</h1>
+
 @if (Model.Count() == 0)
 {
     <h1 class="text-center mt-10 text-2xl">Restaurantes no encontrados</h1>
@@ -22,7 +24,8 @@
                         </div>
                         <div class="flex">
                             <div class="w-1/2 text-gray-500">
-                                @rest.TiempoEntrega min
+                                <p>@rest.InfoEntrega.TiempoEstimado~ min</p>
+                                <p>@rest.InfoEntrega.Distancia</p>
                             </div>
                             <div class="w-1/2">
                                 <div class="card-actions justify-end">

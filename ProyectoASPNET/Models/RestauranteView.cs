@@ -23,7 +23,8 @@ namespace ProyectoASPNET.Models
         public string CategoriaRestaurante { get; set; }
         [Column("VALORACION")]
         public decimal Valoracion { get; set; }
-        [Column("TIEMPOENTREGA")]
-        public string TiempoEntrega { get; set; }
+
+        [NotMapped]
+        public DistanceMatrixInfo InfoEntrega { get; set; }
     }
 }

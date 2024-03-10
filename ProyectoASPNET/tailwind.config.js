@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
-        './**/*.razor',
         './**/*.cshtml',
     ],
     theme: {
@@ -13,5 +12,6 @@ module.exports = {
     darkMode: 'media',
     plugins: [
         require("daisyui"),
+        require('flowbite/plugin')
     ],
 }

@@ -12,7 +12,7 @@ namespace ProyectoASPNET;
 CREATE OR ALTER VIEW V_RESTAURANTES
 AS
 	SELECT R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO, R.CORREO,
-	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA,
+	R.DIRECCION, R.IMAGEN, CR.NOMBRECATEGORIA,
 	CAST(ISNULL(AVG(V.VALORACION), 0) AS DECIMAL(4,2)) AS VALORACION
 	FROM RESTAURANTES R
 	INNER JOIN CATEGORIAS_RESTAURANTES CR
@@ -20,7 +20,7 @@ AS
 	LEFT JOIN VALORACIONES_RESTAURANTE V
 	ON R.IDRESTAURANTE = V.IDRESTAURANTE
 	GROUP BY R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO, R.CORREO,
-	R.DIRECCION, R.IMAGEN, R.TIEMPOENTREGA, CR.NOMBRECATEGORIA
+	R.DIRECCION, R.IMAGEN, CR.NOMBRECATEGORIA
 GO
 
 CREATE OR ALTER VIEW V_PRODUCTOS_PEDIDO AS
@@ -68,10 +68,17 @@ GO
 public class RepositoryRestaurantes
 {
     private RestaurantesContext context;
+    private HelperGoogleApiDirections helperGoogleApi;
+    private HelperUploadFiles helperUploadFiles;
 
-    public RepositoryRestaurantes(RestaurantesContext context)
+    public RepositoryRestaurantes
+        (RestaurantesContext context,
+        HelperGoogleApiDirections helperGoogleApi,
+        HelperUploadFiles helperUploadFiles)
     {
         this.context = context;
+        this.helperGoogleApi = helperGoogleApi;
+        this.helperUploadFiles = helperUploadFiles;
     }
 
     #region RESTAURANTES
@@ -93,9 +100,12 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<Restaurante> CreateRestauranteAsync(Restaurante restaurante, string password)
+    public async Task<Restaurante> CreateRestauranteAsync(Restaurante restaurante, string password, IFormFile imagen)
     {
         restaurante.IdRestaurante = await GetMaxIdRestaurante();
+        restaurante.Imagen =
+            await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+        restaurante.Direccion = await helperGoogleApi.GetValidatedDireccionAsync(restaurante.Direccion);
         await this.context.Restaurantes.AddAsync(restaurante);
         Usuario usuRestaurante = new Usuario
         {
@@ -110,8 +120,11 @@ public class RepositoryRestaurantes
         return restaurante;
     }
 
-    public async Task EditRestauranteAsync(Restaurante restaurante)
+    public async Task EditRestauranteAsync(Restaurante restaurante, IFormFile imagen)
     {
+        restaurante.Imagen =
+            await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+        restaurante.Direccion = await helperGoogleApi.GetValidatedDireccionAsync(restaurante.Direccion);
         Restaurante restEditar = await this.FindRestauranteAsync(restaurante.IdRestaurante);
         Usuario usuEditar = await this.GetUsuarioFromRestauranteAsync(restEditar.Correo); // Buscar con correo antiguo
         usuEditar.Telefono = restaurante.Telefono;
@@ -122,7 +135,6 @@ public class RepositoryRestaurantes
         restEditar.Direccion = restaurante.Direccion;
         restEditar.Imagen = restaurante.Imagen;
         restEditar.CategoriaRestaurante = restaurante.CategoriaRestaurante;
-        restEditar.TiempoEntrega = restaurante.TiempoEntrega;
         restEditar.Correo = restaurante.Correo;
         await context.SaveChangesAsync();
     }
@@ -298,16 +310,20 @@ public class RepositoryRestaurantes
             .ToListAsync();
     }
 
-    public async Task<Producto> CreateProductoAsync(Producto producto)
+    public async Task<Producto> CreateProductoAsync(Producto producto, IFormFile imagen)
     {
         producto.IdProducto = await this.GetMaxIdProducto();
+        producto.Imagen =
+            await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
         await this.context.Productos.AddAsync(producto);
         await this.context.SaveChangesAsync();
         return producto;
     }
 
-    public async Task EditProductoAsync(Producto producto, int[] categproducto)
+    public async Task EditProductoAsync(Producto producto, int[] categproducto, IFormFile imagen)
     {
+        producto.Imagen =
+            await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
         Producto prodEditar = await this.FindProductoAsync(producto.IdProducto);
         prodEditar.Nombre = producto.Nombre;
         prodEditar.Precio = producto.Precio;
@@ -377,6 +393,7 @@ public class RepositoryRestaurantes
 
     public async Task<Usuario> RegisterUsuarioAsync(Usuario user, string password)
     {
+        user.Direccion = await helperGoogleApi.GetValidatedDireccionAsync(user.Direccion);
         user.IdUsuario = await GetMaxIdUsuarioAsync();
         user.Salt = HelperTools.GenerateSalt();
         user.Contrasenya = HelperCryptography.EncryptPassword
@@ -393,16 +410,18 @@ public class RepositoryRestaurantes
 
     public async Task<Usuario> FindUsuarioAsync(int id)
     {
-        return await this.context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == id);
+        return await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.IdUsuario == id);
     }
 
-    public async Task EditUsuarioAsync(Usuario usu)
+    public async Task EditUsuarioAsync(Usuario user)
     {
-        Usuario usuEditar = await this.FindUsuarioAsync(usu.IdUsuario);
-        usuEditar.Nombre = usu.Nombre;
-        usuEditar.Direccion = usu.Direccion;
-        usuEditar.Telefono = usu.Telefono;
-        usuEditar.Correo = usu.Correo;
+        user.Direccion = await helperGoogleApi.GetValidatedDireccionAsync(user.Direccion);
+        Usuario usuEditar = await this.FindUsuarioAsync(user.IdUsuario);
+        usuEditar.Nombre = user.Nombre;
+        usuEditar.Direccion = user.Direccion;
+        usuEditar.Telefono = user.Telefono;
+        usuEditar.Correo = user.Correo;
         await context.SaveChangesAsync();
     }
     #endregion

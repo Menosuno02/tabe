@@ -8,19 +8,17 @@ namespace ProyectoASPNET.Helpers
 
     public class HelperPathProvider
     {
-        // Necesitamos acceder al sistema de archivos del Web Server (wwwroot)
         private IWebHostEnvironment hostEnvironment;
         private IServer server;
 
-        public HelperPathProvider(IWebHostEnvironment hostEnvironment,
+        public HelperPathProvider
+            (IWebHostEnvironment hostEnvironment,
             IServer server)
         {
             this.hostEnvironment = hostEnvironment;
             this.server = server;
         }
 
-        // Creamos private que nos devuelva el nombre de la carpeta
-        // dependiendo del folder
         private string GetFolderPath(Folders folder)
         {
             string carpeta = "";

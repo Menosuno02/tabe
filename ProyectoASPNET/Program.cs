@@ -9,6 +9,8 @@ builder.Services.AddAntiforgery();
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -22,6 +24,12 @@ builder.Services.AddDbContext<RestaurantesContext>
 
 builder.Services.AddTransient<HelperPathProvider>();
 builder.Services.AddTransient<HelperCesta>();
+string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
+
+
+builder.Services.AddTransient<HelperGoogleApiDirections>
+    (h => new HelperGoogleApiDirections(googleApiKey, h.GetRequiredService<IHttpClientFactory>()));
+
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();

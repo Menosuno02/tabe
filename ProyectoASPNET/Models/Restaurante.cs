@@ -21,7 +21,5 @@ namespace ProyectoASPNET.Models
         public string Imagen { get; set; }
         [Column("IDCATEGORIA")]
         public int CategoriaRestaurante { get; set; }
-        [Column("TIEMPOENTREGA")]
-        public string TiempoEntrega { get; set; }
     }
 }
