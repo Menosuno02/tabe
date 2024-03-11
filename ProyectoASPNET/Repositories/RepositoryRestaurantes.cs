@@ -194,11 +194,17 @@ public class RepositoryRestaurantes
     #endregion
 
     #region V_RESTAURANTES
-    public async Task<List<RestauranteView>> GetRestaurantesViewAsync()
+    public async Task<List<RestauranteView>> GetRestaurantesViewAsync(string searchquery)
     {
-        return await this.context.RestaurantesView
+        List<RestauranteView> restaurantes = await this.context.RestaurantesView
             .OrderByDescending(r => r.Valoracion)
             .ToListAsync();
+        if (searchquery != "")
+            restaurantes = restaurantes
+                .Where(r => r.Nombre
+                .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+        return restaurantes;
     }
 
     public async Task<RestauranteView> FindRestauranteViewAsync(int id)
@@ -208,19 +214,18 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria)
+    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, string searchquery)
     {
-        /*
-        return await this.context.RestaurantesView
-            .Where(r => r.Valoracion >= rating && categoria == "Todas" ||
-                       r.Valoracion >= rating && r.CategoriaRestaurante == categoria)
-            .OrderByDescending(r => r.Valoracion)
-            .ToListAsync();
-        */
-        return await this.context.RestaurantesView
+        List<RestauranteView> restaurantes = await this.context.RestaurantesView
             .Where(r => r.CategoriaRestaurante == categoria)
             .OrderByDescending(r => r.Valoracion)
             .ToListAsync();
+        if (searchquery != "")
+            restaurantes = restaurantes
+                .Where(r => r.Nombre
+                .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+        return restaurantes;
     }
     #endregion
 

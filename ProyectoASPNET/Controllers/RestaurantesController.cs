@@ -21,7 +21,7 @@ namespace ProyectoASPNET.Controllers
             this.helperDistanceMatrix = helperDistanceMatrix;
         }
 
-        public async Task<IActionResult> Index(string? categoria)
+        public async Task<IActionResult> Index()
         {
             if (HttpContext.Session.GetString("USER") == null ||
                 HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
@@ -33,16 +33,16 @@ namespace ProyectoASPNET.Controllers
             return View();
         }
 
-        public async Task<IActionResult> _ListRestaurantes(string? categoria)
+        public async Task<IActionResult> _ListRestaurantes(string? categoria, string searchquery = "")
         {
             List<RestauranteView> restaurantes;
             if (categoria != null)
             {
-                restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria);
+                restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria, searchquery);
             }
             else
             {
-                restaurantes = await this.repo.GetRestaurantesViewAsync();
+                restaurantes = await this.repo.GetRestaurantesViewAsync(searchquery);
             }
             int idusuario = HttpContext.Session.GetObject<int>("USER");
             Usuario usu = await this.repo.FindUsuarioAsync(idusuario);

@@ -40,7 +40,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesViewAsync();
+            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesViewAsync("");
             return PartialView("_Restaurantes", restaurantes);
         }
 
