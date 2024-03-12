@@ -21,7 +21,7 @@ namespace ProyectoASPNET.Helpers
         public async Task<DistanceMatrixInfo> GetDistanceMatrixInfoAsync(string origen, string destino)
         {
             string url = $"https://maps.googleapis.com/maps/api/distancematrix/json" +
-                $"?origins={origen}&destinations={destino}&key={_googleApiKey}&region=es&language=es";
+                $"?origins={origen}&destinations={destino}&key={_googleApiKey}&region=es&language=es&mode=bicycling";
 
             var client = _httpClientFactory.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -35,8 +35,7 @@ namespace ProyectoASPNET.Helpers
                     return new DistanceMatrixInfo
                     {
                         Distancia = distanceMatrix.Rows[0].Elements[0].Distance.Text,
-                        TiempoEstimado =
-                        (int)Math.Ceiling((decimal)(distanceMatrix.Rows[0].Elements[0].Duration.Value / 60 / 5)) * 5
+                        TiempoEstimado = distanceMatrix.Rows[0].Elements[0].Duration.Value / 60
                     };
                 }
                 else

@@ -1,5 +1,6 @@
 ﻿@{
     List<CategoriaRestaurante> categorias = ViewData["CATEGORIAS"] as List<CategoriaRestaurante>;
+    string baseUri = Context.Request.Scheme + "://" + Context.Request.Host;
 }
 
 <div class="sm:px-4 p-6">
@@ -50,9 +51,11 @@
 @section scripts {
     <script>
         $(function () {
+            $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/3 mx-auto' />");
             $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=");
 
             $("input[name=categoria]").on("change", function () {
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/3 mx-auto' />");
                 let searchQuery = $("input[name=searchquery]").val();
                 let categoria = $(this).val();
                 if (categoria == undefined) categoria = "Todas";
@@ -68,6 +71,7 @@
             });
 
             $("input[name=searchquery]").on("input", function () {
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/3 mx-auto' />");
                 let searchQuery = $("input[name=searchquery]").val();
                 let categoria = $("input[name=categoria].categ-selected").val();
                 if (categoria == undefined) categoria = "Todas";
