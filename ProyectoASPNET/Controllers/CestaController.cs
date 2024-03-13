@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Extensions;
+using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
 
@@ -18,10 +19,10 @@ namespace ProyectoASPNET.Controllers
             this.helperCesta = helperCesta;
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -31,6 +32,7 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public async Task<IActionResult> Index(string form, int? idproducto)
         {
             if (form == "borrar" && idproducto != null)
@@ -46,10 +48,10 @@ namespace ProyectoASPNET.Controllers
             return View(cestaView);
         }
 
+        [AuthorizeUser]
         public IActionResult UpdateCesta(int idproducto, int cantidad)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }

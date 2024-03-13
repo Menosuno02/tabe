@@ -11,7 +11,7 @@
 
 @{
     int idrestaurante = Model.Restaurante.IdRestaurante;
-    int idusuario = Context.Session.GetObject<int>("USER");
+    int idusuario = int.Parse(Context.User.Identity.Name);
     ValoracionRestaurante val = await this.repo.GetValoracionRestauranteAsync(idrestaurante, idusuario);
     int value = 1;
     if (val != null) value = val.Valoracion;

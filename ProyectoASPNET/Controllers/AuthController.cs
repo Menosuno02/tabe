@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -15,8 +19,6 @@ namespace ProyectoASPNET.Controllers
 
         public IActionResult CheckRoutes()
         {
-            if (HttpContext.Session.GetString("USER") == null)
-                return RedirectToAction("Login", "Auth");
             int tipoUsuario = HttpContext.Session.GetObject<int>("TIPOUSER");
             if (tipoUsuario == 1)
                 return RedirectToAction("Index", "Restaurantes");
@@ -28,7 +30,7 @@ namespace ProyectoASPNET.Controllers
 
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("USER") != null)
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("CheckRoutes");
             }
@@ -42,8 +44,17 @@ namespace ProyectoASPNET.Controllers
             Usuario usuario = await this.repo.LoginUsuarioAsync(email, password);
             if (usuario != null)
             {
-                HttpContext.Session.SetObject("USER", usuario.IdUsuario);
                 HttpContext.Session.SetObject("TIPOUSER", usuario.TipoUsuario);
+                ClaimsIdentity identity = new ClaimsIdentity(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        ClaimTypes.Name, ClaimTypes.Role);
+                Claim claimName = new Claim(ClaimTypes.Name, usuario.IdUsuario.ToString());
+                Claim claimRole = new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString());
+                identity.AddClaim(claimName);
+                identity.AddClaim(claimRole);
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
                 return RedirectToAction("CheckRoutes");
             }
             else
@@ -62,7 +73,7 @@ namespace ProyectoASPNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Usuario usuario, string contrasenya, string provincia)
         {
-            if (HttpContext.Session.GetString("USER") != null)
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("CheckRoutes");
             }
@@ -71,11 +82,13 @@ namespace ProyectoASPNET.Controllers
             return RedirectToAction("Login");
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Remove("USER");
+            await HttpContext.SignOutAsync
+                (CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("TIPOUSER");
             HttpContext.Session.Remove("CESTA");
+            HttpContext.Session.Remove("RESTAURANTE");
             return RedirectToAction("Index", "Home");
         }
     }

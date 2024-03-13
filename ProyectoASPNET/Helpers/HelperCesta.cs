@@ -48,7 +48,7 @@ namespace ProyectoASPNET.Helpers
                     total += producto.Precio * cantidad;
                 }
             }
-            int id = httpContext.Session.GetObject<int>("USER");
+            int id = int.Parse(httpContext.User.Identity.Name);
             Usuario usuario = await this.repo.FindUsuarioAsync(id);
             return new CestaView
             {
@@ -132,7 +132,7 @@ namespace ProyectoASPNET.Helpers
             {
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");
-                int user = httpContext.Session.GetObject<int>("USER");
+                int user = int.Parse(httpContext.User.Identity.Name);
                 int idrestaurante = httpContext.Session.GetObject<int>("RESTAURANTE");
                 Pedido pedido =
                     await this.repo.CreatePedidoAsync(user, idrestaurante, cesta);

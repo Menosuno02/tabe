@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Extensions;
+using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
 
@@ -14,10 +15,10 @@ namespace ProyectoASPNET.Controllers
             this.repo = repo;
         }
 
+        [AuthorizeUser]
         public IActionResult Index(string? nomvista, int? idrest)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -33,10 +34,10 @@ namespace ProyectoASPNET.Controllers
         }
 
         #region RESTAURANTES
+        [AuthorizeUser]
         public async Task<IActionResult> _Restaurantes()
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -44,10 +45,10 @@ namespace ProyectoASPNET.Controllers
             return PartialView("_Restaurantes", restaurantes);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _CreateRestaurante()
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -57,16 +58,17 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public async Task<IActionResult> _CreateRestaurante(Restaurante rest, string contrasenya, IFormFile fileimagen)
         {
             await this.repo.CreateRestauranteAsync(rest, contrasenya, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Restaurantes" });
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _DetailsRestaurante(int idrest)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -74,10 +76,10 @@ namespace ProyectoASPNET.Controllers
             return PartialView("_DetailsRestaurante", rest);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _EditRestaurante(int idrest)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -88,16 +90,17 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public async Task<IActionResult> _EditRestaurante(Restaurante rest, IFormFile fileimagen)
         {
             await this.repo.EditRestauranteAsync(rest, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Restaurantes" });
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> DeleteRestaurante(int id)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -107,10 +110,10 @@ namespace ProyectoASPNET.Controllers
         #endregion
 
         #region USUARIOS
+        [AuthorizeUser]
         public async Task<IActionResult> _Usuarios()
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -120,10 +123,10 @@ namespace ProyectoASPNET.Controllers
         #endregion
 
         #region PRODUCTOS
+        [AuthorizeUser]
         public async Task<IActionResult> _Productos(int? idrest)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -140,10 +143,10 @@ namespace ProyectoASPNET.Controllers
             return PartialView("_Productos", productos);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _CreateProducto(int? idrestaurante)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -159,16 +162,17 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public async Task<IActionResult> _CreateProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
             await this.repo.CreateProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _DetailsProducto(int idprod)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -176,10 +180,10 @@ namespace ProyectoASPNET.Controllers
             return PartialView("_DetailsProducto", prod);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _EditProducto(int idprod)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -190,16 +194,17 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public async Task<IActionResult> _EditProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
             await this.repo.EditProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> DeleteProducto(int id)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }

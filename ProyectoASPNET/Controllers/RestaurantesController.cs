@@ -2,6 +2,7 @@
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Filters;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -21,10 +22,10 @@ namespace ProyectoASPNET.Controllers
             this.helperDistanceMatrix = helperDistanceMatrix;
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -33,6 +34,7 @@ namespace ProyectoASPNET.Controllers
             return View();
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _ListRestaurantes(string? categoria, string searchquery = "")
         {
             List<RestauranteView> restaurantes;
@@ -44,7 +46,7 @@ namespace ProyectoASPNET.Controllers
             {
                 restaurantes = await this.repo.GetRestaurantesViewAsync(searchquery);
             }
-            int idusuario = HttpContext.Session.GetObject<int>("USER");
+            int idusuario = int.Parse(HttpContext.User.Identity.Name);
             Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
 
@@ -64,10 +66,10 @@ namespace ProyectoASPNET.Controllers
             return PartialView("_ListRestaurantes", restaurantes);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> Productos(int idrestaurante)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -81,6 +83,7 @@ namespace ProyectoASPNET.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeUser]
         public async Task<IActionResult> Productos
             (string form, int idrestaurante, int cantidad, int idproducto)
         {
@@ -108,6 +111,7 @@ namespace ProyectoASPNET.Controllers
             return View(model);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> _ListProductos(int idrestaurante, int categoria)
         {
             List<Producto> productos;
@@ -118,11 +122,11 @@ namespace ProyectoASPNET.Controllers
             return PartialView("_ListProductos", productos);
         }
 
+        [AuthorizeUser]
         public async Task<IActionResult> UpdateValoracionRestaurante
             (int idrestaurante, int idusuario, int valoracion)
         {
-            if (HttpContext.Session.GetString("USER") == null ||
-                HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }

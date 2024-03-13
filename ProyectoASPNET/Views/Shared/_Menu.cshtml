@@ -1,0 +1,206 @@
+﻿@{
+    int tipoUsuario = Context.Session.GetObject<int>("TIPOUSER");
+    int numCesta = 0;
+    if (Context.Session.GetObject<List<ProductoCesta>>("CESTA") != null)
+    {
+        numCesta = Context.Session.GetObject<List<ProductoCesta>>("CESTA").Sum(p => p.Cantidad);
+    }
+}
+
+<div class="navbar bg-primary text-primary-content lg:px-12">
+    <div class="navbar-start">
+        <div class="flex lg:hidden">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h8m-8 6h16" />
+                    </svg>
+                </div>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-primary text-primary-content rounded-box w-52">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index">Inicio</a>
+                    </li>
+                    @if (Context.User.Identity.IsAuthenticated)
+                    {
+                        @if (tipoUsuario == 1)
+                        {
+                            <li>
+                                <a asp-controller="Restaurantes" asp-action="Index">
+                                    Restaurantes
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Cesta" asp-action="Index">
+                                    Cesta
+                                    @if (numCesta > 0)
+                                    {
+                                        <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs text-white top-[1px] end-28 badge badge-error bg-red-600">
+                                            @numCesta
+                                        </div>
+                                    }
+                                </a>
+                            </li>
+                        }
+                        else if (tipoUsuario == 2)
+                        {
+                            <li>
+                                <a>Panel Admin</a>
+                                <ul class="p-2">
+                                    <li>
+                                        <a asp-controller="PanelAdmin" asp-route-nomvista="_Restaurantes">
+                                            Restaurantes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="PanelAdmin" asp-route-nomvista="_Usuarios">
+                                            Usuarios
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="PanelAdmin" asp-route-nomvista="_Productos">
+                                            Productos
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else if (tipoUsuario == 3)
+                        {
+                            <li>
+                                <a asp-controller="Restaurantes" asp-action="PanelRestaurante">
+                                    Panel Restaurante
+                                </a>
+                            </li>
+                        }
+                    }
+                    <li>
+                        <a>Usuario</a>
+                        <ul class="p-2">
+                            @if (!Context.User.Identity.IsAuthenticated)
+                            {
+                                <li>
+                                    <a asp-controller="Auth" asp-action="Login">
+                                        Iniciar sesión
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Auth" asp-action="Register">
+                                        Registrarse
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+
+                                <li>
+                                    <a asp-controller="Usuario" asp-action="Perfil">
+                                        Perfil
+                                    </a>
+                                </li>
+                                if (tipoUsuario == 1)
+                                {
+                                    <li>
+                                        <a asp-controller="Usuario" asp-action="Pedidos">
+                                            Pedidos
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a asp-controller="Auth" asp-action="Logout">
+                                        Cerrar sesión
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-ghost">
+            <span class="text-xl">Tabe</span>
+        </a>
+    </div>
+    <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+            @if (Context.User.Identity.IsAuthenticated)
+            {
+                @if (tipoUsuario == 1)
+                {
+                    <li>
+                        <a asp-controller="Restaurantes" asp-action="Index">
+                            Restaurantes
+                        </a>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>Usuario</summary>
+                            <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                                <li>
+                                    <a asp-controller="Usuario" asp-action="Perfil">
+                                        Perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Usuario" asp-action="Pedidos">
+                                        Pedidos
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                }
+                else if (tipoUsuario == 2)
+                {
+                    <li>
+                        <a asp-controller="PanelAdmin" asp-action="Index">
+                            Panel Admin
+                        </a>
+                    </li>
+                }
+                else if (tipoUsuario == 3)
+                {
+                    <li>
+                        <a asp-controller="Restaurantes" asp-action="PanelRestaurante">
+                            Panel Restaurante
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+    <div class="navbar-end hidden lg:flex">
+        @if (!Context.User.Identity.IsAuthenticated)
+        {
+            <div class="join">
+                <a asp-controller="Auth" asp-action="Login" class="btn font-medium join-item">
+                    Iniciar sesión
+                </a>
+                <a asp-controller="Auth" asp-action="Register" class="btn font-medium join-item">
+                    Registrarse
+                </a>
+            </div>
+        }
+        else
+        {
+            if (tipoUsuario == 1)
+            {
+                <a asp-controller="Cesta" asp-action="Index"
+                   class="btn btn-ghost btn-circle me-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                        <path d="M1.75 1.002a.75.75 0 1 0 0 1.5h1.835l1.24 5.113A3.752 3.752 0 0 0 2 11.25c0 .414.336.75.75.75h10.5a.75.75 0 0 0 0-1.5H3.628A2.25 2.25 0 0 1 5.75 9h6.5a.75.75 0 0 0 .73-.578l.846-3.595a.75.75 0 0 0-.578-.906 44.118 44.118 0 0 0-7.996-.91l-.348-1.436a.75.75 0 0 0-.73-.573H1.75ZM5 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
+                    </svg>
+                    @if (numCesta > 0)
+                    {
+                        <div class="w-5 h-5 text-xs text-white badge badge-error bg-red-600">@numCesta</div>
+                    }
+                </a>
+            }
+            <a asp-controller="Auth" asp-action="Logout" class="btn font-medium">
+                Cerrar sesión
+            </a>
+        }
+    </div>
+</div>

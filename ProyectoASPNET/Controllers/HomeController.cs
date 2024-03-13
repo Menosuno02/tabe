@@ -6,7 +6,7 @@ namespace ProyectoASPNET.Controllers
     {
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("USER") != null)
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
