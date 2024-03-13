@@ -8,14 +8,14 @@
                     @if (ViewData["IDRESTAURANTE"] != null)
                     {
                         <button data-idrestaurante="@ViewData["IDRESTAURANTE"]" onclick="createProducto(this)"
-                                class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
+                                class="btn btn-primary px-5 py-3 text-sm font-medium mb-6 w-full">
                             Crear producto
                         </button>
                     }
                     else
                     {
                         <button data-idrestaurante="" onclick="createProducto(this)"
-                                class="btn btn-primary px-5 py-3 text-sm font-medium w-100 mb-6 w-full">
+                                class="btn btn-primary px-5 py-3 text-sm font-medium mb-6 w-full">
                             Crear producto
                         </button>
                     }

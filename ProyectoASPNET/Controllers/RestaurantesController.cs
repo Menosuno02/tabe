@@ -76,7 +76,7 @@ namespace ProyectoASPNET.Controllers
             ProductosActionModel model = new ProductosActionModel
             {
                 Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriasProductosAsync()
+                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(idrestaurante)
             };
             return View(model);
         }
@@ -106,7 +106,7 @@ namespace ProyectoASPNET.Controllers
             ProductosActionModel model = new ProductosActionModel
             {
                 Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriasProductosAsync()
+                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(idrestaurante)
             };
             return View(model);
         }

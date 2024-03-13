@@ -239,9 +239,43 @@ public class RepositoryRestaurantes
     #endregion
 
     #region CATEGORIAS_PRODUCTOS
-    public async Task<List<CategoriaProducto>> GetCategoriasProductosAsync()
+    private async Task<int> GetMaxIdCategoriaProducto()
     {
-        return await this.context.CategoriasProducto.ToListAsync();
+        if (this.context.CategoriasProducto.Count() == 0) return 1;
+        return await this.context.CategoriasProducto.MaxAsync(cp => cp.IdCategoriaProducto) + 1;
+    }
+
+    public async Task<List<CategoriaProducto>> GetCategoriasProductosAsync(int idrestaurante)
+    {
+        return await this.context.CategoriasProducto
+            .Where(cp => cp.IdRestaurante == idrestaurante)
+            .ToListAsync();
+    }
+
+    public async Task<CategoriaProducto> CreateCategoriaProductoAsync(int idrestaurante, string categoria)
+    {
+        CategoriaProducto categoriaProducto = new CategoriaProducto
+        {
+            IdCategoriaProducto = await GetMaxIdCategoriaProducto(),
+            IdRestaurante = idrestaurante,
+            Nombre = categoria
+        };
+        await this.context.CategoriasProducto.AddAsync(categoriaProducto);
+        await this.context.SaveChangesAsync();
+        return categoriaProducto;
+    }
+
+    public async Task DeleteCategoriaProductoAsync(int idcategoria)
+    {
+        List<ProductoCategorias> relationsCategoria = await this.context.ProductoCategorias
+            .Where(pc => pc.IdCategoria == idcategoria)
+            .ToListAsync();
+        this.context.ProductoCategorias.RemoveRange(relationsCategoria);
+        await this.context.SaveChangesAsync();
+        CategoriaProducto categoriaProducto = await this.context.CategoriasProducto
+            .FirstOrDefaultAsync(cp => cp.IdCategoriaProducto == idcategoria);
+        this.context.CategoriasProducto.Remove(categoriaProducto);
+        await this.context.SaveChangesAsync();
     }
     #endregion
 

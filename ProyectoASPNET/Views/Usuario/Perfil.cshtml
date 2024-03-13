@@ -5,7 +5,7 @@
     <fieldset class="flex flex-wrap w-full justify-center">
         <div class="w-[48%]">
             <label for="detailsRadio"
-                   class="flex cursor-pointer items-center justify-center rounded-md border border-gray-100 bg-white px-3 py-2 text-gray-900 hover:border-gray-200 has-[:checked]:border-violet-800 has-[:checked]:bg-violet-800 has-[:checked]:text-white">
+                   class="flex cursor-pointer items-center justify-center rounded-md border border-gray-100 bg-white px-3 py-2 text-gray-900 hover:border-gray-200 has-[:checked]:border-violet-700 has-[:checked]:bg-violet-700 has-[:checked]:text-white">
                 <input type="radio"
                        name="optionForm"
                        value="detailsRadio"
@@ -19,7 +19,7 @@
 
         <div class="w-[48%]">
             <label for="editRadio"
-                   class="flex cursor-pointer items-center justify-center rounded-md border border-gray-100 bg-white px-3 py-2 text-gray-900 hover:border-gray-200 has-[:checked]:border-violet-800 has-[:checked]:bg-violet-800 has-[:checked]:text-white">
+                   class="flex cursor-pointer items-center justify-center rounded-md border border-gray-100 bg-white px-3 py-2 text-gray-900 hover:border-gray-200 has-[:checked]:border-violet-700 has-[:checked]:bg-violet-700 has-[:checked]:text-white">
                 <input type="radio"
                        name="optionForm"
                        value="editRadio"
@@ -52,7 +52,7 @@
             <input type="text" readonly name="direccion" value="@Model.Direccion" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
         </div>
         <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
-            <button id="editButton" disabled class="btn btn-primary w-48 font-medium">
+            <button id="editButton" disabled class="btn btn-primary w-48 font-medium transition">
                 Editar perfil
             </button>
         </div>

@@ -85,6 +85,13 @@
             });
         }
 
+        function loadCategoriasProductoRestaurante() {
+            $(function () {
+                let id = $("#selectRestauranteCreateProd").val();
+                $("#selectCategoriasCreateProd").load("/PanelAdmin/_CategoriasProductoRestaurante?idrestaurante=" + id);
+            });
+        }
+
         function detailsProducto(e) {
             $(function () {
                 let id = e.dataset.idproducto;

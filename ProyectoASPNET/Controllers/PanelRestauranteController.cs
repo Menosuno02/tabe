@@ -101,7 +101,7 @@ namespace ProyectoASPNET.Controllers
             }
             int idusuario = int.Parse(HttpContext.User.Identity.Name);
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync();
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(rest.IdRestaurante);
             return PartialView("_CreateProducto", rest);
         }
 
@@ -133,7 +133,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             Producto prod = await this.repo.FindProductoAsync(idprod);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync();
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(prod.IdRestaurante);
             return PartialView("_EditProducto", prod);
         }
 
@@ -155,6 +155,42 @@ namespace ProyectoASPNET.Controllers
             }
             await this.repo.DeleteProductoAsync(id);
             return RedirectToAction("Index", new { nomvista = "_ProductosRestaurante" });
+        }
+
+        [AuthorizeUser]
+        public async Task<IActionResult> _CategoriasRestaurante()
+        {
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
+            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
+            List<CategoriaProducto> categorias = await this.repo.GetCategoriasProductosAsync(rest.IdRestaurante);
+            ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
+            return PartialView("_CategoriasRestaurante", categorias);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeUser]
+        public async Task<IActionResult> _CategoriasRestaurante(string categoria)
+        {
+            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
+            CategoriaProducto categProducto = await this.repo.CreateCategoriaProductoAsync(rest.IdRestaurante, categoria);
+            return RedirectToAction("Index", new { nomvista = "_CategoriasRestaurante" });
+        }
+
+        [AuthorizeUser]
+        public async Task<IActionResult> DeleteCategoriaProducto(int idcategoria)
+        {
+            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            {
+                return RedirectToAction("CheckRoutes", "Auth");
+            }
+            await this.repo.DeleteCategoriaProductoAsync(idcategoria);
+            return RedirectToAction("Index", new { nomvista = "_CategoriasRestaurante" });
         }
     }
 }

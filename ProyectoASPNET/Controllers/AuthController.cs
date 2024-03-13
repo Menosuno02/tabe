@@ -5,6 +5,7 @@ using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using System.Text.RegularExpressions;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -19,13 +20,18 @@ namespace ProyectoASPNET.Controllers
 
         public IActionResult CheckRoutes()
         {
-            int tipoUsuario = HttpContext.Session.GetObject<int>("TIPOUSER");
-            if (tipoUsuario == 1)
-                return RedirectToAction("Index", "Restaurantes");
-            else if (tipoUsuario == 2)
-                return RedirectToAction("Index", "PanelAdmin");
-            else
-                return RedirectToAction("Index", "PanelRestaurante");
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                int tipoUsuario = HttpContext.Session.GetObject<int>("TIPOUSER");
+                if (tipoUsuario == 1)
+                    return RedirectToAction("Index", "Restaurantes");
+                else if (tipoUsuario == 2)
+                    return RedirectToAction("Index", "PanelAdmin");
+                else if (tipoUsuario == 3)
+                    return RedirectToAction("Index", "PanelRestaurante");
+                else return RedirectToAction("Logout", "Auth"); // bug
+            }
+            else return RedirectToAction("Logout", "Auth"); // bug
         }
 
         public IActionResult Login()

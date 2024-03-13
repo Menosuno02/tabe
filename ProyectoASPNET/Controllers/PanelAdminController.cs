@@ -150,10 +150,10 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync();
             if (idrestaurante != null)
             {
                 ViewData["RESTAURANTE"] = await this.repo.FindRestauranteAsync(idrestaurante.Value);
+                ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(idrestaurante.Value);
                 return PartialView("_CreateProducto");
             }
             List<Restaurante> restaurantes = await this.repo.GetRestaurantesAsync();
@@ -188,7 +188,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             Producto prod = await this.repo.FindProductoAsync(idprod);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync();
+            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(prod.IdRestaurante);
             return PartialView("_EditProducto", prod);
         }
 
@@ -211,6 +211,12 @@ namespace ProyectoASPNET.Controllers
             Producto prod = await this.repo.FindProductoAsync(id);
             await this.repo.DeleteProductoAsync(id);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
+        }
+
+        public async Task<IActionResult> _CategoriasProductoRestaurante(int idrestaurante)
+        {
+            List<CategoriaProducto> categorias = await this.repo.GetCategoriasProductosAsync(idrestaurante);
+            return PartialView("_CategoriasProductoRestaurante", categorias);
         }
         #endregion
     }

@@ -55,7 +55,7 @@
             $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=");
 
             $("input[name=categoria]").on("change", function () {
-                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/3 mx-auto' />");
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
                 let searchQuery = $("input[name=searchquery]").val();
                 let categoria = $(this).val();
                 if (categoria == undefined) categoria = "Todas";
@@ -71,7 +71,7 @@
             });
 
             $("input[name=searchquery]").on("input", function () {
-                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/3 mx-auto' />");
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
                 let searchQuery = $("input[name=searchquery]").val();
                 let categoria = $("input[name=categoria].categ-selected").val();
                 if (categoria == undefined) categoria = "Todas";

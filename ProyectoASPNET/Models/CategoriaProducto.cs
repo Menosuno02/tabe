@@ -9,6 +9,8 @@ namespace ProyectoASPNET.Models
         [Key]
         [Column("IDCATEGORIA")]
         public int IdCategoriaProducto { get; set; }
+        [Column("IDRESTAURANTE")]
+        public int IdRestaurante { get; set; }
         [Column("NOMBRECATEGORIA")]
         public string Nombre { get; set; }
     }
