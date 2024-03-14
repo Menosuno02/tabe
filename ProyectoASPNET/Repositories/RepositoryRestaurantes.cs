@@ -158,15 +158,19 @@ public class RepositoryRestaurantes
                 .Where(pc => pc.IdProducto == producto.IdProducto)
                 .ToListAsync());
         }
+        this.context.ValoracionRestaurantes.RemoveRange
+            (await this.context.ValoracionRestaurantes
+            .Where(v => v.IdRestaurante == id)
+            .ToListAsync());
         await this.context.SaveChangesAsync();
+        this.context.CategoriasProducto.RemoveRange
+            (await this.context.CategoriasProducto
+            .Where(cp => cp.IdRestaurante == id)
+            .ToListAsync());
         this.context.Productos.RemoveRange(productos);
         this.context.Pedidos.RemoveRange
             (await this.context.Pedidos
             .Where(p => p.IdRestaurante == id)
-            .ToListAsync());
-        this.context.ValoracionRestaurantes.RemoveRange
-            (await this.context.ValoracionRestaurantes
-            .Where(v => v.IdRestaurante == id)
             .ToListAsync());
         await this.context.SaveChangesAsync();
         Restaurante restaurante = await FindRestauranteAsync(id);

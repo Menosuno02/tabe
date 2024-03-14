@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Models;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using System.Text.RegularExpressions;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -22,7 +20,7 @@ namespace ProyectoASPNET.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                int tipoUsuario = HttpContext.Session.GetObject<int>("TIPOUSER");
+                int tipoUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.Role).Value);
                 if (tipoUsuario == 1)
                     return RedirectToAction("Index", "Restaurantes");
                 else if (tipoUsuario == 2)
@@ -50,17 +48,18 @@ namespace ProyectoASPNET.Controllers
             Usuario usuario = await this.repo.LoginUsuarioAsync(email, password);
             if (usuario != null)
             {
-                HttpContext.Session.SetObject("TIPOUSER", usuario.TipoUsuario);
                 ClaimsIdentity identity = new ClaimsIdentity(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         ClaimTypes.Name, ClaimTypes.Role);
-                Claim claimName = new Claim(ClaimTypes.Name, usuario.IdUsuario.ToString());
+                Claim claimName = new Claim(ClaimTypes.Name, usuario.Correo);
+                Claim claimID = new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString());
                 Claim claimRole = new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString());
                 identity.AddClaim(claimName);
+                identity.AddClaim(claimID);
                 identity.AddClaim(claimRole);
                 ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
+                await HttpContext.SignInAsync
+                    (CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
                 return RedirectToAction("CheckRoutes");
             }
             else
@@ -92,7 +91,6 @@ namespace ProyectoASPNET.Controllers
         {
             await HttpContext.SignOutAsync
                 (CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Remove("TIPOUSER");
             HttpContext.Session.Remove("CESTA");
             HttpContext.Session.Remove("RESTAURANTE");
             return RedirectToAction("Index", "Home");

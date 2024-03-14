@@ -2,6 +2,7 @@
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Models;
+using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -17,7 +18,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Perfil()
         {
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
             return View(usu);
         }
@@ -34,11 +35,11 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Pedidos()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             List<Pedido> pedidos = await this.repo.GetPedidosUsuarioAsync(idusuario);
             List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
             ViewData["PRODUCTOS"] = await this.repo.GetProductosPedidoViewAsync(idPedidos);

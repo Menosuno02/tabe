@@ -1,5 +1,6 @@
 ﻿using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Models;
+using System.Security.Claims;
 
 namespace ProyectoASPNET.Helpers
 {
@@ -48,7 +49,7 @@ namespace ProyectoASPNET.Helpers
                     total += producto.Precio * cantidad;
                 }
             }
-            int id = int.Parse(httpContext.User.Identity.Name);
+            int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Usuario usuario = await this.repo.FindUsuarioAsync(id);
             return new CestaView
             {
@@ -132,10 +133,10 @@ namespace ProyectoASPNET.Helpers
             {
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");
-                int user = int.Parse(httpContext.User.Identity.Name);
+                int idusuario = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 int idrestaurante = httpContext.Session.GetObject<int>("RESTAURANTE");
                 Pedido pedido =
-                    await this.repo.CreatePedidoAsync(user, idrestaurante, cesta);
+                    await this.repo.CreatePedidoAsync(idusuario, idrestaurante, cesta);
                 httpContext.Session.Remove("CESTA");
                 httpContext.Session.Remove("RESTAURANTE");
             }

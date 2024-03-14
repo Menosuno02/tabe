@@ -3,6 +3,7 @@ using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
+using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -22,7 +23,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -51,7 +52,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public IActionResult UpdateCesta(int idproducto, int cantidad)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }

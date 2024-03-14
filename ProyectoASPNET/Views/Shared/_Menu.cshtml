@@ -1,5 +1,10 @@
-﻿@{
-    int tipoUsuario = Context.Session.GetObject<int>("TIPOUSER");
+﻿@using System.Security.Claims
+@{
+    int tipoUsuario = 0;
+    if (Context.User.Identity.IsAuthenticated)
+    {
+        tipoUsuario = int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value);
+    }
     int numCesta = 0;
     if (Context.Session.GetObject<List<ProductoCesta>>("CESTA") != null)
     {

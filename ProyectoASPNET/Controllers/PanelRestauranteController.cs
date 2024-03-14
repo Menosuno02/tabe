@@ -3,6 +3,7 @@ using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
+using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -21,7 +22,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public IActionResult Index(string? nomvista)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -35,11 +36,11 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _PedidosRestaurante()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             List<Pedido> pedidos = await this.repo.GetPedidosRestauranteAsync(idusuario);
             List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
             ViewData["PRODUCTOS"] = await this.repo.GetProductosPedidoViewAsync(idPedidos);
@@ -58,11 +59,11 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _EditRestaurante()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
             return PartialView("_EditRestaurante", rest);
@@ -80,12 +81,12 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _ProductosRestaurante()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             List<Producto> productos;
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
             productos = await this.repo.GetProductosRestauranteAsync(rest.IdRestaurante);
             ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
@@ -95,11 +96,11 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CreateProducto()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
             ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(rest.IdRestaurante);
             return PartialView("_CreateProducto", rest);
@@ -117,7 +118,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _DetailsProducto(int idprod)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -128,7 +129,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _EditProducto(int idprod)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -149,7 +150,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> DeleteProducto(int id)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -160,11 +161,11 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CategoriasRestaurante()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
             List<CategoriaProducto> categorias = await this.repo.GetCategoriasProductosAsync(rest.IdRestaurante);
             ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
@@ -176,7 +177,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CategoriasRestaurante(string categoria)
         {
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(idusuario);
             CategoriaProducto categProducto = await this.repo.CreateCategoriaProductoAsync(rest.IdRestaurante, categoria);
             return RedirectToAction("Index", new { nomvista = "_CategoriasRestaurante" });
@@ -185,7 +186,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> DeleteCategoriaProducto(int idcategoria)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 3)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }

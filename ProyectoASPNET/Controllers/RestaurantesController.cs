@@ -3,6 +3,7 @@ using ProyectoASPNET.Models;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Filters;
+using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -25,7 +26,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -46,7 +47,7 @@ namespace ProyectoASPNET.Controllers
             {
                 restaurantes = await this.repo.GetRestaurantesViewAsync(searchquery);
             }
-            int idusuario = int.Parse(HttpContext.User.Identity.Name);
+            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
 
@@ -69,7 +70,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Productos(int idrestaurante)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -126,7 +127,7 @@ namespace ProyectoASPNET.Controllers
         public async Task<IActionResult> UpdateValoracionRestaurante
             (int idrestaurante, int idusuario, int valoracion)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 1)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }

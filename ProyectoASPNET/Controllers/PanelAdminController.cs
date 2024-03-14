@@ -3,6 +3,7 @@ using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
+using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -18,7 +19,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public IActionResult Index(string? nomvista, int? idrest)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -37,7 +38,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _Restaurantes()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -48,7 +49,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CreateRestaurante()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -68,7 +69,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _DetailsRestaurante(int idrest)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -79,7 +80,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _EditRestaurante(int idrest)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -100,7 +101,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> DeleteRestaurante(int id)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -113,7 +114,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _Usuarios()
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -126,7 +127,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _Productos(int? idrest)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -146,7 +147,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CreateProducto(int? idrestaurante)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -172,7 +173,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _DetailsProducto(int idprod)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -183,7 +184,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _EditProducto(int idprod)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
@@ -204,7 +205,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> DeleteProducto(int id)
         {
-            if (HttpContext.Session.GetObject<int>("TIPOUSER") != 2)
+            if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "2")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
