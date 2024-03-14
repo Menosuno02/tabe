@@ -1,6 +1,6 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [BBDDPROYECTO]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Database [BBDDPROYECTO]    Script Date: 14/03/2024 14:10:13 ******/
 CREATE DATABASE [BBDDPROYECTO]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -80,7 +80,7 @@ ALTER DATABASE [BBDDPROYECTO] SET QUERY_STORE = OFF
 GO
 USE [BBDDPROYECTO]
 GO
-/****** Object:  Table [dbo].[CATEGORIAS_RESTAURANTES]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[CATEGORIAS_RESTAURANTES]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -95,7 +95,7 @@ CREATE TABLE [dbo].[CATEGORIAS_RESTAURANTES](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[VALORACIONES_RESTAURANTE]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[VALORACIONES_RESTAURANTE]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -111,7 +111,7 @@ CREATE TABLE [dbo].[VALORACIONES_RESTAURANTE](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RESTAURANTES]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[RESTAURANTES]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,7 +130,7 @@ CREATE TABLE [dbo].[RESTAURANTES](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[V_RESTAURANTES]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  View [dbo].[V_RESTAURANTES]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -148,7 +148,7 @@ AS
 	GROUP BY R.IDRESTAURANTE, R.NOMBRE, R.TELEFONO, R.CORREO,
 	R.DIRECCION, R.IMAGEN, CR.NOMBRECATEGORIA
 GO
-/****** Object:  Table [dbo].[ESTADOS_PEDIDOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[ESTADOS_PEDIDOS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -162,7 +162,7 @@ CREATE TABLE [dbo].[ESTADOS_PEDIDOS](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PEDIDOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[PEDIDOS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -179,7 +179,7 @@ CREATE TABLE [dbo].[PEDIDOS](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PRODUCTOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[PRODUCTOS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -197,7 +197,7 @@ CREATE TABLE [dbo].[PRODUCTOS](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PRODUCTOS_PEDIDO]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[PRODUCTOS_PEDIDO]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -213,7 +213,7 @@ CREATE TABLE [dbo].[PRODUCTOS_PEDIDO](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[V_PRODUCTOS_PEDIDO]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  View [dbo].[V_PRODUCTOS_PEDIDO]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -231,7 +231,7 @@ CREATE   VIEW [dbo].[V_PRODUCTOS_PEDIDO] AS
 	INNER JOIN ESTADOS_PEDIDOS E
 	ON P.ESTADO = E.IDESTADO
 GO
-/****** Object:  Table [dbo].[CATEGORIAS_PRODUCTOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[CATEGORIAS_PRODUCTOS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -246,7 +246,7 @@ CREATE TABLE [dbo].[CATEGORIAS_PRODUCTOS](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PRODUCTO_CATEGORIAS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[PRODUCTO_CATEGORIAS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -261,7 +261,7 @@ CREATE TABLE [dbo].[PRODUCTO_CATEGORIAS](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TIPOS_USUARIOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[TIPOS_USUARIOS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -275,7 +275,7 @@ CREATE TABLE [dbo].[TIPOS_USUARIOS](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[USUARIOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Table [dbo].[USUARIOS]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -302,6 +302,36 @@ GO
 INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (3, 1, N'Postres')
 GO
 INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (4, 2, N'Platos nuevos')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (5, 3, N'Cajas')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (6, 3, N'Galletas')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (7, 4, N'Burgers')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (8, 4, N'Ribs')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (9, 4, N'Entrantes')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (10, 5, N'Bowls')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (11, 5, N'Entrantes')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (12, 6, N'Menús')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (13, 6, N'Raciones')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (14, 7, N'Hamburguesas')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (15, 7, N'Entrantes')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (16, 8, N'Entrantes')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (17, 8, N'Especialidades')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (18, 9, N'Sándwiches')
+GO
+INSERT [dbo].[CATEGORIAS_PRODUCTOS] ([IDCATEGORIA], [IDRESTAURANTE], [NOMBRECATEGORIA]) VALUES (19, 9, N'Postres')
 GO
 INSERT [dbo].[CATEGORIAS_RESTAURANTES] ([IDCATEGORIA], [NOMBRECATEGORIA], [ICONO]) VALUES (1, N'Americana', N'americana.png')
 GO
@@ -365,6 +395,68 @@ INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (9, 4)
 GO
 INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (11, 4)
 GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (12, 5)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (13, 6)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (14, 6)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (15, 6)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (16, 6)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (17, 7)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (18, 7)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (19, 8)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (20, 9)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (21, 9)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (22, 10)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (23, 11)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (24, 10)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (25, 10)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (26, 12)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (27, 13)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (28, 13)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (29, 12)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (30, 14)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (31, 14)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (32, 14)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (33, 14)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (34, 15)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (35, 16)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (36, 17)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (37, 16)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (38, 17)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (39, 18)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (40, 18)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (41, 19)
+GO
+INSERT [dbo].[PRODUCTO_CATEGORIAS] ([IDPRODUCTO], [IDCATEGORIA]) VALUES (42, 18)
+GO
 INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (1, N'Pizza Fugazzeta Rellena', N'Extra de mozarrella, cebolla dulce, ají molido y orégano', CAST(28.00 AS Decimal(5, 2)), N'img1.jpeg', 1)
 GO
 INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (2, N'Pizza Posta', N'Mozzarella, portobello, yema de huevo, trufa y parmesano', CAST(23.00 AS Decimal(5, 2)), N'img2.jpeg', 1)
@@ -386,6 +478,68 @@ GO
 INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (10, N'Panceta ahumada con ajetes tiernos', N'Panceta ahumada durante días con ajetes tiernos', CAST(15.00 AS Decimal(5, 2)), N'img10.jpeg', 2)
 GO
 INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (11, N'Tallarines a las 36 especias', N'Uno de los platos más populares del desayuno en Hunan', CAST(12.00 AS Decimal(5, 2)), N'img11.jpeg', 2)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (12, N'Caja de Galletas (6 unidades)', N'Cajita con seis sabores distintos', CAST(18.50 AS Decimal(5, 2)), N'img12.jpeg', 3)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (13, N'Chocolate Chunk Cookie', N'Chocolate de leche y semidulce con un toque de sal marina', CAST(3.30 AS Decimal(5, 2)), N'img13.jpeg', 3)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (14, N'S''mores Cookie', N'Trozos de chocolate con nubes sobre una galleta graham', CAST(3.30 AS Decimal(5, 2)), N'img14.jpeg', 3)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (15, N'Red Velvet Cookie', N'Chocolate blanco, chocolate semidulce, cacao y nubes', CAST(3.30 AS Decimal(5, 2)), N'img15.jpeg', 3)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (16, N'Blueberry Cookie', N'Arándanos + limón + mantecado', CAST(3.30 AS Decimal(5, 2)), N'img16.jpeg', 3)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (17, N'Bacon Cheeseburger', N'Carne a la parrilla, con queso fundido, bacon crujiente y lechuga, tomate, cebolla y pepinillos', CAST(10.46 AS Decimal(5, 2)), N'img17.jpeg', 4)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (18, N'Ultimate Signature Burger', N'Dos carnes con nuestra salsa Fridays, queso fundido, bacon, cebolla caramelizada, mayonesa y lechuga.', CAST(11.72 AS Decimal(5, 2)), N'img18.jpeg', 4)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (19, N'Whiskey-Glaze Ribs', N'Costillas glaseadas con salsa Whiskey-Glaze y sazonadas con una mezcla de especias cajún, auténtico sabor americano.', CAST(10.88 AS Decimal(5, 2)), N'img19.jpeg', 4)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (20, N'Buffalo Wings', N'Alitas de pollo marinadas en salsa Buffalo picante, servidas con palitos de apio y salsa de queso azul.', CAST(9.95 AS Decimal(5, 2)), N'img20.jpeg', 4)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (21, N'Mozzarella Sticks', N'Dorados sticks de mozzarella con un perejil y queso rallado, acompañados de salsa marinara.', CAST(10.95 AS Decimal(5, 2)), N'img21.jpeg', 4)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (22, N'¡Está Padre!', N'Arroz blanco, salsa blanca ligera, cochinita pibil, maíz, pico de gallo, piña natural, aguacate y cacahuetes', CAST(12.90 AS Decimal(5, 2)), N'img22.jpeg', 5)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (23, N'Crema de zanahoria', N'Crema casera de zanahoria con un toque de pimentón de la vera, aceite de oliva extra virgen y cebollino', CAST(5.90 AS Decimal(5, 2)), N'img23.jpeg', 5)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (24, N'Pasión vegana', N'Arroz integral, tofu con salsa teriyaki, zanahoria, garbanzos, verduras asadas, aguacate y cebolla crujiente', CAST(11.90 AS Decimal(5, 2)), N'img24.jpeg', 5)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (25, N'Mambo Italiano', N'Pasta Integral, pollo asado con salsa pesto, brócoli, tomate cherry, huevo cocido, queso feta y semillas de girasol.', CAST(13.90 AS Decimal(5, 2)), N'img25.jpeg', 5)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (26, N'Menú Dürüm', N'Pollo, cordero o mixto con patatas y bebida de 0.33 litros.', CAST(13.99 AS Decimal(5, 2)), N'img26.jpeg', 6)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (27, N'Patatas Fritas', N'Ración mediana', CAST(3.99 AS Decimal(5, 2)), N'img27.jpeg', 6)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (28, N'Dürüm Normal', N'Pan fino, carne o pollo, ensalada y salsa.', CAST(8.50 AS Decimal(5, 2)), N'img28.jpeg', 6)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (29, N'Menú Kebab', N'Pollo, cordero o mixto con patatas y bebida de 0.33 litros.', CAST(12.99 AS Decimal(5, 2)), N'img29.jpeg', 6)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (30, N'Hamburguesa Dirty Philly', N'Beyond meat, lechuga, tomate, pepinillos, cebolla caramelizada y salsa hoisin. Viene con patatas y nuestra salsa casera MAD.', CAST(13.95 AS Decimal(5, 2)), N'img30.jpeg', 7)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (31, N'Hamburguesa Double Cheese Bacon', N'Burger de heura, doble queso vegano fundido, bacon, lechuga, tomate, pepinillos, cebolla roja y sweet Carolina. Viene con patatas y nuestra salsa casera MAD.', CAST(13.95 AS Decimal(5, 2)), N'img31.jpeg', 7)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (32, N'Hamburguesa Rock''n Chick''n', N'Crunchy chick''n burger, lechuga, tomate, pepinillos, mix cebolla y crujiente, queso cheddar fundido, vegan mayo y salsa MAD. Viene con patatas y nuestra salsa casera MAD.', CAST(12.95 AS Decimal(5, 2)), N'img32.jpeg', 7)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (33, N'Hamburguesa Mad Signature', N'Beyond meat, lechuga, tomate, pepinillos, mix cebolla roja y crujiente, queso cheddar fundido y salsa MAD. Viene con patatas y nuestra salsa casera MAD.', CAST(13.95 AS Decimal(5, 2)), N'img33.jpeg', 7)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (34, N'Homemade Buffalo Coli Wings', N'Alitas crujientes de coliflor con nuestro rebozado secreto a las 7 especias y salsa casera búffalo.', CAST(7.50 AS Decimal(5, 2)), N'img34.jpeg', 7)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (35, N' Menú Mayura', N'Entrante con cuatro salsas, Curry Hindú con Bebida, acompañado de Arroz Basmati o Pan Naan', CAST(14.90 AS Decimal(5, 2)), N'img35.jpeg', 8)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (36, N'Pollo Tikka Masala', N'Excepcional plato de pollo con una exquisita salsa de tomate y cebolla.', CAST(13.90 AS Decimal(5, 2)), N'img36.jpeg', 8)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (37, N'Arroz Basmati (Vegano)', N'Arroz tradicional y aromático hecho a fuego lento', CAST(4.80 AS Decimal(5, 2)), N'img37.jpeg', 8)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (38, N'Pollo Makhani', N'Una delicia cremosa de pollo tandoori con queso, tomate y mantequilla.', CAST(13.90 AS Decimal(5, 2)), N'img38.jpeg', 8)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (39, N'Smashed Sandwich', N'180 gr. de carne de vaca gallega crujientes por fuera y jugosos por dentro. Con queso cheddar, emmental y nuestra salsa secreta.', CAST(13.75 AS Decimal(5, 2)), N'img39.jpeg', 9)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (40, N'Pastrami', N'Sándwich de pan de trigo a la plancha con queso suizo, cebolla encurtida, mostaza picante y, por supuesto, pastrami.', CAST(13.75 AS Decimal(5, 2)), N'img40.jpeg', 9)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (41, N'Chocolate Chip Cookie Gigante', N'La galleta casera más adictiva, crujiente y blandita al mismo tiempo.', CAST(2.95 AS Decimal(5, 2)), N'img41.jpeg', 9)
+GO
+INSERT [dbo].[PRODUCTOS] ([IDPRODUCTO], [NOMBRE], [DESCRIPCION], [PRECIO], [IMAGEN], [IDRESTAURANTE]) VALUES (42, N'Cubano', N'Pan blanco a la plancha con cerdo asado, jamón, salami de Génova, queso suizo, pepinillos y mostaza picante.', CAST(11.95 AS Decimal(5, 2)), N'img42.jpeg', 9)
 GO
 INSERT [dbo].[PRODUCTOS_PEDIDO] ([IDPEDIDO], [IDPRODUCTO], [CANTIDAD]) VALUES (1, 1, 2)
 GO
@@ -492,7 +646,7 @@ INSERT [dbo].[VALORACIONES_RESTAURANTE] ([IDRESTAURANTE], [IDUSUARIO], [VALORACI
 GO
 INSERT [dbo].[VALORACIONES_RESTAURANTE] ([IDRESTAURANTE], [IDUSUARIO], [VALORACION]) VALUES (2, 2, 4)
 GO
-/****** Object:  Index [UNIQUE_CORREO_RESTAURANTES]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Index [UNIQUE_CORREO_RESTAURANTES]    Script Date: 14/03/2024 14:10:13 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [UNIQUE_CORREO_RESTAURANTES] ON [dbo].[RESTAURANTES]
 (
 	[IDRESTAURANTE] ASC
@@ -500,7 +654,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [UNIQUE_CORREO_RESTAURANTES] ON [dbo].[RESTAURA
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UNIQUE_CORREO_USUARIOS]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  Index [UNIQUE_CORREO_USUARIOS]    Script Date: 14/03/2024 14:10:13 ******/
 ALTER TABLE [dbo].[USUARIOS] ADD  CONSTRAINT [UNIQUE_CORREO_USUARIOS] UNIQUE NONCLUSTERED 
 (
 	[CORREO] ASC
@@ -561,25 +715,7 @@ REFERENCES [dbo].[RESTAURANTES] ([IDRESTAURANTE])
 GO
 ALTER TABLE [dbo].[VALORACIONES_RESTAURANTE] CHECK CONSTRAINT [FK_VALORACIONES_RESTAURANTE_RESTAURANTES]
 GO
-/****** Object:  StoredProcedure [dbo].[SP_CREATE_USUARIO]    Script Date: 13/03/2024 23:51:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE   PROCEDURE [dbo].[SP_CREATE_USUARIO]
-(@NOMBRE NVARCHAR(100), @APELLIDOS NVARCHAR(100),
-@CORREO NVARCHAR(100), @CONTRASENYA VARBINARY(MAX),
-@TELEFONO NVARCHAR(9), @DIRECCION NVARCHAR(200),
-@SALT NVARCHAR(50))
-AS
-	DECLARE @IDUSUARIO INT
-	SELECT @IDUSUARIO = ISNULL(MAX(IDUSUARIO), 0) + 1
-	FROM USUARIOS
-	INSERT INTO USUARIOS VALUES
-	(@IDUSUARIO, @NOMBRE, @APELLIDOS, @CORREO,
-	@CONTRASENYA, @SALT, @TELEFONO, @DIRECCION, 1)
-GO
-/****** Object:  StoredProcedure [dbo].[SP_PRODUCTOS_CATEGORIA]    Script Date: 13/03/2024 23:51:52 ******/
+/****** Object:  StoredProcedure [dbo].[SP_PRODUCTOS_CATEGORIA]    Script Date: 14/03/2024 14:10:13 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
