@@ -33,14 +33,21 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-wrap">
-            <div class="relative w-11/12 mt-4 mx-auto">
+        <div class="flex flex-wrap mx-auto w-11/12 lg:w-11/12 md:w-10/12">
+            <div class="relative w-[49%] mt-4 mx-auto">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                     </svg>
                 </div>
                 <input type="search" value="" name="searchquery" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Busca restaurantes" />
+            </div>
+            <div class="w-[49%] mt-3 mx-auto">
+                <select id="selectOrden" name="idrestaurante"
+                        class="p-2 py-3.5 sm:py-4 mt-1 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                    <option value="valoracion">Ordenar por valoración</option>
+                    <option value="distancia">Ordenar por distancia</option>
+                </select>
             </div>
         </div>
     </div>
@@ -58,6 +65,7 @@
                 $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
                 let searchQuery = $("input[name=searchquery]").val();
                 let categoria = $(this).val();
+                let orden = $("#selectOrden").val();
                 if (categoria == undefined) categoria = "Todas";
                 $("span.text-categoria").removeClass("font-bold text-violet-700");
                 $(this).siblings("span.text-categoria").addClass("font-bold text-violet-700");
@@ -65,21 +73,35 @@
                 $(this).addClass("categ-selected");
                 if (categoria != "Todas")
                     $("#contentRestaurantes")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery);
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden);
                 else
-                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery);
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden);
             });
 
             $("input[name=searchquery]").on("input", function () {
                 $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
                 let searchQuery = $("input[name=searchquery]").val();
                 let categoria = $("input[name=categoria].categ-selected").val();
+                let orden = $("#selectOrden").val();
                 if (categoria == undefined) categoria = "Todas";
                 if (categoria != "Todas")
                     $("#contentRestaurantes")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery);
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden);
                 else
-                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery);
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden);
+            });
+
+            $("#selectOrden").on("change", function () {
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
+                let searchQuery = $("input[name=searchquery]").val();
+                let categoria = $("input[name=categoria].categ-selected").val();
+                let orden = $("#selectOrden").val();
+                if (categoria == undefined) categoria = "Todas";
+                if (categoria != "Todas")
+                    $("#contentRestaurantes")
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden);
+                else
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden);
             });
         });
     </script>

@@ -36,34 +36,23 @@ namespace ProyectoASPNET.Controllers
         }
 
         [AuthorizeUser]
-        public async Task<IActionResult> _ListRestaurantes(string? categoria, string searchquery = "")
+        public async Task<IActionResult> _ListRestaurantes
+            (string? categoria, string searchquery = "", string orden = "valoracion")
         {
             List<RestauranteView> restaurantes;
             if (categoria != null)
-            {
                 restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria, searchquery);
-            }
             else
-            {
                 restaurantes = await this.repo.GetRestaurantesViewAsync(searchquery);
-            }
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
-
-            /*
-            foreach (RestauranteView rest in restaurantes)
-            {
-                rest.InfoEntrega =
-                    await this.helperDistanceMatrix
-                    .GetDistanceMatrixInfoAsync(rest.Direccion, direccionUsu);
-            }
-            */
-
             var tasks = restaurantes
                 .Select(async r => r.InfoEntrega = await this.helperDistanceMatrix
                     .GetDistanceMatrixInfoAsync(r.Direccion, direccionUsu));
             await Task.WhenAll(tasks);
+            if (orden != "valoracion")
+                restaurantes = restaurantes.OrderBy(r => r.InfoEntrega.TiempoEstimado).ToList();
             return PartialView("_ListRestaurantes", restaurantes);
         }
 
