@@ -45,5 +45,30 @@ namespace ProyectoASPNET.Controllers
             ViewData["PRODUCTOS"] = await this.repo.GetProductosPedidoViewAsync(idPedidos);
             return View(pedidos);
         }
+
+        [AuthorizeUser]
+        public async Task<IActionResult> ModificarContrasenya()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeUser]
+        public async Task<IActionResult> ModificarContrasenya
+            (string actual, string nueva, string confirmar)
+        {
+            if (nueva != confirmar)
+                ViewData["CASO"] = "1";
+            else
+            {
+                int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
+                if (!await this.repo.ModificarContrasenyaAsync(usu, actual, nueva))
+                    ViewData["CASO"] = "2";
+                else ViewData["CASO"] = "3";
+            }
+            return View();
+        }
     }
 }

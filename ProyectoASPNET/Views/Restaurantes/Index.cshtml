@@ -57,9 +57,35 @@
 
 @section scripts {
     <script>
+        let posicion = 1;
+        window.addEventListener('scroll', () => {
+            const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+            if ((scrollTop + clientHeight) >= scrollHeight) {
+                posicion++;
+                getContentt(posicion);
+            }
+        });
+
+        function getContent(posicion) {
+            $(function () {
+                $("<img id='loading' src='/images/general/loading.gif' class='w-1/4 mx-auto' />").appendTo("#contentRestaurantes");
+                let searchQuery = $("input[name=searchquery]").val();
+                let categoria = $("input[name=categoria].categ-selected").val();
+                let orden = $("#selectOrden").val();
+                if (categoria == undefined) categoria = "Todas";
+                if (categoria != "Todas")
+                    $("<div>")
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + posicion)
+                        .appendTo("#contentRestaurantes");
+                else
+                    $("<div>").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + posicion).appendTo("#contentRestaurantes");
+                $("img#loading").first().remove();
+            });
+        }
+
         $(function () {
             $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
-            $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=");
+            $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=&posicion=1");
 
             $("input[name=categoria]").on("change", function () {
                 $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
@@ -73,9 +99,9 @@
                 $(this).addClass("categ-selected");
                 if (categoria != "Todas")
                     $("#contentRestaurantes")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden);
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
                 else
-                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden);
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
             });
 
             $("input[name=searchquery]").on("input", function () {
@@ -86,9 +112,9 @@
                 if (categoria == undefined) categoria = "Todas";
                 if (categoria != "Todas")
                     $("#contentRestaurantes")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden);
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
                 else
-                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden);
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
             });
 
             $("#selectOrden").on("change", function () {
@@ -99,10 +125,41 @@
                 if (categoria == undefined) categoria = "Todas";
                 if (categoria != "Todas")
                     $("#contentRestaurantes")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden);
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
                 else
-                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden);
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
             });
         });
+
+        function paginationProductos(e) {
+            let pos = e.value;
+            $(function () {
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
+                let searchQuery = $("input[name=searchquery]").val();
+                let categoria = $("input[name=categoria].categ-selected").val();
+                let orden = $("#selectOrden").val();
+                if (categoria == undefined) categoria = "Todas";
+                if (categoria != "Todas")
+                    $("#contentRestaurantes")
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + pos);
+                else
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + pos);
+            });
+        }
+
+        function paginacionProductos(pos) {
+            $(function () {
+                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
+                let searchQuery = $("input[name=searchquery]").val();
+                let categoria = $("input[name=categoria].categ-selected").val();
+                let orden = $("#selectOrden").val();
+                if (categoria == undefined) categoria = "Todas";
+                if (categoria != "Todas")
+                    $("#contentRestaurantes")
+                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + pos);
+                else
+                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + pos);
+            });
+        }
     </script>
 }

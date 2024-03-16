@@ -75,7 +75,7 @@
                         else if (tipoUsuario == 3)
                         {
                             <li>
-                                <a asp-controller="Restaurantes" asp-action="PanelRestaurante">
+                                <a asp-controller="PanelRestaurante" asp-action="Index">
                                     Panel Restaurante
                                 </a>
                             </li>
@@ -103,6 +103,11 @@
                                 <li>
                                     <a asp-controller="Usuario" asp-action="Perfil">
                                         Perfil
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Usuario" asp-action="ModificarContrasenya">
+                                        Mod. contraseña
                                     </a>
                                 </li>
                                 if (tipoUsuario == 1)
@@ -139,23 +144,6 @@
                             Restaurantes
                         </a>
                     </li>
-                    <li>
-                        <details>
-                            <summary>Usuario</summary>
-                            <ul class="p-2 bg-primary text-primary-content z-50 top-10">
-                                <li>
-                                    <a asp-controller="Usuario" asp-action="Perfil">
-                                        Perfil
-                                    </a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Usuario" asp-action="Pedidos">
-                                        Pedidos
-                                    </a>
-                                </li>
-                            </ul>
-                        </details>
-                    </li>
                 }
                 else if (tipoUsuario == 2)
                 {
@@ -168,11 +156,36 @@
                 else if (tipoUsuario == 3)
                 {
                     <li>
-                        <a asp-controller="Restaurantes" asp-action="PanelRestaurante">
+                        <a asp-controller="PanelRestaurante" asp-action="Index">
                             Panel Restaurante
                         </a>
                     </li>
                 }
+                <li>
+                    <details>
+                        <summary>Usuario</summary>
+                        <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                            <li>
+                                <a asp-controller="Usuario" asp-action="Perfil">
+                                    Perfil
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Usuario" asp-action="ModificarContrasenya">
+                                    Mod. contraseña
+                                </a>
+                            </li>
+                            @if (tipoUsuario == 1)
+                            {
+                                <li>
+                                    <a asp-controller="Usuario" asp-action="Pedidos">
+                                        Pedidos
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </details>
+                </li>
             }
         </ul>
     </div>

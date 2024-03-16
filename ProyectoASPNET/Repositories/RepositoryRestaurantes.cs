@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET.Data;
@@ -47,20 +48,6 @@ AS
 	ON P.IDPRODUCTO = PC.IDPRODUCTO
 	WHERE PC.IDCATEGORIA = @CATEGORIA
 	AND P.IDRESTAURANTE = @RESTAURANTE
-GO
-
-CREATE OR ALTER PROCEDURE SP_CREATE_USUARIO
-(@NOMBRE NVARCHAR(100), @APELLIDOS NVARCHAR(100),
-@CORREO NVARCHAR(100), @CONTRASENYA VARBINARY(MAX),
-@TELEFONO NVARCHAR(9), @DIRECCION NVARCHAR(200),
-@SALT NVARCHAR(50))
-AS
-	DECLARE @IDUSUARIO INT
-	SELECT @IDUSUARIO = ISNULL(MAX(IDUSUARIO), 0) + 1
-	FROM USUARIOS
-	INSERT INTO USUARIOS VALUES
-	(@IDUSUARIO, @NOMBRE, @APELLIDOS, @CORREO,
-	@CONTRASENYA, @SALT, @TELEFONO, @DIRECCION, 1)
 GO
 */
 #endregion
@@ -218,7 +205,24 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, string searchquery)
+    public async Task<PaginationRestaurantesView> GetPaginationRestaurantesViewAsync(string searchquery, int posicion)
+    {
+        List<RestauranteView> restaurantes = await this.context.RestaurantesView
+            .OrderByDescending(r => r.Valoracion)
+            .ToListAsync();
+        if (searchquery != "")
+            restaurantes = restaurantes
+                .Where(r => r.Nombre
+                .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+        PaginationRestaurantesView model = new PaginationRestaurantesView();
+        model.NumRegistros = restaurantes.Count();
+        restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
+        model.Restaurantes = restaurantes;
+        return model;
+    }
+
+    public async Task<PaginationRestaurantesView> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery, int posicion)
     {
         List<RestauranteView> restaurantes = await this.context.RestaurantesView
             .Where(r => r.CategoriaRestaurante == categoria)
@@ -229,7 +233,11 @@ public class RepositoryRestaurantes
                 .Where(r => r.Nombre
                 .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
-        return restaurantes;
+        PaginationRestaurantesView model = new PaginationRestaurantesView();
+        model.NumRegistros = restaurantes.Count();
+        restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
+        model.Restaurantes = restaurantes;
+        return model;
     }
     #endregion
 
@@ -481,6 +489,27 @@ public class RepositoryRestaurantes
         usuEditar.Telefono = user.Telefono;
         usuEditar.Correo = user.Correo;
         await context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ModificarContrasenyaAsync(Usuario usu, string actual, string nueva)
+    {
+        string salt = usu.Salt;
+        byte[] temp =
+            HelperCryptography.EncryptPassword(actual, salt);
+        byte[] passUser = usu.Contrasenya;
+        bool response = HelperTools.CompareArrays(temp, passUser);
+        if (response == true)
+        {
+            Usuario usuEditar = await this.context.Usuarios
+                .FirstOrDefaultAsync(u => u.IdUsuario == usu.IdUsuario);
+            usuEditar.Salt = HelperTools.GenerateSalt();
+            usuEditar.Contrasenya = HelperCryptography.EncryptPassword
+                (nueva, usuEditar.Salt);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+        else
+            return false;
     }
     #endregion
 

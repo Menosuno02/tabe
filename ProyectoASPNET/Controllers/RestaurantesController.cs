@@ -37,13 +37,16 @@ namespace ProyectoASPNET.Controllers
 
         [AuthorizeUser]
         public async Task<IActionResult> _ListRestaurantes
-            (string? categoria, string searchquery = "", string orden = "valoracion")
+            (string? categoria, string searchquery = "", string orden = "valoracion", int posicion = 1)
         {
-            List<RestauranteView> restaurantes;
+            PaginationRestaurantesView model = new PaginationRestaurantesView();
             if (categoria != null)
-                restaurantes = await this.repo.FilterRestaurantesViewAsync(categoria, searchquery);
+                model = await this.repo.FilterPaginationRestaurantesViewAsync(categoria, searchquery, posicion);
             else
-                restaurantes = await this.repo.GetRestaurantesViewAsync(searchquery);
+                model = await this.repo.GetPaginationRestaurantesViewAsync(searchquery, posicion);
+            List<RestauranteView> restaurantes = model.Restaurantes;
+            ViewData["POSICION"] = posicion;
+            ViewData["NUMREGISTROS"] = model.NumRegistros;
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
