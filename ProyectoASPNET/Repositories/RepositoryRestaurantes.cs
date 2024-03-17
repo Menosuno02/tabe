@@ -529,7 +529,8 @@ public class RepositoryRestaurantes
             IdUsuario = idusuario,
             IdRestaurante = idrestaurante,
             Estado = 1,
-            Fecha = DateTime.Now
+            FechaPedido = DateTime.Now,
+            FechaEntrega = null
         };
         await this.context.Pedidos.AddAsync(pedido);
         foreach (ProductoCesta producto in cesta)
@@ -576,6 +577,7 @@ public class RepositoryRestaurantes
         Pedido pedido = await this.context.Pedidos
             .FirstOrDefaultAsync(p => p.IdPedido == idpedido);
         pedido.Estado = estado;
+        if (estado == 4) pedido.FechaEntrega = DateTime.Now;
         await this.context.SaveChangesAsync();
     }
     #endregion

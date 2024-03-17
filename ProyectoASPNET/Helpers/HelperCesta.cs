@@ -126,7 +126,7 @@ namespace ProyectoASPNET.Helpers
             }
         }
 
-        public async Task CreatePedido()
+        public async Task<Pedido> CreatePedido()
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
             if (httpContext.Session.GetString("CESTA") != null)
@@ -139,7 +139,9 @@ namespace ProyectoASPNET.Helpers
                     await this.repo.CreatePedidoAsync(idusuario, idrestaurante, cesta);
                 httpContext.Session.Remove("CESTA");
                 httpContext.Session.Remove("RESTAURANTE");
+                return pedido;
             }
+            return null;
         }
     }
 }

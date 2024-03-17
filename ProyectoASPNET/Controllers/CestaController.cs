@@ -11,13 +11,16 @@ namespace ProyectoASPNET.Controllers
     {
         private RepositoryRestaurantes repo;
         private HelperCesta helperCesta;
+        private HelperMails helperMails;
 
         public CestaController
             (RepositoryRestaurantes repo,
-            HelperCesta helperCesta)
+            HelperCesta helperCesta,
+            HelperMails helperMails)
         {
             this.repo = repo;
             this.helperCesta = helperCesta;
+            this.helperMails = helperMails;
         }
 
         [AuthorizeUser]
@@ -42,7 +45,44 @@ namespace ProyectoASPNET.Controllers
             }
             else if (form == "pagar")
             {
-                await this.helperCesta.CreatePedido();
+                Pedido pedido = await this.helperCesta.CreatePedido();
+                List<ProductoPedidoView> productosPedido = await this.repo.GetProductosPedidoViewAsync(new List<int> { pedido.IdPedido });
+                string mensaje = "<h1 style=\"color: #6D28D9; margin-bottom:0px;\">Pedido realizado con éxito</h3>";
+                mensaje += $"<div style=\"padding: 1.25rem; border-width: 1px; border-bottom-width: 0; border-color: #E5E7EB; \">" +
+                    $"<p style=\"margin-bottom: 0.5rem; color: #4B5563; \"><span style=\"font-size: 1.5rem;line-height: 2rem; color: #374151; \">" +
+                    $"<span style=\"font-weight: 700; \">{productosPedido.FirstOrDefault().Restaurante}</span>" +
+                    $"&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;Fecha: {pedido.FechaPedido}" +
+                    $"</span>" +
+                    $"<div style=\"overflow-x: auto; position: relative; \">" +
+                    $"<table style=\"width: 100%; font-size: 0.875rem;line-height: 1.25rem; text-align: left; color: #6B7280; \">" +
+                    $"<thead style=\"font-size: 0.75rem;line-height: 1rem; color: #111827; text-transform: uppercase; background-color: #F3F4F6; \">" +
+                    $"<tr>" +
+                    $"<th scope=\"col\" style=\"padding-top: 0.75rem;padding-bottom: 0.75rem; padding-left: 1.5rem;padding-right: 1.5rem; \">Producto</th>" +
+                    $"<th scope=\"col\" style=\"padding-top: 0.75rem;padding-bottom: 0.75rem; padding-left: 1.5rem;padding-right: 1.5rem; \">Cantidad</th>" +
+                    $"<th scope=\"col\" style=\"padding-top: 0.75rem;padding-bottom: 0.75rem; padding-left: 1.5rem;padding-right: 1.5rem; \">Total</th>" +
+                    $"</tr>" +
+                    $"</thead>" +
+                    $"<tbody>";
+                foreach (ProductoPedidoView producto in productosPedido)
+                {
+                    decimal total = producto.Cantidad * producto.Precio;
+                    mensaje += $"<tr style=\"background-color: #ffffff; \">" +
+                        $"<th scope=\"row\" style=\"padding-top: 1rem;padding-bottom: 1rem; padding-left: 1.5rem;padding-right: 1.5rem; font-weight: 500; color: #111827; white-space: nowrap; \">{producto.Producto}</th>" +
+                        $"<td style=\"padding-top: 1rem;padding-bottom: 1rem; padding-left: 1.5rem;padding-right: 1.5rem; \">{producto.Cantidad}</td>" +
+                        $"<td style=\"padding-top: 1rem;padding-bottom: 1rem; padding-left: 1.5rem;padding-right: 1.5rem; \">{total}€</td>" +
+                        $"</tr>";
+                }
+                mensaje += $"<tr style=\"background-color: #ffffff; \">" +
+                    $"<th scope=\"row\" style=\"padding-top: 1rem;padding-bottom: 1rem; padding-left: 1.5rem;padding-right: 1.5rem; font-weight: 500; color: #111827; white-space: nowrap; \"></th>" +
+                    $"<td style=\"padding-top: 1rem;padding-bottom: 1rem; padding-left: 1.5rem;padding-right: 1.5rem; \"></td>" +
+                    $"<td style=\"padding-top: 1rem;padding-bottom: 1rem; padding-left: 1.5rem;padding-right: 1.5rem; font-weight: 700; color: #374151; \">{productosPedido.Sum(pp => pp.Cantidad * pp.Precio)}€</td>" +
+                    $"</tr>" +
+                    $"</tbody>" +
+                    $"</table>" +
+                    $"</div>" +
+                    $"</p>" +
+                    $"</div>";
+                await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await helperCesta.GetDatosCesta();

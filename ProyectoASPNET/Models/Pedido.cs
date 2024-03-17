@@ -15,7 +15,9 @@ namespace ProyectoASPNET.Models
         public int IdRestaurante { get; set; }
         [Column("ESTADO")]
         public int Estado { get; set; }
-        [Column("FECHA")]
-        public DateTime Fecha { get; set; }
+        [Column("FECHAPEDIDO")]
+        public DateTime FechaPedido { get; set; }
+        [Column("FECHAENTREGA")]
+        public DateTime? FechaEntrega { get; set; }
     }
 }
