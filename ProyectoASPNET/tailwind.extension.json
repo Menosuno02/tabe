@@ -1,5 +1,1 @@
-{
-  "ConfigurationFile": "tailwind.config.js",
-  "InputCssFile": null,
-  "OutputCssFile": null
-}
+{"ConfigurationFile":"tailwind.config.js","InputCssFile":"wwwroot\\css\\input.css","OutputCssFile":"wwwroot\\css\\output.css"}
