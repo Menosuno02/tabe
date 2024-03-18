@@ -561,7 +561,7 @@ public class RepositoryRestaurantes
         Restaurante rest = await this.context.Restaurantes
             .FirstOrDefaultAsync(r => r.Correo == usuario.Correo);
         return await this.context.Pedidos
-            .Where(p => p.IdRestaurante == rest.IdRestaurante)
+            .Where(p => p.IdRestaurante == rest.IdRestaurante && p.Estado != 4)
             .ToListAsync();
     }
     #endregion
