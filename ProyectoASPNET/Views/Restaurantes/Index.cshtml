@@ -14,7 +14,7 @@
                                name="categoria"
                                value="Todas"
                                class="sr-only" />
-                        <img src="~/images/categ_restaurantes/todas.png" />
+                        <img class="bg-violet-700 bg-opacity-20 rounded-full" src="~/images/categ_restaurantes/todas.png" />
                         <span class="text-categoria font-bold text-violet-700">Todas</span>
                     </label>
                     @foreach (CategoriaRestaurante categoria in categorias)
@@ -57,32 +57,6 @@
 
 @section scripts {
     <script>
-        let posicion = 1;
-        window.addEventListener('scroll', () => {
-            const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-            if ((scrollTop + clientHeight) >= scrollHeight) {
-                posicion++;
-                getContentt(posicion);
-            }
-        });
-
-        function getContent(posicion) {
-            $(function () {
-                $("<img id='loading' src='/images/general/loading.gif' class='w-1/4 mx-auto' />").appendTo("#contentRestaurantes");
-                let searchQuery = $("input[name=searchquery]").val();
-                let categoria = $("input[name=categoria].categ-selected").val();
-                let orden = $("#selectOrden").val();
-                if (categoria == undefined) categoria = "Todas";
-                if (categoria != "Todas")
-                    $("<div>")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + posicion)
-                        .appendTo("#contentRestaurantes");
-                else
-                    $("<div>").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + posicion).appendTo("#contentRestaurantes");
-                $("img#loading").first().remove();
-            });
-        }
-
         $(function () {
             $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
             $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=&posicion=1");
@@ -94,7 +68,9 @@
                 let orden = $("#selectOrden").val();
                 if (categoria == undefined) categoria = "Todas";
                 $("span.text-categoria").removeClass("font-bold text-violet-700");
+                $("img").removeClass("bg-violet-700 bg-opacity-20 rounded-full");
                 $(this).siblings("span.text-categoria").addClass("font-bold text-violet-700");
+                $(this).siblings("img").addClass("bg-violet-700 bg-opacity-20 rounded-full");
                 $("input[name=searchquery]").removeClass("categ-selected");
                 $(this).addClass("categ-selected");
                 if (categoria != "Todas")
@@ -130,22 +106,6 @@
                     $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=1");
             });
         });
-
-        function paginationProductos(e) {
-            let pos = e.value;
-            $(function () {
-                $("#contentRestaurantes").html("<img src='/images/general/loading.gif' class='w-1/4 mx-auto' />");
-                let searchQuery = $("input[name=searchquery]").val();
-                let categoria = $("input[name=categoria].categ-selected").val();
-                let orden = $("#selectOrden").val();
-                if (categoria == undefined) categoria = "Todas";
-                if (categoria != "Todas")
-                    $("#contentRestaurantes")
-                        .load("/Restaurantes/_ListRestaurantes?categoria=" + categoria + "&searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + pos);
-                else
-                    $("#contentRestaurantes").load("/Restaurantes/_ListRestaurantes?searchquery=" + searchQuery + "&orden=" + orden + "&posicion=" + pos);
-            });
-        }
 
         function paginacionProductos(pos) {
             $(function () {

@@ -18,17 +18,58 @@ else
                         <li class="w-[calc(100%/@paginas)]">
                             @if (i == int.Parse(@ViewData["POSICION"].ToString()))
                             {
-                                <a onclick="paginacionProductos(@i)" aria-current="page"
-                                   class="z-10 flex items-center justify-center px-4 h-10 leading-tight text-violet-600 border border-violet-300 bg-violet-50 hover:bg-violet-100 hover:text-violet-700">
-                                    @i
-                                </a>
+                                if (i == 1 && i == paginas)
+                                {
+                                    <a onclick="paginacionProductos(@i)" aria-current="page"
+                                       class="rounded-s-xl rounded-e-xl z-10 flex items-center justify-center px-4 h-10 leading-tight text-violet-600 border border-violet-300 bg-violet-50 hover:bg-violet-100 hover:text-violet-700">
+                                        @i
+                                    </a>
+                                }
+                                else if (i == 1)
+                                {
+                                    <a onclick="paginacionProductos(@i)" aria-current="page"
+                                       class="rounded-s-xl z-10 flex items-center justify-center px-4 h-10 leading-tight text-violet-600 border border-violet-300 bg-violet-50 hover:bg-violet-100 hover:text-violet-700">
+                                        @i
+                                    </a>
+                                }
+                                else if (i == paginas)
+                                {
+                                    <a onclick="paginacionProductos(@i)" aria-current="page"
+                                       class="rounded-e-xl z-10 flex items-center justify-center px-4 h-10 leading-tight text-violet-600 border border-violet-300 bg-violet-50 hover:bg-violet-100 hover:text-violet-700">
+                                        @i
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a onclick="paginacionProductos(@i)" aria-current="page"
+                                       class="z-10 flex items-center justify-center px-4 h-10 leading-tight text-violet-600 border border-violet-300 bg-violet-50 hover:bg-violet-100 hover:text-violet-700">
+                                        @i
+                                    </a>
+                                }
                             }
                             else
                             {
-                                <a onclick="paginacionProductos(@i)"
-                                   class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
-                                    @i
-                                </a>
+                                if (i == 1)
+                                {
+                                    <a onclick="paginacionProductos(@i)"
+                                       class="rounded-s-xl flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                        @i
+                                    </a>
+                                }
+                                else if (i == paginas)
+                                {
+                                    <a onclick="paginacionProductos(@i)"
+                                       class="rounded-e-xl flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                        @i
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a onclick="paginacionProductos(@i)"
+                                       class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                        @i
+                                    </a>
+                                }
                             }
 
                         </li>
