@@ -27,9 +27,9 @@ namespace ProyectoASPNET.Controllers
                     return RedirectToAction("Index", "PanelAdmin");
                 else if (tipoUsuario == 3)
                     return RedirectToAction("Index", "PanelRestaurante");
-                else return RedirectToAction("Logout", "Auth"); // bug
+                else return RedirectToAction("Logout", "Auth");
             }
-            else return RedirectToAction("Logout", "Auth"); // bug
+            else return RedirectToAction("Logout", "Auth"); // redirige al login
         }
 
         public IActionResult Login()
