@@ -24,7 +24,7 @@
                     </svg>
                 </div>
                 <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow bg-primary text-primary-content rounded-box w-52">
+                    class="menu menu-sm dropdown-content rounded-box z-50 mt-3 w-52 bg-primary p-2 text-primary-content shadow">
                     <li>
                         <a asp-controller="Home" asp-action="Index">Inicio</a>
                     </li>
@@ -42,7 +42,7 @@
                                     Cesta
                                     @if (numCesta > 0)
                                     {
-                                        <div class="absolute inline-flex items-center justify-center w-5 h-5 text-xs text-white top-[1px] end-28 badge badge-error bg-red-600">
+                                        <div class="text-white top-[1px] badge badge-error bg-red-600 absolute end-28 inline-flex h-5 w-5 items-center justify-center text-xs">
                                             @numCesta
                                         </div>
                                     }
@@ -164,7 +164,7 @@
                 <li>
                     <details>
                         <summary>Usuario</summary>
-                        <ul class="p-2 bg-primary text-primary-content z-50 top-10">
+                        <ul class="top-10 z-50 bg-primary p-2 text-primary-content">
                             <li>
                                 <a asp-controller="Usuario" asp-action="Perfil">
                                     Perfil
@@ -193,10 +193,10 @@
         @if (!Context.User.Identity.IsAuthenticated)
         {
             <div class="join">
-                <a asp-controller="Auth" asp-action="Login" class="btn font-medium join-item">
+                <a asp-controller="Auth" asp-action="Login" class="btn join-item font-medium">
                     Iniciar sesión
                 </a>
-                <a asp-controller="Auth" asp-action="Register" class="btn font-medium join-item">
+                <a asp-controller="Auth" asp-action="Register" class="btn join-item font-medium">
                     Registrarse
                 </a>
             </div>
@@ -207,12 +207,12 @@
             {
                 <a asp-controller="Cesta" asp-action="Index"
                    class="btn btn-ghost btn-circle me-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
                         <path d="M1.75 1.002a.75.75 0 1 0 0 1.5h1.835l1.24 5.113A3.752 3.752 0 0 0 2 11.25c0 .414.336.75.75.75h10.5a.75.75 0 0 0 0-1.5H3.628A2.25 2.25 0 0 1 5.75 9h6.5a.75.75 0 0 0 .73-.578l.846-3.595a.75.75 0 0 0-.578-.906 44.118 44.118 0 0 0-7.996-.91l-.348-1.436a.75.75 0 0 0-.73-.573H1.75ZM5 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM13 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
                     </svg>
                     @if (numCesta > 0)
                     {
-                        <div class="w-5 h-5 text-xs text-white badge badge-error bg-red-600">@numCesta</div>
+                        <div class="text-white badge badge-error bg-red-600 h-5 w-5 text-xs">@numCesta</div>
                     }
                 </a>
             }

@@ -1,48 +1,48 @@
 ﻿@model List<RestauranteView>
 
-<div class="sm:px-4 p-6">
+<div class="p-6 sm:px-4">
     <div class="flex flex-wrap lg:px-16">
         <button onclick="createRestaurante()"
-                class="btn btn-primary px-5 py-3 text-sm font-medium mb-6 w-full">
+                class="btn btn-primary mb-6 w-full px-5 py-3 text-sm font-medium">
             Crear restaurante
         </button>
-        <div class="flex flex-col w-full">
+        <div class="flex w-full flex-col">
             <div class="-m-1.5 overflow-x-auto">
-                <div class="p-1.5 min-w-full inline-block align-middle">
-                    <div class="border rounded-lg shadow overflow-hidden">
-                        <table class="min-w-full divide-y divide-gray-200">
+                <div class="inline-block min-w-full p-1.5 align-middle">
+                    <div class="overflow-hidden rounded-lg border shadow">
+                        <table class="divide-gray-200 min-w-full divide-y">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Nombre</th>
-                                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Teléfono</th>
-                                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Dirección</th>
-                                    <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Valoración</th>
+                                    <th scope="col" class="text-gray-500 px-6 py-3 text-start text-xs font-medium uppercase">Nombre</th>
+                                    <th scope="col" class="text-gray-500 px-6 py-3 text-start text-xs font-medium uppercase">Teléfono</th>
+                                    <th scope="col" class="text-gray-500 px-6 py-3 text-start text-xs font-medium uppercase">Dirección</th>
+                                    <th scope="col" class="text-gray-500 px-6 py-3 text-start text-xs font-medium uppercase">Valoración</th>
                                     <th scope="col" class="px-6 py-3"></th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
+                            <tbody class="divide-gray-200 divide-y">
                                 @foreach (RestauranteView restaurante in Model)
                                 {
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">@restaurante.Nombre</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@restaurante.Telefono</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@restaurante.Direccion</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">@restaurante.Valoracion/5</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-medium space-x-2">
+                                        <td class="text-gray-800 whitespace-nowrap px-6 py-4 text-sm font-medium">@restaurante.Nombre</td>
+                                        <td class="text-gray-800 whitespace-nowrap px-6 py-4 text-sm">@restaurante.Telefono</td>
+                                        <td class="text-gray-800 whitespace-nowrap px-6 py-4 text-sm">@restaurante.Direccion</td>
+                                        <td class="text-gray-800 whitespace-nowrap px-6 py-4 text-sm">@restaurante.Valoracion/5</td>
+                                        <td class="space-x-2 whitespace-nowrap px-6 py-4 text-center text-sm font-medium">
                                             <button data-idrestaurante="@restaurante.IdRestaurante" onclick="productosRestaurante(this)"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-purple-600 hover:text-purple-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    class="text-purple-600 inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-medium hover:text-purple-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Productos
                                             </button>
                                             <button data-idrestaurante="@restaurante.IdRestaurante" onclick="detailsRestaurante(this)"
-                                                    class="btn-details inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-green-600 hover:text-green-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    class="btn-details text-green-600 inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-medium hover:text-green-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Detalles
                                             </button>
                                             <button data-idrestaurante="@restaurante.IdRestaurante" onclick="editRestaurante(this)"
-                                                    class="btn-edit inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    class="btn-edit text-blue-600 inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-medium hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Editar
                                             </button>
                                             <a asp-controller="PanelAdmin" asp-action="DeleteRestaurante" asp-route-id="@restaurante.IdRestaurante"
-                                               class="inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
+                                               class="text-red-600 inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-medium hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
                                                 Borrar
                                             </a>
                                         </td>

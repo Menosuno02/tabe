@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ builder.Services.AddSession(options =>
 */
 
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
-builder.Services.AddTransient<RepositoryRestaurantes>();
+builder.Services.AddTransient<IServiceRestaurantes, ServiceApiRestaurantes>();
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 

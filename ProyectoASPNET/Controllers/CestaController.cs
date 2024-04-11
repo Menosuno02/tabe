@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
     public class CestaController : Controller
     {
-        private RepositoryRestaurantes repo;
+        private IServiceRestaurantes service;
         private HelperCesta helperCesta;
         private HelperMails helperMails;
 
         public CestaController
-            (RepositoryRestaurantes repo,
+            (IServiceRestaurantes service,
             HelperCesta helperCesta,
             HelperMails helperMails)
         {
-            this.repo = repo;
+            this.service = service;
             this.helperCesta = helperCesta;
             this.helperMails = helperMails;
         }
@@ -46,7 +46,7 @@ namespace ProyectoASPNET.Controllers
             else if (form == "pagar")
             {
                 Pedido pedido = await this.helperCesta.CreatePedido();
-                List<ProductoPedidoView> productosPedido = await this.repo.GetProductosPedidoViewAsync(new List<int> { pedido.IdPedido });
+                List<ProductoPedidoView> productosPedido = await this.service.GetProductosPedidoViewAsync(new List<int> { pedido.IdPedido });
                 string mensaje = "<h1 style=\"color: #6D28D9; margin-bottom:0px;\">Pedido realizado con éxito</h3>";
                 mensaje += $"<div style=\"padding: 1.25rem; border-width: 1px; border-bottom-width: 0; border-color: #E5E7EB; \">" +
                     $"<p style=\"margin-bottom: 0.5rem; color: #4B5563; \"><span style=\"font-size: 1.5rem;line-height: 2rem; color: #374151; \">" +

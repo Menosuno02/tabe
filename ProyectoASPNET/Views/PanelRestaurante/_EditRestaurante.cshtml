@@ -6,20 +6,20 @@
 
 @using (Html.BeginForm("_EditRestaurante", "PanelRestaurante", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="py-6 px-8">
-        <div class="grid grid-cols-6 gap-6">
+    <div class="px-8 py-6">
+        <div class="grid-cols-6 grid gap-6">
             <form method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="idrestaurante" value="@Model.IdRestaurante" />
                 <input type="hidden" name="imagen" value="@Model.Imagen" />
                 <div class="col-span-6 sm:col-span-3">
-                    <label class="block text-sm font-bold text-gray-700">Nombre</label>
-                    <input required type="text" name="nombre" value="@Model.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                    <label class="text-gray-700 block text-sm font-bold">Nombre</label>
+                    <input required type="text" name="nombre" value="@Model.Nombre" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label class="block text-sm font-bold text-gray-700">Categoría</label>
+                    <label class="text-gray-700 block text-sm font-bold">Categoría</label>
                     <select name="categoriarestaurante"
-                            class="p-2 pb-1.5 mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                            class="border-gray-300 text-gray-700 mt-1.5 w-full rounded-lg p-2 pb-1.5 shadow-sm focus:ring focus:outline-none sm:text-sm">
                         @foreach (CategoriaRestaurante categ in categorias)
                         {
                             if (categ.IdCategoriaRestaurante == Model.CategoriaRestaurante)
@@ -34,26 +34,26 @@
                     </select>
                 </div>
                 <div class="col-span-6">
-                    <label class="block text-sm font-bold text-gray-700">Teléfono</label>
+                    <label class="text-gray-700 block text-sm font-bold">Teléfono</label>
                     <input required type="tel" maxlength="9" name="telefono" value="@Model.Telefono"
-                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                           class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label class="block text-sm font-bold text-gray-700">Dirección</label>
+                    <label class="text-gray-700 block text-sm font-bold">Dirección</label>
                     <input required type="text" name="direccion" value="@Model.Direccion"
-                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                           class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label class="block text-sm font-bold text-gray-700">Imagen</label>
+                    <label class="text-gray-700 block text-sm font-bold">Imagen</label>
                     <input type="file" name="fileimagen" class="file-input w-full" />
                 </div>
                 <div class="col-span-6">
-                    <label class="block text-sm font-bold text-gray-700">Correo</label>
+                    <label class="text-gray-700 block text-sm font-bold">Correo</label>
                     <input required type="text" name="correo" value="@Model.Correo"
-                           class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                           class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
                 </div>
                 <div class="col-span-6">
-                    <button id="btnEditPost" class="btn btn-primary font-medium w-full">
+                    <button id="btnEditPost" class="btn btn-primary w-full font-medium">
                         Editar restaurante
                     </button>
                 </div>

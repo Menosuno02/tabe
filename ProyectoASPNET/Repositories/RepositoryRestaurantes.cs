@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 
 namespace ProyectoASPNET;
 
@@ -52,7 +53,7 @@ GO
 */
 #endregion
 
-public class RepositoryRestaurantes
+public class RepositoryRestaurantes : IServiceRestaurantes
 {
     private RestaurantesContext context;
     private HelperGoogleApiDirections helperGoogleApi;
@@ -599,6 +600,7 @@ public class RepositoryRestaurantes
             .Where(v => v.IdRestaurante == idrestaurante && v.IdUsuario == idusuario)
             .FirstOrDefaultAsync();
     }
+
     public async Task UpdateValoracionRestauranteAsync(ValoracionRestaurante val)
     {
         ValoracionRestaurante valBorrar =

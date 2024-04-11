@@ -1,14 +1,14 @@
-﻿<div class="py-6 px-16">
-    <h1 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Modificar contraseña</h1>
-    <form method="post" class="mt-8 grid grid-cols-6 gap-6">
+﻿<div class="px-16 py-6">
+    <h1 class="text-gray-900 mb-4 mt-2 text-3xl font-bold">Modificar contraseña</h1>
+    <form method="post" class="grid-cols-6 mt-8 grid gap-6">
         @Html.AntiForgeryToken()
         <div class="col-span-6">
-            <label class="block text-sm font-bold text-gray-700">Contraseña actual</label>
+            <label class="text-gray-700 block text-sm font-bold">Contraseña actual</label>
             <div class="relative">
                 <div class="relative">
-                    <input type="password" name="actual" class="ps-11 mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                    <input type="password" name="actual" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md ps-11 text-sm shadow-sm focus:ring focus:outline-none" />
                     <div class="absolute inset-y-0 start-0 flex items-center ps-4">
-                        <svg onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 w-4 h-4">
+                        <svg onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 h-4 w-4">
                             <path fill-rule="evenodd" d="M3.28 2.22a.75.75 0 0 0-1.06 1.06l10.5 10.5a.75.75 0 1 0 1.06-1.06l-1.322-1.323a7.012 7.012 0 0 0 2.16-3.11.87.87 0 0 0 0-.567A7.003 7.003 0 0 0 4.82 3.76l-1.54-1.54Zm3.196 3.195 1.135 1.136A1.502 1.502 0 0 1 9.45 8.389l1.136 1.135a3 3 0 0 0-4.109-4.109Z" clip-rule="evenodd" />
                             <path d="m7.812 10.994 1.816 1.816A7.003 7.003 0 0 1 1.38 8.28a.87.87 0 0 1 0-.566 6.985 6.985 0 0 1 1.113-2.039l2.513 2.513a3 3 0 0 0 2.806 2.806Z" />
                         </svg>
@@ -17,11 +17,11 @@
             </div>
         </div>
         <div class="col-span-6">
-            <label class="inline-block text-sm font-bold text-gray-700">Contraseña nueva</label>
+            <label class="text-gray-700 inline-block text-sm font-bold">Contraseña nueva</label>
             <div class="relative">
-                <input type="password" name="nueva" class="ps-11 mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                <input type="password" name="nueva" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md ps-11 text-sm shadow-sm focus:ring focus:outline-none" />
                 <div class="absolute inset-y-0 start-0 flex items-center ps-4">
-                    <svg onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 w-4 h-4">
+                    <svg onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 h-4 w-4">
                         <path fill-rule="evenodd" d="M3.28 2.22a.75.75 0 0 0-1.06 1.06l10.5 10.5a.75.75 0 1 0 1.06-1.06l-1.322-1.323a7.012 7.012 0 0 0 2.16-3.11.87.87 0 0 0 0-.567A7.003 7.003 0 0 0 4.82 3.76l-1.54-1.54Zm3.196 3.195 1.135 1.136A1.502 1.502 0 0 1 9.45 8.389l1.136 1.135a3 3 0 0 0-4.109-4.109Z" clip-rule="evenodd" />
                         <path d="m7.812 10.994 1.816 1.816A7.003 7.003 0 0 1 1.38 8.28a.87.87 0 0 1 0-.566 6.985 6.985 0 0 1 1.113-2.039l2.513 2.513a3 3 0 0 0 2.806 2.806Z" />
                     </svg>
@@ -29,11 +29,11 @@
             </div>
         </div>
         <div class="col-span-6">
-            <label class="inline-block text-sm font-bold text-gray-700">Confirmar nueva contraseña</label>
+            <label class="text-gray-700 inline-block text-sm font-bold">Confirmar nueva contraseña</label>
             <div class="relative">
-                <input type="password" name="confirmar" class="ps-11 mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                <input type="password" name="confirmar" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md ps-11 text-sm shadow-sm focus:ring focus:outline-none" />
                 <div class="absolute inset-y-0 start-0 flex items-center ps-4">
-                    <svg onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 w-4 h-4">
+                    <svg onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 h-4 w-4">
                         <path fill-rule="evenodd" d="M3.28 2.22a.75.75 0 0 0-1.06 1.06l10.5 10.5a.75.75 0 1 0 1.06-1.06l-1.322-1.323a7.012 7.012 0 0 0 2.16-3.11.87.87 0 0 0 0-.567A7.003 7.003 0 0 0 4.82 3.76l-1.54-1.54Zm3.196 3.195 1.135 1.136A1.502 1.502 0 0 1 9.45 8.389l1.136 1.135a3 3 0 0 0-4.109-4.109Z" clip-rule="evenodd" />
                         <path d="m7.812 10.994 1.816 1.816A7.003 7.003 0 0 1 1.38 8.28a.87.87 0 0 1 0-.566 6.985 6.985 0 0 1 1.113-2.039l2.513 2.513a3 3 0 0 0 2.806 2.806Z" />
                     </svg>
@@ -74,12 +74,12 @@
     }
 }
 
-<svg id="hideSVG" onclick="hidePassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 w-4 h-4 hidden">
+<svg id="hideSVG" onclick="hidePassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 hidden h-4 w-4">
     <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
     <path fill-rule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" />
 </svg>
 
-<svg id="showSVG" onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 w-4 h-4 hidden">
+<svg id="showSVG" onclick="showPassword(this)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="mt-1 hidden h-4 w-4">
     <path fill-rule="evenodd" d="M3.28 2.22a.75.75 0 0 0-1.06 1.06l10.5 10.5a.75.75 0 1 0 1.06-1.06l-1.322-1.323a7.012 7.012 0 0 0 2.16-3.11.87.87 0 0 0 0-.567A7.003 7.003 0 0 0 4.82 3.76l-1.54-1.54Zm3.196 3.195 1.135 1.136A1.502 1.502 0 0 1 9.45 8.389l1.136 1.135a3 3 0 0 0-4.109-4.109Z" clip-rule="evenodd" />
     <path d="m7.812 10.994 1.816 1.816A7.003 7.003 0 0 1 1.38 8.28a.87.87 0 0 1 0-.566 6.985 6.985 0 0 1 1.113-2.039l2.513 2.513a3 3 0 0 0 2.806 2.806Z" />
 </svg>
@@ -91,17 +91,17 @@
         <div class="modal-box">
             @if (ViewData["CASO"].ToString() == "1")
             {
-                <h3 class="font-bold text-lg">Error al modificar contraseña :(</h3>
+                <h3 class="text-lg font-bold">Error al modificar contraseña :(</h3>
                 <p class="py-4">Las contraseñas no coinciden</p>
             }
             else if (ViewData["CASO"].ToString() == "2")
             {
-                <h3 class="font-bold text-lg">Error al modificar contraseña :(</h3>
+                <h3 class="text-lg font-bold">Error al modificar contraseña :(</h3>
                 <p class="py-4">La contraseña actual introducida no es correcta</p>
             }
             else if (ViewData["CASO"].ToString() == "3")
             {
-                <h3 class="font-bold text-lg">Acción exitosa</h3>
+                <h3 class="text-lg font-bold">Acción exitosa</h3>
                 <p class="py-4">Has cambiado tu contraseña</p>
             }
             <div class="modal-action">

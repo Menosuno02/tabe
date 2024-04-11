@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
     public class AuthController : Controller
     {
-        private RepositoryRestaurantes repo;
+        private IServiceRestaurantes service;
 
-        public AuthController(RepositoryRestaurantes repo)
+        public AuthController(IServiceRestaurantes service)
         {
-            this.repo = repo;
+            this.service = service;
         }
 
         public IActionResult CheckRoutes()
@@ -45,7 +45,7 @@ namespace ProyectoASPNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string email, string password)
         {
-            Usuario usuario = await this.repo.LoginUsuarioAsync(email, password);
+            Usuario usuario = await this.service.LoginUsuarioAsync(email, password);
             if (usuario != null)
             {
                 ClaimsIdentity identity = new ClaimsIdentity(
@@ -83,7 +83,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes");
             }
             usuario.Direccion += ", " + provincia;
-            Usuario user = await this.repo.RegisterUsuarioAsync(usuario, contrasenya);
+            Usuario user = await this.service.RegisterUsuarioAsync(usuario, contrasenya);
             return RedirectToAction("Login");
         }
 

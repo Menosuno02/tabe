@@ -2,33 +2,33 @@
 
 @if (Model.Count() == 0)
 {
-    <h1 class="text-center mt-10 text-2xl font-bold">Productos no encontrados</h1>
+    <h1 class="mt-10 text-center text-2xl font-bold">Productos no encontrados</h1>
 }
 <div class="flex flex-wrap">
     @foreach (Producto prod in Model)
     {
-        <div class="lg:w-1/2 p-6 w-full">
-            <div class="card card-compact h-full sm:h-48 card-side bg-base-100 shadow-xl ">
+        <div class="w-full p-6 lg:w-1/2">
+            <div class="card card-compact card-side h-full bg-base-100 shadow-xl sm:h-48">
                 <figure class="w-4/12">
-                    <img class="sm:object-cover h-[192px]" src="~/images/imag_productos/@prod.Imagen" />
+                    <img class="h-[192px] sm:object-cover" src="~/images/imag_productos/@prod.Imagen" />
                 </figure>
                 <div class="card-body w-8/12">
                     <h2 data-tooltip-target="tooltip-@prod.IdProducto" class="card-title line-clamp-1">@prod.Nombre</h2>
                     <div id="tooltip-@prod.IdProducto" role="tooltip"
-                         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                         class="z-10 text-white bg-gray-900 opacity-0 tooltip invisible absolute inline-block rounded-lg px-3 py-2 text-sm font-medium shadow-sm transition-opacity duration-300 dark:bg-gray-700">
                         @prod.Nombre
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
                     <p>@prod.Descripcion</p>
                     <div class="card-actions max-w-full justify-between">
-                        <div class="justify-start h-1/2 mt-3">
+                        <div class="mt-3 h-1/2 justify-start">
                             <span class="text-gray-600">@prod.Precio€</span>
                         </div>
                         <div class="justify-end">
                             <button onclick="@("modal" + prod.IdProducto + ".showModal()")"
                                     class="btn btn-primary btn-circle"
                                     data-id="@prod.IdProducto" data-nombre="@prod.Nombre" data-desc="@prod.Descripcion" data-imagen="@prod.Imagen">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
                                     <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
                                 </svg>
                             </button>
@@ -40,23 +40,23 @@
         </div>
         <dialog id="@("modal" + prod.IdProducto)" class="modal modal-bottom sm:modal-middle">
             <div class="modal-box">
-                <h3 class="font-bold text-lg">@prod.Nombre</h3>
+                <h3 class="text-lg font-bold">@prod.Nombre</h3>
                 <p class="py-4">@prod.Descripcion</p>
-                <img class="rounded-xl object-cover h-64 w-full" src="~/images/imag_productos/@prod.Imagen" />
-                <div class="modal-action h-full flex">
+                <img class="h-64 w-full rounded-xl object-cover" src="~/images/imag_productos/@prod.Imagen" />
+                <div class="modal-action flex h-full">
                     <form class="flex flex-wrap space-x-2" method="post">
                         @Html.AntiForgeryToken()
                         <div class="custom-number-input h-10 w-32">
-                            <div class="flex h-10 w-full rounded-lg relative bg-transparent mt-1">
+                            <div class="relative mt-1 flex h-10 w-full rounded-lg bg-transparent">
                                 <button onclick="decrementarCantidad(this)" type="button" data-action="decrement" data-idproducto="@prod.IdProducto"
-                                        class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-l cursor-pointer outline-none">
+                                        class="bg-gray-100 text-gray-600 h-full w-20 cursor-pointer rounded-l outline-none hover:text-gray-600 hover:bg-gray-200">
                                     <span class="m-auto text-2xl font-thin">−</span>
                                 </button>
                                 <input id="@("cantidad" + prod.IdProducto)" type="text"
-                                       class="w-20 outline-none focus:ring-0 border-0 focus:outline-none text-center bg-gray-100 font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
+                                       class="border-0 bg-gray-100 text-md text-gray-700 flex w-20 items-center text-center font-semibold outline-none hover:text-black focus:ring-0 focus:outline-none focus:text-black md:text-basecursor-default"
                                        name="cantidad" value="0">
                                 <button onclick="incrementarCantidad(this)" type="button" data-action="increment" data-idproducto="@prod.IdProducto"
-                                        class="bg-gray-100 text-gray-600 hover:text-gray-600 hover:bg-gray-200 h-full w-20 rounded-r cursor-pointer">
+                                        class="bg-gray-100 text-gray-600 h-full w-20 cursor-pointer rounded-r hover:text-gray-600 hover:bg-gray-200">
                                     <span class="m-auto text-2xl font-thin">+</span>
                                 </button>
                             </div>

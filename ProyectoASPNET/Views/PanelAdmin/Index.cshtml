@@ -1,16 +1,16 @@
 ﻿@model string
 
-<div role="tablist" class="tabs tabs-boxed w-11/12 mx-auto mt-3">
+<div role="tablist" class="tabs tabs-boxed mx-auto mt-3 w-11/12">
     <button role="tab" class="tab" value="_Restaurantes">Restaurantes</button>
     <button role="tab" class="tab" value="_Productos">Productos</button>
     <button role="tab" class="tab" value="_Usuarios">Usuarios</button>
 </div>
-<div id="contentPanel" class="sm:px-4 px-6"></div>
+<div id="contentPanel" class="px-6 sm:px-4"></div>
 
 <dialog id="modal" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box">
         <button id="closeModal" onclick="cerrarModal()" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        <h3 id="titleModal" class="font-bold text-lg"></h3>
+        <h3 id="titleModal" class="text-lg font-bold"></h3>
         <div id="contentModal" class="py-4"></div>
     </div>
 </dialog>

@@ -1,25 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
     public class UsuarioController : Controller
     {
-        private RepositoryRestaurantes repo;
+        private IServiceRestaurantes service;
 
-        public UsuarioController(RepositoryRestaurantes repo)
+        public UsuarioController(IServiceRestaurantes service)
         {
-            this.repo = repo;
+            this.service = service;
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> Perfil()
         {
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
+            Usuario usu = await this.service.FindUsuarioAsync(idusuario);
             return View(usu);
         }
 
@@ -28,7 +28,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Perfil(Usuario usuario)
         {
-            await this.repo.EditUsuarioAsync(usuario);
+            await this.service.EditUsuarioAsync(usuario);
             return RedirectToAction("Perfil");
         }
 
@@ -40,9 +40,9 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            List<Pedido> pedidos = await this.repo.GetPedidosUsuarioAsync(idusuario);
+            List<Pedido> pedidos = await this.service.GetPedidosUsuarioAsync(idusuario);
             List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
-            ViewData["PRODUCTOS"] = await this.repo.GetProductosPedidoViewAsync(idPedidos);
+            ViewData["PRODUCTOS"] = await this.service.GetProductosPedidoViewAsync(idPedidos);
             return View(pedidos);
         }
 
@@ -63,8 +63,8 @@ namespace ProyectoASPNET.Controllers
             else
             {
                 int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
-                if (!await this.repo.ModificarContrasenyaAsync(usu, actual, nueva))
+                Usuario usu = await this.service.FindUsuarioAsync(idusuario);
+                if (!await this.service.ModificarContrasenyaAsync(usu, actual, nueva))
                     ViewData["CASO"] = "2";
                 else ViewData["CASO"] = "3";
             }

@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
-using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
     public class PanelAdminController : Controller
     {
-        private RepositoryRestaurantes repo;
+        private IServiceRestaurantes service;
 
-        public PanelAdminController(RepositoryRestaurantes repo)
+        public PanelAdminController(IServiceRestaurantes service)
         {
-            this.repo = repo;
+            this.service = service;
         }
 
         [AuthorizeUser]
@@ -42,7 +41,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            List<RestauranteView> restaurantes = await this.repo.GetRestaurantesViewAsync("");
+            List<RestauranteView> restaurantes = await this.service.GetRestaurantesViewAsync("");
             return PartialView("_Restaurantes", restaurantes);
         }
 
@@ -53,7 +52,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            List<CategoriaRestaurante> categorias = await this.repo.GetCategoriasRestaurantesAsync();
+            List<CategoriaRestaurante> categorias = await this.service.GetCategoriasRestaurantesAsync();
             return PartialView("_CreateRestaurante", categorias);
         }
 
@@ -62,7 +61,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CreateRestaurante(Restaurante rest, string contrasenya, IFormFile fileimagen)
         {
-            await this.repo.CreateRestauranteAsync(rest, contrasenya, fileimagen);
+            await this.service.CreateRestauranteAsync(rest, contrasenya, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Restaurantes" });
         }
 
@@ -73,7 +72,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            RestauranteView rest = await this.repo.FindRestauranteViewAsync(idrest);
+            RestauranteView rest = await this.service.FindRestauranteViewAsync(idrest);
             return PartialView("_DetailsRestaurante", rest);
         }
 
@@ -84,8 +83,8 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            Restaurante rest = await this.repo.FindRestauranteAsync(idrest);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasRestaurantesAsync();
+            Restaurante rest = await this.service.FindRestauranteAsync(idrest);
+            ViewData["CATEGORIAS"] = await this.service.GetCategoriasRestaurantesAsync();
             return PartialView("_EditRestaurante", rest);
         }
 
@@ -94,7 +93,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _EditRestaurante(Restaurante rest, IFormFile fileimagen)
         {
-            await this.repo.EditRestauranteAsync(rest, fileimagen);
+            await this.service.EditRestauranteAsync(rest, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Restaurantes" });
         }
 
@@ -105,7 +104,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            await this.repo.DeleteRestauranteAsync(id);
+            await this.service.DeleteRestauranteAsync(id);
             return RedirectToAction("Index", new { nomvista = "_Restaurantes" });
         }
         #endregion
@@ -118,7 +117,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            List<Usuario> usuarios = await this.repo.GetUsuariosAsync();
+            List<Usuario> usuarios = await this.service.GetUsuariosAsync();
             return PartialView("_Usuarios", usuarios);
         }
         #endregion
@@ -134,12 +133,12 @@ namespace ProyectoASPNET.Controllers
             List<Producto> productos;
             if (idrest != null)
             {
-                productos = await this.repo.GetProductosRestauranteAsync(idrest.Value);
+                productos = await this.service.GetProductosRestauranteAsync(idrest.Value);
                 ViewData["IDRESTAURANTE"] = idrest.Value;
             }
             else
             {
-                productos = await this.repo.GetProductosAsync();
+                productos = await this.service.GetProductosAsync();
             }
             return PartialView("_Productos", productos);
         }
@@ -153,11 +152,11 @@ namespace ProyectoASPNET.Controllers
             }
             if (idrestaurante != null)
             {
-                ViewData["RESTAURANTE"] = await this.repo.FindRestauranteAsync(idrestaurante.Value);
-                ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(idrestaurante.Value);
+                ViewData["RESTAURANTE"] = await this.service.FindRestauranteAsync(idrestaurante.Value);
+                ViewData["CATEGORIAS"] = await this.service.GetCategoriasProductosAsync(idrestaurante.Value);
                 return PartialView("_CreateProducto");
             }
-            List<Restaurante> restaurantes = await this.repo.GetRestaurantesAsync();
+            List<Restaurante> restaurantes = await this.service.GetRestaurantesAsync();
             return PartialView("_CreateProducto", restaurantes);
         }
 
@@ -166,7 +165,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CreateProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
-            await this.repo.CreateProductoAsync(prod, categproducto, fileimagen);
+            await this.service.CreateProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
         }
 
@@ -177,7 +176,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            Producto prod = await this.repo.FindProductoAsync(idprod);
+            Producto prod = await this.service.FindProductoAsync(idprod);
             return PartialView("_DetailsProducto", prod);
         }
 
@@ -188,8 +187,8 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            Producto prod = await this.repo.FindProductoAsync(idprod);
-            ViewData["CATEGORIAS"] = await this.repo.GetCategoriasProductosAsync(prod.IdRestaurante);
+            Producto prod = await this.service.FindProductoAsync(idprod);
+            ViewData["CATEGORIAS"] = await this.service.GetCategoriasProductosAsync(prod.IdRestaurante);
             return PartialView("_EditProducto", prod);
         }
 
@@ -198,7 +197,7 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _EditProducto(Producto prod, int[] categproducto, IFormFile fileimagen)
         {
-            await this.repo.EditProductoAsync(prod, categproducto, fileimagen);
+            await this.service.EditProductoAsync(prod, categproducto, fileimagen);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
         }
 
@@ -209,14 +208,14 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            Producto prod = await this.repo.FindProductoAsync(id);
-            await this.repo.DeleteProductoAsync(id);
+            Producto prod = await this.service.FindProductoAsync(id);
+            await this.service.DeleteProductoAsync(id);
             return RedirectToAction("Index", new { nomvista = "_Productos", idrest = prod.IdRestaurante });
         }
 
         public async Task<IActionResult> _CategoriasProductoRestaurante(int idrestaurante)
         {
-            List<CategoriaProducto> categorias = await this.repo.GetCategoriasProductosAsync(idrestaurante);
+            List<CategoriaProducto> categorias = await this.service.GetCategoriasProductosAsync(idrestaurante);
             return PartialView("_CategoriasProductoRestaurante", categorias);
         }
         #endregion

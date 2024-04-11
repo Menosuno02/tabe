@@ -1,5 +1,6 @@
 ﻿using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 using System.Security.Claims;
 
 namespace ProyectoASPNET.Helpers
@@ -7,12 +8,12 @@ namespace ProyectoASPNET.Helpers
     public class HelperCesta
     {
         IHttpContextAccessor httpContextAccessor;
-        RepositoryRestaurantes repo;
+        IServiceRestaurantes service;
 
-        public HelperCesta(IHttpContextAccessor httpContextAccessor, RepositoryRestaurantes repo)
+        public HelperCesta(IHttpContextAccessor httpContextAccessor, IServiceRestaurantes service)
         {
             this.httpContextAccessor = httpContextAccessor;
-            this.repo = repo;
+            this.service = service;
         }
 
         public List<ProductoCesta> GetCesta()
@@ -32,7 +33,7 @@ namespace ProyectoASPNET.Helpers
             {
                 IEnumerable<int> ids = cesta.Select(p => p.IdProducto);
                 List<Producto> productos =
-                    await this.repo.FindListProductosAsync(cesta.Select(p => p.IdProducto));
+                    await this.service.FindListProductosAsync(cesta.Select(p => p.IdProducto));
                 foreach (Producto producto in productos)
                 {
                     int cantidad = cesta
@@ -50,7 +51,7 @@ namespace ProyectoASPNET.Helpers
                 }
             }
             int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            Usuario usuario = await this.repo.FindUsuarioAsync(id);
+            Usuario usuario = await this.service.FindUsuarioAsync(id);
             return new CestaView
             {
                 Cesta = cestaView,
@@ -68,7 +69,7 @@ namespace ProyectoASPNET.Helpers
             {
                 List<ProductoCesta> cesta = new List<ProductoCesta> { prod };
                 httpContext.Session.SetObject("CESTA", cesta);
-                Producto productoPivot = await this.repo.FindProductoAsync(prod.IdProducto);
+                Producto productoPivot = await this.service.FindProductoAsync(prod.IdProducto);
                 httpContext.Session.SetObject("RESTAURANTE", productoPivot.IdRestaurante);
             }
             else
@@ -136,7 +137,7 @@ namespace ProyectoASPNET.Helpers
                 int idusuario = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 int idrestaurante = httpContext.Session.GetObject<int>("RESTAURANTE");
                 Pedido pedido =
-                    await this.repo.CreatePedidoAsync(idusuario, idrestaurante, cesta);
+                    await this.service.CreatePedidoAsync(idusuario, idrestaurante, cesta);
                 httpContext.Session.Remove("CESTA");
                 httpContext.Session.Remove("RESTAURANTE");
                 return pedido;

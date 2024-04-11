@@ -1,24 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProyectoASPNET.Models;
 using ProyectoASPNET.Extensions;
-using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Filters;
+using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Models;
+using ProyectoASPNET.Services;
 using System.Security.Claims;
 
 namespace ProyectoASPNET.Controllers
 {
     public class RestaurantesController : Controller
     {
-        private RepositoryRestaurantes repo;
+        private IServiceRestaurantes service;
         private HelperCesta helperCesta;
         private HelperGoogleApiDirections helperDistanceMatrix;
 
         public RestaurantesController
-            (RepositoryRestaurantes repo,
+            (IServiceRestaurantes service,
             HelperCesta helperCesta,
             HelperGoogleApiDirections helperDistanceMatrix)
         {
-            this.repo = repo;
+            this.service = service;
             this.helperCesta = helperCesta;
             this.helperDistanceMatrix = helperDistanceMatrix;
         }
@@ -31,7 +32,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             ViewData["CATEGORIAS"] =
-                await this.repo.GetCategoriasRestaurantesAsync();
+                await this.service.GetCategoriasRestaurantesAsync();
             return View();
         }
 
@@ -41,14 +42,14 @@ namespace ProyectoASPNET.Controllers
         {
             PaginationRestaurantesView model = new PaginationRestaurantesView();
             if (categoria != null)
-                model = await this.repo.FilterPaginationRestaurantesViewAsync(categoria, searchquery, posicion);
+                model = await this.service.FilterPaginationRestaurantesViewAsync(categoria, searchquery, posicion);
             else
-                model = await this.repo.GetPaginationRestaurantesViewAsync(searchquery, posicion);
+                model = await this.service.GetPaginationRestaurantesViewAsync(searchquery, posicion);
             List<RestauranteView> restaurantes = model.Restaurantes;
             ViewData["POSICION"] = posicion;
             ViewData["NUMREGISTROS"] = model.NumRegistros;
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            Usuario usu = await this.repo.FindUsuarioAsync(idusuario);
+            Usuario usu = await this.service.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
             var tasks = restaurantes
                 .Select(async r => r.InfoEntrega = await this.helperDistanceMatrix
@@ -68,8 +69,8 @@ namespace ProyectoASPNET.Controllers
             }
             ProductosActionModel model = new ProductosActionModel
             {
-                Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(idrestaurante)
+                Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
+                CategoriasProductos = await this.service.GetCategoriasProductosAsync(idrestaurante)
             };
             return View(model);
         }
@@ -98,8 +99,8 @@ namespace ProyectoASPNET.Controllers
             }
             ProductosActionModel model = new ProductosActionModel
             {
-                Restaurante = await this.repo.FindRestauranteViewAsync(idrestaurante),
-                CategoriasProductos = await this.repo.GetCategoriasProductosAsync(idrestaurante)
+                Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
+                CategoriasProductos = await this.service.GetCategoriasProductosAsync(idrestaurante)
             };
             return View(model);
         }
@@ -109,9 +110,9 @@ namespace ProyectoASPNET.Controllers
         {
             List<Producto> productos;
             if (categoria == 0)
-                productos = await this.repo.GetProductosRestauranteAsync(idrestaurante);
+                productos = await this.service.GetProductosRestauranteAsync(idrestaurante);
             else
-                productos = await this.repo.GetProductosByCategoriaAsync(idrestaurante, categoria);
+                productos = await this.service.GetProductosByCategoriaAsync(idrestaurante, categoria);
             return PartialView("_ListProductos", productos);
         }
 
@@ -123,7 +124,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            await this.repo.UpdateValoracionRestauranteAsync(
+            await this.service.UpdateValoracionRestauranteAsync(
                 new ValoracionRestaurante
                 {
                     IdRestaurante = idrestaurante,

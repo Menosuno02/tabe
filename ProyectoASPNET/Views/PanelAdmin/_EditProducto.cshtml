@@ -2,25 +2,25 @@
 
 @{
     List<CategoriaProducto> categorias = ViewData["CATEGORIAS"] as List<CategoriaProducto>;
-    List<string> categProducto = await this.repo.GetCategoriasFromProductoAsync(Model.IdProducto);
+    List<string> categProducto = await this.service.GetCategoriasFromProductoAsync(Model.IdProducto);
 }
 @using (Html.BeginForm("_EditProducto", "PanelAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="py-6 px-8">
-        <div class="grid grid-cols-6 gap-6">
+    <div class="px-8 py-6">
+        <div class="grid-cols-6 grid gap-6">
             <form method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="idproducto" value="@Model.IdProducto" />
                 <input type="hidden" name="idrestaurante" value="@Model.IdRestaurante" />
                 <input type="hidden" name="imagen" value="@Model.Imagen" />
                 <div class="col-span-6">
-                    <label class="block text-sm font-bold text-gray-700">Nombre</label>
-                    <input required type="text" name="nombre" value="@Model.Nombre" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                    <label class="text-gray-700 block text-sm font-bold">Nombre</label>
+                    <input required type="text" name="nombre" value="@Model.Nombre" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
                 </div>
                 <div class="col-span-6">
-                    <label class="block text-sm font-bold text-gray-700">Categorías</label>
+                    <label class="text-gray-700 block text-sm font-bold">Categorías</label>
                     <select name="categproducto" multiple size="@categorias.Count()"
-                            class="scrollbar-hide p-2 pb-1.5 mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                            class="scrollbar-hide border-gray-300 text-gray-700 mt-1.5 w-full rounded-lg p-2 pb-1.5 shadow-sm focus:ring focus:outline-none sm:text-sm">
                         @foreach (CategoriaProducto categ in categorias)
                         {
                             if (categProducto.Contains(categ.Nombre))
@@ -35,19 +35,19 @@
                     </select>
                 </div>
                 <div class="col-span-6">
-                    <label class="block text-sm font-bold text-gray-700">Descripción</label>
-                    <input required type="text" size="3" name="descripcion" value="@Model.Descripcion" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none">
+                    <label class="text-gray-700 block text-sm font-bold">Descripción</label>
+                    <input required type="text" size="3" name="descripcion" value="@Model.Descripcion" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none">
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label class="block text-sm font-bold text-gray-700">Precio</label>
-                    <input required type="text" name="precio" pattern="^\d+(,\d{1,2})?$" value="@Model.Precio.ToString()" class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:ring focus:outline-none" />
+                    <label class="text-gray-700 block text-sm font-bold">Precio</label>
+                    <input required type="text" name="precio" pattern="^\d+(,\d{1,2})?$" value="@Model.Precio.ToString()" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                    <label class="block text-sm font-bold text-gray-700">Imagen</label>
+                    <label class="text-gray-700 block text-sm font-bold">Imagen</label>
                     <input type="file" name="fileimagen" value="@Model.Imagen" class="file-input w-full" />
                 </div>
                 <div class="col-span-6">
-                    <button id="btnEditPost" class="btn btn-primary font-medium w-full">
+                    <button id="btnEditPost" class="btn btn-primary w-full font-medium">
                         Editar producto
                     </button>
                 </div>

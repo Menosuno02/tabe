@@ -2,11 +2,11 @@
 
 @{
     List<ProductoPedidoView> productos = ViewData["PRODUCTOS"] as List<ProductoPedidoView>;
-    List<EstadoPedido> estados = await this.repo.GetEstadoPedidosAsync();
+    List<EstadoPedido> estados = await this.service.GetEstadoPedidosAsync();
 }
 
-<div class="py-6 px-6 md:px-12">
-    <h1 class="text-3xl font-bold text-gray-900 mt-2 mb-4">Pedidos pendientes</h1>
+<div class="px-6 py-6 md:px-12">
+    <h1 class="text-gray-900 mb-4 mt-2 text-3xl font-bold">Pedidos pendientes</h1>
     @if (Model.Count > 0)
     {
         <div id="accordion" class="border-2 rounded-xl" data-accordion="open">
@@ -14,32 +14,32 @@
             {
                 <h2 id="accordion-color-heading-@pedido.IdPedido">
                     <button type="button"
-                            class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl bg-purple-100 text-purple-600 focus:ring-4 focus:ring-purple-200 hover:bg-purple-100 gap-3"
+                            class="text-gray-500 border-b-0 border-gray-200 bg-purple-100 text-purple-600 flex w-full items-center justify-between gap-3 rounded-t-xl border p-5 font-medium hover:bg-purple-100 focus:ring-4 focus:ring-purple-200 rtl:text-right"
                             data-accordion-target="#accordion-color-body-@pedido.IdPedido" aria-expanded="true" aria-controls="accordion-color-body-@pedido.IdPedido">
                         <span>Pedido #@pedido.IdPedido (ESTADO: @productos.FirstOrDefault(p => p.IdPedido == pedido.IdPedido).Estado)</span>
                     </button>
                 </h2>
                 <div id="accordion-color-body-@pedido.IdPedido" aria-labelledby="accordion-color-heading-@pedido.IdPedido">
-                    <div class="p-5 border border-b-0 border-gray-200">
-                        <p class="mb-2 text-gray-600">
-                            <span class="text-2xl text-gray-700">
+                    <div class="border-b-0 border-gray-200 border p-5">
+                        <p class="text-gray-600 mb-2">
+                            <span class="text-gray-700 text-2xl">
                                 Fecha: @pedido.FechaPedido
                             </span>
                             @{
-                                Usuario user = await this.repo.FindUsuarioAsync(pedido.IdUsuario);
+                                Usuario user = await this.service.FindUsuarioAsync(pedido.IdUsuario);
                             }
-                        <p class="text-xl text-gray-700">
+                        <p class="text-gray-700 text-xl">
                                 @user.Direccion
                         </p>
                             @using (Html.BeginForm("_PedidosRestaurante", "PanelRestaurante"))
                             {
                             <form method="post">
-                                <div class="flex flex-wrap my-5 w-full">
+                                <div class="my-5 flex w-full flex-wrap">
                                     <input type="hidden" name="idpedido" value="@pedido.IdPedido" />
                                     <div class="w-full md:w-[49%]">
-                                        <label class="block text-sm font-bold text-gray-700">Categoría</label>
+                                        <label class="text-gray-700 block text-sm font-bold">Categoría</label>
                                         <select name="estado"
-                                                class="p-2 pb-1.5 mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm shadow-sm focus:ring focus:outline-none">
+                                                class="border-gray-300 text-gray-700 mt-1.5 w-full rounded-lg p-2 pb-1.5 shadow-sm focus:ring focus:outline-none sm:text-sm">
                                                 @foreach (EstadoPedido estado in estados)
                                                 {
                                                     if (estado.IdEstado == pedido.Estado)
@@ -55,18 +55,18 @@
                                     </div>
                                     <div class="w-0 md:w-[2%]"></div>
                                     <div class="w-full md:w-[49%]">
-                                        <button class="btn btn-primary w-full mt-4">Modificar estado</button>
+                                        <button class="btn btn-primary mt-4 w-full">Modificar estado</button>
                                     </div>
                                 </div>
                             </form>
                             }
                         <div class="relative overflow-x-auto">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                                <thead class="text-xs text-gray-900 bg-gray-100 uppercase">
+                            <table class="text-gray-500 w-full text-left text-sm rtl:text-right">
+                                <thead class="text-gray-900 bg-gray-100 text-xs uppercase">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 rounded-s-lg">Producto</th>
+                                        <th scope="col" class="rounded-s-lg px-6 py-3">Producto</th>
                                         <th scope="col" class="px-6 py-3">Cantidad</th>
-                                        <th scope="col" class="px-6 py-3 rounded-e-lg">Total</th>
+                                        <th scope="col" class="rounded-e-lg px-6 py-3">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -77,7 +77,7 @@
                                         {
                                             decimal total = producto.Cantidad * producto.Precio;
                                         <tr class="bg-white">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                            <th scope="row" class="text-gray-900 whitespace-nowrap px-6 py-4 font-medium">
                                                     @producto.Producto
                                             </th>
                                             <td class="px-6 py-4">@producto.Cantidad</td>
@@ -85,9 +85,9 @@
                                         </tr>
                                         }
                                     <tr class="bg-white">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"></th>
+                                        <th scope="row" class="text-gray-900 whitespace-nowrap px-6 py-4 font-medium"></th>
                                         <td class="px-6 py-4"></td>
-                                        <td class="px-6 py-4 font-bold text-gray-700">@productosPedido.Sum(pp => pp.Cantidad * pp.Precio)€</td>
+                                        <td class="text-gray-700 px-6 py-4 font-bold">@productosPedido.Sum(pp => pp.Cantidad * pp.Precio)€</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -100,6 +100,6 @@
     }
     else
     {
-        <h2 class="text-xl font-bold text-gray-900 mt-2 mb-4">No hay pedidos por entregar</h2>
+        <h2 class="text-gray-900 mb-4 mt-2 text-xl font-bold">No hay pedidos por entregar</h2>
     }
 </div>

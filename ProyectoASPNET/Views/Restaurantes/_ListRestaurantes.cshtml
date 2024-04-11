@@ -2,7 +2,7 @@
 
 @if (Model.Count() == 0)
 {
-    <h1 class="text-center mt-10 text-2xl">Restaurantes no encontrados</h1>
+    <h1 class="mt-10 text-center text-2xl">Restaurantes no encontrados</h1>
 }
 else
 {
@@ -11,8 +11,8 @@ else
             int paginas = 0;
             for (int i = 1; i <= int.Parse(ViewData["NUMREGISTROS"].ToString()); i += 8)
                 paginas++;
-            <nav class="w-full my-5 mx-3">
-                <ul class="flex flex-wrap items-center -space-x-px h-10 text-base justify-center w-full">
+            <nav class="mx-3 my-5 w-full">
+                <ul class="flex h-10 w-full flex-wrap items-center justify-center -space-x-px text-base">
                     @for (int i = 1; i <= paginas; i++)
                     {
                         <li class="w-[calc(100%/@paginas)]">

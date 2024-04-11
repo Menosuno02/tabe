@@ -1,12 +1,12 @@
 ﻿@model string
 
-<div role="tablist" class="tabs tabs-boxed w-11/12 mx-auto mt-3">
+<div role="tablist" class="tabs tabs-boxed mx-auto mt-3 w-11/12">
     <button role="tab" class="tab" value="_EditRestaurante">Editar</button>
     <button role="tab" class="tab" value="_PedidosRestaurante">Pedidos</button>
     <button role="tab" class="tab" value="_ProductosRestaurante">Productos</button>
     <button role="tab" class="tab" value="_CategoriasRestaurante">Categorías</button>
 </div>
-<div id="contentPanel" class="sm:px-4 px-6"></div>
+<div id="contentPanel" class="px-6 sm:px-4"></div>
 
 @section scripts {
     @if (ViewData["NOMVISTA"] != null)
