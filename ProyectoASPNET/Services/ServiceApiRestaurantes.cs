@@ -85,6 +85,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                restaurante.IdRestaurante = await this.CallApiAsync<int>("api/Productos/GetMaxIdRestaurante");
                 restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
                 RestauranteAPIModel model = new RestauranteAPIModel
                 {
@@ -148,7 +149,8 @@ namespace ProyectoASPNET.Services
         #region V_RESTAURANTES
         public async Task<List<RestauranteView>> GetRestaurantesViewAsync(string searchquery)
         {
-            string request = "api/ViewRestaurantes/" + searchquery;
+            string request = "api/ViewRestaurantes";
+            if (searchquery != "") request += "?searchquery=" + searchquery;
             return await this.CallApiAsync<List<RestauranteView>>(request);
         }
 
@@ -160,13 +162,17 @@ namespace ProyectoASPNET.Services
 
         public async Task<PaginationRestaurantesView> GetPaginationRestaurantesViewAsync(string searchquery, int posicion)
         {
-            string request = "api/ViewRestaurantes/GetPaginationRestaurantesView?searchquery=" + searchquery + "&posicion=" + posicion;
+            string request = "api/ViewRestaurantes/GetPaginationRestaurantesView?";
+            if (searchquery != "") request += "searchquery=" + searchquery + "&";
+            request += "posicion=" + posicion;
             return await this.CallApiAsync<PaginationRestaurantesView>(request);
         }
 
         public async Task<PaginationRestaurantesView> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery, int posicion)
         {
-            string request = "api/ViewRestaurantes/FilterPaginationRestaurantesView?categoria=" + categoria + "&searchquery=" + searchquery + "&posicion=" + posicion;
+            string request = "api/ViewRestaurantes/FilterPaginationRestaurantesView?categoria=" + categoria + "&";
+            if (searchquery != "") request += "searchquery=" + searchquery + "&";
+            request += "posicion=" + posicion;
             return await this.CallApiAsync<PaginationRestaurantesView>(request);
         }
         #endregion
@@ -182,7 +188,7 @@ namespace ProyectoASPNET.Services
         #region CATEGORIAS_PRODUCTOS
         public async Task<List<CategoriaProducto>> GetCategoriasProductosAsync(int idrestaurante)
         {
-            string request = "api/ViewRestaurantes/CategoriasProductos/" + idrestaurante;
+            string request = "api/CategoriasProductos/" + idrestaurante;
             return await this.CallApiAsync<List<CategoriaProducto>>(request);
         }
 
@@ -190,7 +196,7 @@ namespace ProyectoASPNET.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                string request = "api/CategoriasProductos/" + idrestaurante + "/" + categoria;
+                string request = "api/CategoriasProductos";
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
@@ -256,7 +262,7 @@ namespace ProyectoASPNET.Services
 
         public async Task<List<Producto>> FindListProductosAsync(IEnumerable<int> ids)
         {
-            string request = "api/Productos/FindListProductos" + string.Join(",", ids);
+            string request = "api/Productos/FindListProductos/" + string.Join(",", ids);
             return await this.CallApiAsync<List<Producto>>(request);
         }
 
@@ -268,6 +274,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                producto.IdProducto = await this.CallApiAsync<int>("api/Productos/GetMaxIdProducto");
                 producto.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
                 ProductoAPIModel model = new ProductoAPIModel
                 {

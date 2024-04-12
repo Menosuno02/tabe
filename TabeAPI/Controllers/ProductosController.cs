@@ -51,6 +51,13 @@ namespace TabeAPI.Controllers
             return await this.repo.FindListProductosAsync(idsproductos.Split(",").Select(int.Parse).ToList());
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ActionResult<int>> GetMaxIdProducto()
+        {
+            return await this.repo.GetMaxIdProductoAsync();
+        }
+
         [HttpPost]
         public async Task<ActionResult<Producto>> CreateProducto
             (ProductoAPIModel model)

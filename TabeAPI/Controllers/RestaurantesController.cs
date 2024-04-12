@@ -30,31 +30,6 @@ namespace TabeAPI.Controllers
             return await this.repo.FindRestauranteAsync(id);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Restaurante>> CreateRestaurante
-            (RestauranteAPIModel model)
-        {
-            return await this.repo.CreateRestauranteAsync(model.Restaurante, model.Password);
-        }
-
-        [HttpPut]
-        public async Task<ActionResult> EditRestaurante(Restaurante restaurante)
-        {
-            await this.repo.EditRestauranteAsync(restaurante);
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteRestaurante(int id)
-        {
-            if (await this.repo.FindRestauranteAsync(id) == null) return NotFound();
-            else
-            {
-                await this.repo.DeleteRestauranteAsync(id);
-                return Ok();
-            }
-        }
-
         [HttpGet]
         [Route("[action]/{id}")]
         public async Task<ActionResult<Restaurante>>
@@ -69,6 +44,37 @@ namespace TabeAPI.Controllers
             GetUsuarioFromRestaurante(string restaurantecorreo)
         {
             return await this.repo.GetUsuarioFromRestauranteAsync(restaurantecorreo);
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<ActionResult<int>> GetMaxIdRestaurante()
+        {
+            return await this.repo.GetMaxIdRestauranteAsync();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Restaurante>> CreateRestaurante
+            (RestauranteAPIModel model)
+        {
+            return await this.repo.CreateRestauranteAsync(model.Restaurante, model.Password);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<Restaurante>> EditRestaurante(Restaurante restaurante)
+        {
+            return await this.repo.EditRestauranteAsync(restaurante);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteRestaurante(int id)
+        {
+            if (await this.repo.FindRestauranteAsync(id) == null) return NotFound();
+            else
+            {
+                await this.repo.DeleteRestauranteAsync(id);
+                return Ok();
+            }
         }
     }
 }

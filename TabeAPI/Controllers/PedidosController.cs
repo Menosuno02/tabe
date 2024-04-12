@@ -16,14 +16,6 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
-        [HttpPost]
-        [Route("{idusuario}/{idrestaurante}")]
-        public async Task<ActionResult<Pedido>> CreatePedido
-            (int idusuario, int idrestaurante, List<ProductoCesta> cesta)
-        {
-            return await this.repo.CreatePedidoAsync(idusuario, idrestaurante, cesta);
-        }
-
         [HttpGet]
         [Route("[action]/{idusuario}")]
         public async Task<ActionResult<List<Pedido>>>
@@ -38,6 +30,14 @@ namespace TabeAPI.Controllers
             GetPedidosRestaurante(int idusurestaurante)
         {
             return await this.repo.GetPedidosRestauranteAsync(idusurestaurante);
+        }
+
+        [HttpPost]
+        [Route("{idusuario}/{idrestaurante}")]
+        public async Task<ActionResult<Pedido>> CreatePedido
+            (int idusuario, int idrestaurante, List<ProductoCesta> cesta)
+        {
+            return await this.repo.CreatePedidoAsync(idusuario, idrestaurante, cesta);
         }
     }
 }

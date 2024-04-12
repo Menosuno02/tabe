@@ -16,9 +16,9 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
-        [HttpGet("{searchquery}")]
+        [HttpGet]
         public async Task<ActionResult<List<RestauranteView>>>
-            GetRestaurantesView(string searchquery)
+            GetRestaurantesView(string? searchquery = "")
         {
             return await this.repo.GetRestaurantesViewAsync(searchquery);
         }

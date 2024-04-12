@@ -31,9 +31,9 @@ namespace ProyectoASPNET.Helpers
             List<ProductoCesta> cesta = GetCesta();
             if (cesta != null)
             {
-                IEnumerable<int> ids = cesta.Select(p => p.IdProducto);
+                List<int> ids = cesta.Select(p => p.IdProducto).ToList();
                 List<Producto> productos =
-                    await this.service.FindListProductosAsync(cesta.Select(p => p.IdProducto));
+                    await this.service.FindListProductosAsync(ids);
                 foreach (Producto producto in productos)
                 {
                     int cantidad = cesta
