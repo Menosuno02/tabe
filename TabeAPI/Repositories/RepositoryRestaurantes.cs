@@ -196,7 +196,7 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<PaginationRestaurantesView> GetPaginationRestaurantesViewAsync(string searchquery, int posicion)
+    public async Task<List<RestauranteView>> GetPaginationRestaurantesViewAsync(string searchquery)
     {
         List<RestauranteView> restaurantes = await this.context.RestaurantesView
             .OrderByDescending(r => r.Valoracion)
@@ -206,14 +206,10 @@ public class RepositoryRestaurantes
                 .Where(r => r.Nombre
                 .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
-        PaginationRestaurantesView model = new PaginationRestaurantesView();
-        model.NumRegistros = restaurantes.Count();
-        restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
-        model.Restaurantes = restaurantes;
-        return model;
+        return restaurantes;
     }
 
-    public async Task<PaginationRestaurantesView> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery, int posicion)
+    public async Task<List<RestauranteView>> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery)
     {
         List<RestauranteView> restaurantes = await this.context.RestaurantesView
             .Where(r => r.CategoriaRestaurante == categoria)
@@ -224,11 +220,7 @@ public class RepositoryRestaurantes
                 .Where(r => r.Nombre
                 .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
-        PaginationRestaurantesView model = new PaginationRestaurantesView();
-        model.NumRegistros = restaurantes.Count();
-        restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
-        model.Restaurantes = restaurantes;
-        return model;
+        return restaurantes;
     }
     #endregion
 

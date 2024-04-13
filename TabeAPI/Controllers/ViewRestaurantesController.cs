@@ -36,20 +36,18 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [Authorize]
-        public async Task<ActionResult<PaginationRestaurantesView>>
-            GetPaginationRestaurantesView(string? searchquery = "", int posicion = 1)
+        public async Task<ActionResult<List<RestauranteView>>> GetPaginationRestaurantesView
+            ([FromQuery] string? searchquery = "")
         {
-            return await this.repo.GetPaginationRestaurantesViewAsync(searchquery, posicion);
+            return await this.repo.GetPaginationRestaurantesViewAsync(searchquery);
         }
 
         [HttpGet]
         [Route("[action]")]
-        [Authorize]
-        public async Task<ActionResult<PaginationRestaurantesView>>
-            FilterPaginationRestaurantesView(string categoria, string? searchquery = "", int posicion = 1)
+        public async Task<ActionResult<List<RestauranteView>>> FilterPaginationRestaurantesView
+            ([FromQuery] string categoria, [FromQuery] string? searchquery = "")
         {
-            return await this.repo.FilterPaginationRestaurantesViewAsync(categoria, searchquery, posicion);
+            return await this.repo.FilterPaginationRestaurantesViewAsync(categoria, searchquery);
         }
     }
 }

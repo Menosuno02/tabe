@@ -24,9 +24,9 @@ namespace ProyectoASPNET.Services
         public Task<List<RestauranteView>> GetRestaurantesViewAsync(string searchquery);
 
         public Task<RestauranteView> FindRestauranteViewAsync(int id);
-        public Task<PaginationRestaurantesView> GetPaginationRestaurantesViewAsync(string searchquery, int posicion);
+        public Task<List<RestauranteView>> GetPaginationRestaurantesViewAsync(string searchquery);
 
-        public Task<PaginationRestaurantesView> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery, int posicion);
+        public Task<List<RestauranteView>> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery);
         #endregion
 
         #region CATEGORIAS_RESTAURANTES

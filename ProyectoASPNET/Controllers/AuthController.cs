@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
@@ -51,15 +52,14 @@ namespace ProyectoASPNET.Controllers
                 ClaimsIdentity identity = new ClaimsIdentity(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         ClaimTypes.Name, ClaimTypes.Role);
-                Claim claimName = new Claim(ClaimTypes.Name, usuario.Correo);
-                Claim claimID = new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString());
-                Claim claimRole = new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString());
-                identity.AddClaim(claimName);
-                identity.AddClaim(claimID);
-                identity.AddClaim(claimRole);
+                identity.AddClaim(new Claim(ClaimTypes.Name, usuario.Correo));
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString()));
+                identity.AddClaim(new Claim("TOKEN", HttpContext.Session.GetString("TOKEN")));
                 ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync
                     (CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
+                HttpContext.Session.Remove("TOKEN");
                 return RedirectToAction("CheckRoutes");
             }
             else
@@ -93,7 +93,6 @@ namespace ProyectoASPNET.Controllers
                 (CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("CESTA");
             HttpContext.Session.Remove("RESTAURANTE");
-            HttpContext.Session.Remove("TOKEN");
             return RedirectToAction("Index", "Home");
         }
     }

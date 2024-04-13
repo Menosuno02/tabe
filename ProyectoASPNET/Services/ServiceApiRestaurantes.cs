@@ -38,10 +38,28 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(this.UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+                HttpResponseMessage response = await client.GetAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    T data = await response.Content.ReadAsAsync<T>();
+                    return data;
+                }
+                else return default(T);
+            }
+        }
+
+        private async Task<T> CallApiAsync<T>(string request, string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(this.UrlApi);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response = await client.GetAsync(request);
                 if (response.IsSuccessStatusCode)
                 {
@@ -73,7 +91,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -101,7 +119,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -125,7 +143,7 @@ namespace ProyectoASPNET.Services
                 string request = "api/Restaurantes/" + id;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -160,20 +178,18 @@ namespace ProyectoASPNET.Services
             return await this.CallApiAsync<RestauranteView>(request);
         }
 
-        public async Task<PaginationRestaurantesView> GetPaginationRestaurantesViewAsync(string searchquery, int posicion)
+        public async Task<List<RestauranteView>> GetPaginationRestaurantesViewAsync(string searchquery)
         {
             string request = "api/ViewRestaurantes/GetPaginationRestaurantesView?";
-            if (searchquery != "") request += "searchquery=" + searchquery + "&";
-            request += "posicion=" + posicion;
-            return await this.CallApiAsync<PaginationRestaurantesView>(request);
+            if (searchquery != "") request += "searchquery=" + searchquery;
+            return await this.CallApiAsync<List<RestauranteView>>(request);
         }
 
-        public async Task<PaginationRestaurantesView> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery, int posicion)
+        public async Task<List<RestauranteView>> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery)
         {
             string request = "api/ViewRestaurantes/FilterPaginationRestaurantesView?categoria=" + categoria + "&";
-            if (searchquery != "") request += "searchquery=" + searchquery + "&";
-            request += "posicion=" + posicion;
-            return await this.CallApiAsync<PaginationRestaurantesView>(request);
+            if (searchquery != "") request += "searchquery=" + searchquery;
+            return await this.CallApiAsync<List<RestauranteView>>(request);
         }
         #endregion
 
@@ -200,7 +216,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -225,7 +241,7 @@ namespace ProyectoASPNET.Services
                 string request = "api/CategoriasProductos/" + idcategoria;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -286,7 +302,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -314,7 +330,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -343,7 +359,7 @@ namespace ProyectoASPNET.Services
                 string request = "api/Productos/" + id;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -379,7 +395,7 @@ namespace ProyectoASPNET.Services
                     string token = keys.GetValue("response").ToString();
                     HttpContext httpContext = this.httpContextAccessor.HttpContext;
                     httpContext.Session.SetString("TOKEN", helperCryptography.EncryptString(this.EncryptKey, token));
-                    return await this.CallApiAsync<Usuario>("api/Usuarios/GetLoggedUsuario");
+                    return await this.CallApiAsync<Usuario>("api/Usuarios/GetLoggedUsuario", token);
                 }
                 else return null;
             }
@@ -430,7 +446,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -451,7 +467,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -481,7 +497,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -522,7 +538,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
@@ -567,7 +583,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);

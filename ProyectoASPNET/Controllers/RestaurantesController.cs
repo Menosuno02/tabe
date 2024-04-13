@@ -40,14 +40,13 @@ namespace ProyectoASPNET.Controllers
         public async Task<IActionResult> _ListRestaurantes
             (string? categoria, string searchquery = "", string orden = "valoracion", int posicion = 1)
         {
-            PaginationRestaurantesView model = new PaginationRestaurantesView();
+            List<RestauranteView> restaurantes = new List<RestauranteView>();
             if (categoria != null)
-                model = await this.service.FilterPaginationRestaurantesViewAsync(categoria, searchquery, posicion);
+                restaurantes = await this.service.FilterPaginationRestaurantesViewAsync(categoria, searchquery);
             else
-                model = await this.service.GetPaginationRestaurantesViewAsync(searchquery, posicion);
-            List<RestauranteView> restaurantes = model.Restaurantes;
+                restaurantes = await this.service.GetPaginationRestaurantesViewAsync(searchquery);
             ViewData["POSICION"] = posicion;
-            ViewData["NUMREGISTROS"] = model.NumRegistros;
+            ViewData["NUMREGISTROS"] = restaurantes.Count();
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             Usuario usu = await this.service.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
@@ -57,6 +56,7 @@ namespace ProyectoASPNET.Controllers
             await Task.WhenAll(tasks);
             if (orden != "valoracion")
                 restaurantes = restaurantes.OrderBy(r => r.InfoEntrega.TiempoEstimado).ToList();
+            restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
             return PartialView("_ListRestaurantes", restaurantes);
         }
 

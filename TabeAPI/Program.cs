@@ -47,6 +47,7 @@ builder.Services.AddSwaggerGen(options =>
         Title = "Tabe API",
         Description = "API de la app de Tabe"
     });
+    options.OrderActionsBy(a => a.RelativePath);
 });
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
