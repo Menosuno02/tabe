@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 /ProyectoASPNET/wwwroot/css/input.output.css
 /ProyectoASPNET/appsettings.Development.json
+/ProyectoASPNET/appsettings.json
+/TabeAPI/appsettings.json
