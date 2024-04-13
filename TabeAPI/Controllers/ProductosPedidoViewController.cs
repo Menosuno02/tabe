@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
@@ -18,6 +19,7 @@ namespace TabeAPI.Controllers
 
         
         [HttpGet("{idpedidos}")]
+        [Authorize]
         public async Task<ActionResult<List<ProductoPedidoView>>> GetProductosPedidoView(string idpedidos)
         {
             return await this.repo.GetProductosPedidoViewAsync(idpedidos.Split(",").Select(int.Parse).ToList());

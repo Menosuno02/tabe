@@ -134,10 +134,9 @@ namespace ProyectoASPNET.Helpers
             {
                 List<ProductoCesta> cesta = httpContext.Session.GetObject
                     <List<ProductoCesta>>("CESTA");
-                int idusuario = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 int idrestaurante = httpContext.Session.GetObject<int>("RESTAURANTE");
                 Pedido pedido =
-                    await this.service.CreatePedidoAsync(idusuario, idrestaurante, cesta);
+                    await this.service.CreatePedidoAsync(idrestaurante, cesta);
                 httpContext.Session.Remove("CESTA");
                 httpContext.Session.Remove("RESTAURANTE");
                 return pedido;

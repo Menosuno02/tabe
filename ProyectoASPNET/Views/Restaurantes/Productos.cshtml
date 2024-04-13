@@ -13,7 +13,7 @@
 @{
     int idrestaurante = Model.Restaurante.IdRestaurante;
     int idusuario = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-    ValoracionRestaurante val = await this.service.GetValoracionRestauranteAsync(idrestaurante, idusuario);
+    ValoracionRestaurante val = await this.service.GetValoracionRestauranteAsync(idrestaurante);
     int value = 1;
     if (val != null) value = val.Valoracion;
 }

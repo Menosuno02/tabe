@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using TabeAPI.Helpers;
 using TabeAPI.Models;
 
@@ -37,8 +39,14 @@ namespace TabeAPI.Controllers
             {
                 SigningCredentials credentials =
                     new SigningCredentials(helper.GetKeyToken(), SecurityAlgorithms.HmacSha256);
+                string json = JsonConvert.SerializeObject(usuario);
+                Claim[] info = new Claim[]
+                {
+                    new Claim("UserData", json)
+                };
                 JwtSecurityToken token =
                     new JwtSecurityToken(
+                        claims: info,
                         issuer: this.helper.Issuer,
                         audience: this.helper.Audience,
                         signingCredentials: credentials,
@@ -48,7 +56,6 @@ namespace TabeAPI.Controllers
                 return Ok(new
                 {
                     response = new JwtSecurityTokenHandler().WriteToken(token),
-                    user = usuario
                 });
             }
         }

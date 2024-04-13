@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
@@ -17,6 +18,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<RestauranteView>>>
             GetRestaurantesView(string? searchquery = "")
         {
@@ -25,6 +27,7 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]/{id}")]
+        [Authorize]
         public async Task<ActionResult<RestauranteView>>
             FindRestauranteView(int id)
         {
@@ -33,6 +36,7 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        [Authorize]
         public async Task<ActionResult<PaginationRestaurantesView>>
             GetPaginationRestaurantesView(string? searchquery = "", int posicion = 1)
         {
@@ -41,6 +45,7 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        [Authorize]
         public async Task<ActionResult<PaginationRestaurantesView>>
             FilterPaginationRestaurantesView(string categoria, string? searchquery = "", int posicion = 1)
         {

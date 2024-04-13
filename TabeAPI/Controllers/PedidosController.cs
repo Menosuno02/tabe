@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
 
@@ -17,27 +19,37 @@ namespace TabeAPI.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{idusuario}")]
-        public async Task<ActionResult<List<Pedido>>>
-            GetPedidosUsuario(int idusuario)
+        [Route("[action]")]
+        [Authorize]
+        public async Task<ActionResult<List<Pedido>>> GetPedidosUsuario()
         {
-            return await this.repo.GetPedidosUsuarioAsync(idusuario);
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            return await this.repo.GetPedidosUsuarioAsync(usuario.IdUsuario);
         }
 
         [HttpGet]
-        [Route("[action]/{idusurestaurante}")]
-        public async Task<ActionResult<List<Pedido>>>
-            GetPedidosRestaurante(int idusurestaurante)
+        [Route("[action]")]
+        [Authorize]
+        public async Task<ActionResult<List<Pedido>>> GetPedidosRestaurante()
         {
-            return await this.repo.GetPedidosRestauranteAsync(idusurestaurante);
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            return await this.repo.GetPedidosRestauranteAsync(usuario);
         }
 
         [HttpPost]
-        [Route("{idusuario}/{idrestaurante}")]
+        [Route("{idrestaurante}")]
+        [Authorize]
         public async Task<ActionResult<Pedido>> CreatePedido
-            (int idusuario, int idrestaurante, List<ProductoCesta> cesta)
+            (int idrestaurante, List<ProductoCesta> cesta)
         {
-            return await this.repo.CreatePedidoAsync(idusuario, idrestaurante, cesta);
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            return await this.repo.CreatePedidoAsync(usuario.IdUsuario, idrestaurante, cesta);
         }
     }
 }

@@ -56,16 +56,13 @@ public class RepositoryRestaurantes
 {
     private RestaurantesContext context;
     private HelperGoogleApiDirections helperGoogleApi;
-    private HelperUploadFiles helperUploadFiles;
 
     public RepositoryRestaurantes
         (RestaurantesContext context,
-        HelperGoogleApiDirections helperGoogleApi,
-        HelperUploadFiles helperUploadFiles)
+        HelperGoogleApiDirections helperGoogleApi)
     {
         this.context = context;
         this.helperGoogleApi = helperGoogleApi;
-        this.helperUploadFiles = helperUploadFiles;
     }
 
     #region RESTAURANTES
@@ -138,6 +135,7 @@ public class RepositoryRestaurantes
                 .Where(pc => pc.IdProducto == producto.IdProducto)
                 .ToListAsync());
         }
+        await this.context.SaveChangesAsync();
         this.context.ValoracionRestaurantes.RemoveRange
             (await this.context.ValoracionRestaurantes
             .Where(v => v.IdRestaurante == id)
@@ -538,10 +536,8 @@ public class RepositoryRestaurantes
             .ToListAsync();
     }
 
-    public async Task<List<Pedido>> GetPedidosRestauranteAsync(int idusuario)
+    public async Task<List<Pedido>> GetPedidosRestauranteAsync(Usuario usuario)
     {
-        Usuario usuario = await this.context.Usuarios
-            .FirstOrDefaultAsync(u => u.IdUsuario == idusuario);
         Restaurante rest = await this.context.Restaurantes
             .FirstOrDefaultAsync(r => r.Correo == usuario.Correo);
         return await this.context.Pedidos

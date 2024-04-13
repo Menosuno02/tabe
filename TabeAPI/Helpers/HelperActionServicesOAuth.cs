@@ -25,8 +25,7 @@ namespace TabeAPI.Helpers
             return new SymmetricSecurityKey(data);
         }
 
-        public Action<JwtBearerOptions>
-            GetJwtBearerOptions()
+        public Action<JwtBearerOptions> GetJwtBearerOptions()
         {
             Action<JwtBearerOptions> options = new Action<JwtBearerOptions>(options =>
             {
@@ -44,8 +43,7 @@ namespace TabeAPI.Helpers
             return options;
         }
 
-        public Action<AuthenticationOptions>
-            GetAuthenticateSchema()
+        public Action<AuthenticationOptions> GetAuthenticateSchema()
         {
             Action<AuthenticationOptions> options =
                 new Action<AuthenticationOptions>

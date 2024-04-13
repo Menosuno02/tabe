@@ -15,7 +15,7 @@ namespace ProyectoASPNET.Services
 
         public Task DeleteRestauranteAsync(int id);
 
-        public Task<Restaurante> GetRestauranteFromLoggedUserAsync(int id);
+        public Task<Restaurante> GetRestauranteFromLoggedUserAsync();
 
         public Task<Usuario> GetUsuarioFromRestauranteAsync(string restCorreo);
         #endregion
@@ -79,11 +79,11 @@ namespace ProyectoASPNET.Services
 
         #region PEDIDOS
         public Task<Pedido> CreatePedidoAsync
-            (int idusuario, int idrestaurante, List<ProductoCesta> cesta);
+            (int idrestaurante, List<ProductoCesta> cesta);
 
-        public Task<List<Pedido>> GetPedidosUsuarioAsync(int idusuario);
+        public Task<List<Pedido>> GetPedidosUsuarioAsync();
 
-        public Task<List<Pedido>> GetPedidosRestauranteAsync(int idusuario);
+        public Task<List<Pedido>> GetPedidosRestauranteAsync();
         #endregion
 
         #region ESTADOS_PEDIDO
@@ -97,8 +97,7 @@ namespace ProyectoASPNET.Services
         #endregion
 
         #region VALORACIONES_RESTAURANTE
-        public Task<ValoracionRestaurante> GetValoracionRestauranteAsync
-            (int idrestaurante, int idusuario);
+        public Task<ValoracionRestaurante> GetValoracionRestauranteAsync(int idrestaurante);
 
         public Task UpdateValoracionRestauranteAsync(ValoracionRestaurante val);
         #endregion

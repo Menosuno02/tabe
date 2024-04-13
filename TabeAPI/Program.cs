@@ -27,7 +27,6 @@ builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
 builder.Services.AddTransient<HelperPathProvider>();
-builder.Services.AddTransient<HelperUploadFiles>();
 
 string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
 builder.Services.AddTransient
@@ -49,6 +48,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "API de la app de Tabe"
     });
 });
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
 var app = builder.Build();
 

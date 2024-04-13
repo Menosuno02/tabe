@@ -53,7 +53,7 @@ GO
 */
 #endregion
 
-public class RepositoryRestaurantes : IServiceRestaurantes
+public class RepositoryRestaurantes
 {
     private RestaurantesContext context;
     private HelperGoogleApiDirections helperGoogleApi;

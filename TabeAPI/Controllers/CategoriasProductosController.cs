@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
@@ -18,6 +19,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpGet("{idrestaurante}")]
+        [Authorize]
         public async Task<ActionResult<List<CategoriaProducto>>>
             GetCategoriasProductos(int idrestaurante)
         {
@@ -25,6 +27,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<CategoriaProducto>>
             CreateCategoriaProducto(CategoriaProductoAPIModel model)
         {
@@ -32,6 +35,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpDelete("{idcategoria}")]
+        [Authorize]
         public async Task<ActionResult> DeleteCategoriaProducto
             (int idcategoria)
         {

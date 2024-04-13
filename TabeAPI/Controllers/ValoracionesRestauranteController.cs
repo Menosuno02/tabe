@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
 
@@ -16,15 +18,18 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
-        [HttpGet("{idrestaurante}/{idusuario}")]
-        public async Task<ActionResult<ValoracionRestaurante>>
-            GetValoracionRestaurante(int idrestaurante, int idusuario)
+        [HttpGet("[action]/{idrestaurante}")]
+        [Authorize]
+        public async Task<ActionResult<ValoracionRestaurante>> ValRestauranteUsuario(int idrestaurante)
         {
-            return await this.repo.GetValoracionRestauranteAsync
-                (idrestaurante, idusuario);
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            return await this.repo.GetValoracionRestauranteAsync(idrestaurante, usuario.IdUsuario);
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult>
             UpdateValoracionRestaurante(ValoracionRestaurante valoracion)
         {

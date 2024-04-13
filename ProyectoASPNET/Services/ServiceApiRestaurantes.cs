@@ -5,7 +5,6 @@ using System.Text;
 using TabeAPI.Models;
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Helpers;
-using System.Numerics;
 
 namespace ProyectoASPNET.Services
 {
@@ -34,27 +33,10 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(this.UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response = await client.GetAsync(request);
-                if (response.IsSuccessStatusCode)
-                {
-                    T data = await response.Content.ReadAsAsync<T>();
-                    return data;
-                }
-                else return default(T);
-            }
-        }
-
-        private async Task<T> CallApiAsync<T>(string request, string token)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(this.UrlApi);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(this.Header);
-                client.DefaultRequestHeaders.Add
-                    ("Authorization", "bearer " + token);
-                HttpResponseMessage response =
-                    await client.GetAsync(request);
                 if (response.IsSuccessStatusCode)
                 {
                     T data = await response.Content.ReadAsAsync<T>();
@@ -85,7 +67,10 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                restaurante.IdRestaurante = await this.CallApiAsync<int>("api/Productos/GetMaxIdRestaurante");
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+                restaurante.IdRestaurante = await this.CallApiAsync<int>("api/Restaurantes/GetMaxIdRestaurante");
                 restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
                 RestauranteAPIModel model = new RestauranteAPIModel
                 {
@@ -109,6 +94,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 if (imagen != null)
                 {
                     restaurante.Imagen =
@@ -129,13 +117,16 @@ namespace ProyectoASPNET.Services
                 string request = "api/Restaurantes/" + id;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response = await client.DeleteAsync(request);
             }
         }
 
-        public async Task<Restaurante> GetRestauranteFromLoggedUserAsync(int id)
+        public async Task<Restaurante> GetRestauranteFromLoggedUserAsync()
         {
-            string request = "api/Restaurantes/GetRestauranteFromLoggedUser/" + id;
+            string request = "api/Restaurantes/GetRestauranteFromLoggedUser";
             return await this.CallApiAsync<Restaurante>(request);
         }
 
@@ -200,6 +191,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 CategoriaProductoAPIModel model = new CategoriaProductoAPIModel
                 {
                     IdRestaurante = idrestaurante,
@@ -221,6 +215,9 @@ namespace ProyectoASPNET.Services
                 string request = "api/CategoriasProductos/" + idcategoria;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response =
                     await client.DeleteAsync(request);
             }
@@ -274,6 +271,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 producto.IdProducto = await this.CallApiAsync<int>("api/Productos/GetMaxIdProducto");
                 producto.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
                 ProductoAPIModel model = new ProductoAPIModel
@@ -298,6 +298,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 if (imagen != null)
                 {
                     producto.Imagen =
@@ -323,6 +326,9 @@ namespace ProyectoASPNET.Services
                 string request = "api/Productos/" + id;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response =
                     await client.DeleteAsync(request);
             }
@@ -355,7 +361,7 @@ namespace ProyectoASPNET.Services
                     string token = keys.GetValue("response").ToString();
                     HttpContext httpContext = this.httpContextAccessor.HttpContext;
                     httpContext.Session.SetString("TOKEN", token);
-                    return keys.GetValue("user").ToObject<Usuario>();
+                    return await this.CallApiAsync<Usuario>("api/Usuarios/GetLoggedUsuario");
                 }
                 else return null;
             }
@@ -369,6 +375,8 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                user.Salt = "";
+                user.Contrasenya = new byte[] { };
                 RegisterUserAPIModel model = new RegisterUserAPIModel
                 {
                     Usuario = user,
@@ -378,8 +386,9 @@ namespace ProyectoASPNET.Services
                 StringContent context = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PutAsync(request, context);
-                return await response.Content.ReadAsAsync<Usuario>();
+                    await client.PostAsync(request, context);
+                string jsonUsuario = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             }
         }
 
@@ -403,6 +412,10 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+                user.Contrasenya = new byte[] { };
                 string json = JsonConvert.SerializeObject(user);
                 StringContent context = new StringContent
                     (json, Encoding.UTF8, "application/json");
@@ -419,6 +432,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 ModifyPasswordAPIModel model = new ModifyPasswordAPIModel
                 {
                     IdUsuario = usu.IdUsuario,
@@ -437,14 +453,17 @@ namespace ProyectoASPNET.Services
 
         #region PEDIDOS
         public async Task<Pedido> CreatePedidoAsync
-            (int idusuario, int idrestaurante, List<ProductoCesta> cesta)
+            (int idrestaurante, List<ProductoCesta> cesta)
         {
             using (HttpClient client = new HttpClient())
             {
-                string request = "api/Pedidos/" + idusuario + "/" + idrestaurante;
+                string request = "api/Pedidos/" + idrestaurante;
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 string json = JsonConvert.SerializeObject(cesta);
                 StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
@@ -454,15 +473,15 @@ namespace ProyectoASPNET.Services
             }
         }
 
-        public async Task<List<Pedido>> GetPedidosUsuarioAsync(int idusuario)
+        public async Task<List<Pedido>> GetPedidosUsuarioAsync()
         {
-            string request = "api/Pedidos/GetPedidosUsuario/" + idusuario;
+            string request = "api/Pedidos/GetPedidosUsuario";
             return await this.CallApiAsync<List<Pedido>>(request);
         }
 
-        public async Task<List<Pedido>> GetPedidosRestauranteAsync(int idusuario)
+        public async Task<List<Pedido>> GetPedidosRestauranteAsync()
         {
-            string request = "api/Pedidos/GetPedidosRestaurante/" + idusuario;
+            string request = "api/Pedidos/GetPedidosRestaurante";
             return await this.CallApiAsync<List<Pedido>>(request);
         }
         #endregion
@@ -482,6 +501,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 EstadoPedidoAPIModel model = new EstadoPedidoAPIModel
                 {
                     IdPedido = idpedido,
@@ -505,10 +527,9 @@ namespace ProyectoASPNET.Services
         #endregion
 
         #region VALORACIONES_RESTAURANTE
-        public async Task<ValoracionRestaurante> GetValoracionRestauranteAsync
-            (int idrestaurante, int idusuario)
+        public async Task<ValoracionRestaurante> GetValoracionRestauranteAsync(int idrestaurante)
         {
-            string request = "api/ValoracionesRestaurante/" + idrestaurante + "/" + idusuario;
+            string request = "api/ValoracionesRestaurante/ValRestauranteUsuario/" + idrestaurante;
             return await this.CallApiAsync<ValoracionRestaurante>(request);
         }
 
@@ -520,6 +541,9 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                if (token != null)
+                    client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 string json = JsonConvert.SerializeObject(val);
                 StringContent context = new StringContent
                     (json, Encoding.UTF8, "application/json");

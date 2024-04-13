@@ -93,6 +93,7 @@ namespace ProyectoASPNET.Controllers
                 (CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("CESTA");
             HttpContext.Session.Remove("RESTAURANTE");
+            HttpContext.Session.Remove("TOKEN");
             return RedirectToAction("Index", "Home");
         }
     }

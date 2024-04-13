@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
@@ -18,12 +19,14 @@ namespace TabeAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Producto>>> GetProductos()
         {
             return await this.repo.GetProductosAsync();
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Producto>> FindProducto(int id)
         {
             return await this.repo.FindProductoAsync(id);
@@ -31,6 +34,7 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]/{id}")]
+        [Authorize]
         public async Task<ActionResult<List<Producto>>> ProductosRestaurante(int id)
         {
             return await this.repo.GetProductosRestauranteAsync(id);
@@ -38,6 +42,7 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]/{restaurante}/{categoria}")]
+        [Authorize]
         public async Task<ActionResult<List<Producto>>> GetProductosByCategoria
             (int restaurante, int categoria)
         {
@@ -45,6 +50,7 @@ namespace TabeAPI.Controllers
         }
         
         [HttpGet("[action]/{idsproductos}")]
+        [Authorize]
         public async Task<ActionResult<List<Producto>>> FindListProductos
             (string idsproductos)
         {
@@ -53,12 +59,14 @@ namespace TabeAPI.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        [Authorize]
         public async Task<ActionResult<int>> GetMaxIdProducto()
         {
             return await this.repo.GetMaxIdProductoAsync();
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Producto>> CreateProducto
             (ProductoAPIModel model)
         {
@@ -66,6 +74,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<ActionResult> EditProducto
             (ProductoAPIModel model)
         {
@@ -74,6 +83,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteProducto(int id)
         {
             if (await this.repo.FindProductoAsync(id) == null) return NotFound();

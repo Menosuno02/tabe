@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
@@ -18,6 +19,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<EstadoPedido>>> GetEstadosPedido()
         {
             return await this.repo.GetEstadoPedidosAsync();
@@ -25,6 +27,7 @@ namespace TabeAPI.Controllers
 
         [HttpPut]
         [Route("UpdateEstadoPedido")]
+        [Authorize]
         public async Task<ActionResult>
             UpdateEstadoPedido(EstadoPedidoAPIModel model)
         {

@@ -18,6 +18,7 @@ namespace TabeAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<CategoriaRestaurante>>>
             GetCategoriasRestaurantes()
         {

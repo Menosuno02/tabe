@@ -39,8 +39,7 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            List<Pedido> pedidos = await this.service.GetPedidosUsuarioAsync(idusuario);
+            List<Pedido> pedidos = await this.service.GetPedidosUsuarioAsync();
             List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
             ViewData["PRODUCTOS"] = await this.service.GetProductosPedidoViewAsync(idPedidos);
             return View(pedidos);
