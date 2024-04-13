@@ -38,6 +38,7 @@ builder.Services.AddTransient<HelperPathProvider>();
 builder.Services.AddTransient<HelperCesta>();
 builder.Services.AddTransient<HelperUploadFiles>();
 builder.Services.AddTransient<HelperMails>();
+builder.Services.AddSingleton<HelperCryptography>();
 
 string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
 builder.Services.AddTransient<HelperGoogleApiDirections>

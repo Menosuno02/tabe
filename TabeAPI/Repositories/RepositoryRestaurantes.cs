@@ -579,6 +579,7 @@ public class RepositoryRestaurantes
             .Where(v => v.IdRestaurante == idrestaurante && v.IdUsuario == idusuario)
             .FirstOrDefaultAsync();
     }
+
     public async Task UpdateValoracionRestauranteAsync(ValoracionRestaurante val)
     {
         ValoracionRestaurante valBorrar =

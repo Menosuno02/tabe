@@ -12,17 +12,22 @@ namespace ProyectoASPNET.Services
     {
         private string UrlApi;
         private MediaTypeWithQualityHeaderValue Header;
+        private string EncryptKey;
         private HelperUploadFiles helperUploadFiles;
+        private HelperCryptography helperCryptography;
         private IHttpContextAccessor httpContextAccessor;
 
         public ServiceApiRestaurantes
             (IConfiguration configuration,
             HelperUploadFiles helperUploadFiles,
+            HelperCryptography helperCryptography,
             IHttpContextAccessor httpContextAccessor)
         {
             this.UrlApi = configuration.GetValue<string>("ApiUrls:TabeApi");
             this.Header = new MediaTypeWithQualityHeaderValue("application/json");
+            this.EncryptKey = configuration.GetValue<string>("EncryptKey");
             this.helperUploadFiles = helperUploadFiles;
+            this.helperCryptography = helperCryptography;
             this.httpContextAccessor = httpContextAccessor;
         }
 
@@ -34,6 +39,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response = await client.GetAsync(request);
@@ -68,6 +74,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 restaurante.IdRestaurante = await this.CallApiAsync<int>("api/Restaurantes/GetMaxIdRestaurante");
@@ -95,6 +102,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 if (imagen != null)
@@ -118,6 +126,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response = await client.DeleteAsync(request);
@@ -192,6 +201,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 CategoriaProductoAPIModel model = new CategoriaProductoAPIModel
@@ -216,6 +226,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response =
@@ -247,7 +258,7 @@ namespace ProyectoASPNET.Services
 
         public async Task<List<Producto>> GetProductosByCategoriaAsync(int restaurante, int categoria)
         {
-            string request = "api/Productos/GetProductosByCategoria/" + restaurante + "/" + categoria;
+            string request = "api/Productos/ProductosByCategoria/" + restaurante + "/" + categoria;
             return await this.CallApiAsync<List<Producto>>(request);
         }
 
@@ -259,7 +270,11 @@ namespace ProyectoASPNET.Services
 
         public async Task<List<Producto>> FindListProductosAsync(IEnumerable<int> ids)
         {
-            string request = "api/Productos/FindListProductos/" + string.Join(",", ids);
+            string request = "api/Productos/ListProductos?";
+            foreach (int id in ids)
+                request += "idprod=" + id + "&";
+            request = request.TrimEnd('&');
+            if (ids.Count() == 0) request = request.TrimEnd('?');
             return await this.CallApiAsync<List<Producto>>(request);
         }
 
@@ -272,6 +287,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 producto.IdProducto = await this.CallApiAsync<int>("api/Productos/GetMaxIdProducto");
@@ -299,6 +315,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 if (imagen != null)
@@ -327,6 +344,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response =
@@ -360,7 +378,7 @@ namespace ProyectoASPNET.Services
                     JObject keys = JObject.Parse(data);
                     string token = keys.GetValue("response").ToString();
                     HttpContext httpContext = this.httpContextAccessor.HttpContext;
-                    httpContext.Session.SetString("TOKEN", token);
+                    httpContext.Session.SetString("TOKEN", helperCryptography.EncryptString(this.EncryptKey, token));
                     return await this.CallApiAsync<Usuario>("api/Usuarios/GetLoggedUsuario");
                 }
                 else return null;
@@ -413,6 +431,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 user.Contrasenya = new byte[] { };
@@ -433,6 +452,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 ModifyPasswordAPIModel model = new ModifyPasswordAPIModel
@@ -462,6 +482,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 string json = JsonConvert.SerializeObject(cesta);
@@ -502,6 +523,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 EstadoPedidoAPIModel model = new EstadoPedidoAPIModel
@@ -521,7 +543,11 @@ namespace ProyectoASPNET.Services
         #region V_PRODUCTOS_PEDIDO
         public async Task<List<ProductoPedidoView>> GetProductosPedidoViewAsync(List<int> idpedidos)
         {
-            string request = "api/ProductosPedidoView/" + string.Join(",", idpedidos);
+            string request = "api/ProductosPedidoView?";
+            foreach (int id in idpedidos)
+                request += "idpedido=" + id + "&";
+            request = request.TrimEnd('&');
+            if (idpedidos.Count() == 0) request = request.TrimEnd('?');
             return await this.CallApiAsync<List<ProductoPedidoView>>(request);
         }
         #endregion
@@ -542,6 +568,7 @@ namespace ProyectoASPNET.Services
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 string token = httpContextAccessor.HttpContext.Session.GetString("TOKEN");
+                token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 string json = JsonConvert.SerializeObject(val);

@@ -43,18 +43,18 @@ namespace TabeAPI.Controllers
         [HttpGet]
         [Route("[action]/{restaurante}/{categoria}")]
         [Authorize]
-        public async Task<ActionResult<List<Producto>>> GetProductosByCategoria
+        public async Task<ActionResult<List<Producto>>> ProductosByCategoria
             (int restaurante, int categoria)
         {
             return await this.repo.GetProductosByCategoriaAsync(restaurante, categoria);
         }
         
-        [HttpGet("[action]/{idsproductos}")]
+        [HttpGet("[action]")]
         [Authorize]
-        public async Task<ActionResult<List<Producto>>> FindListProductos
-            (string idsproductos)
+        public async Task<ActionResult<List<Producto>>> ListProductos
+            ([FromQuery] List<int> idprod)
         {
-            return await this.repo.FindListProductosAsync(idsproductos.Split(",").Select(int.Parse).ToList());
+            return await this.repo.FindListProductosAsync(idprod);
         }
 
         [HttpGet]

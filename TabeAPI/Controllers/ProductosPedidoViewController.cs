@@ -17,12 +17,12 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
-        
-        [HttpGet("{idpedidos}")]
+
+        [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<ProductoPedidoView>>> GetProductosPedidoView(string idpedidos)
+        public async Task<ActionResult<List<ProductoPedidoView>>> GetProductosPedidoView([FromQuery] List<int> idpedido)
         {
-            return await this.repo.GetProductosPedidoViewAsync(idpedidos.Split(",").Select(int.Parse).ToList());
+            return await this.repo.GetProductosPedidoViewAsync(idpedido);
         }
     }
 }
