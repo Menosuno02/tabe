@@ -25,11 +25,8 @@
                             <span class="text-gray-700 text-2xl">
                                 Fecha: @pedido.FechaPedido
                             </span>
-                            @{
-                                Usuario user = await this.service.FindUsuarioAsync(pedido.IdUsuario);
-                            }
                         <p class="text-gray-700 text-xl">
-                                @user.Direccion
+                                @await this.service.GetDireccionUsuario(pedido.IdUsuario)
                         </p>
                             @using (Html.BeginForm("_PedidosRestaurante", "PanelRestaurante"))
                             {

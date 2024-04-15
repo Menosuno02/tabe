@@ -36,17 +36,7 @@
     </div>
 </div>
 
-<dialog id="errorModal" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box">
-        <h3 class="text-lg font-bold">Error al iniciar sesión :(</h3>
-        <p class="py-4">No existe un usuario con este correo o la contraseña es incorrecta</p>
-        <div class="modal-action">
-            <form method="dialog">
-                <button class="btn btn-primary font-medium">Cerrar</button>
-            </form>
-        </div>
-    </div>
-</dialog>
+
 
 @section styles {
     <style>
@@ -59,6 +49,26 @@
 @if (ViewData["MENSAJE"] != null)
 {
     @section scripts {
-    <script>errorModal.showModal()</script>
+    <dialog id="errorModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            @if (ViewData["MENSAJE"].ToString() == "Error")
+                {
+                    <h3 class="text-lg font-bold">Error al iniciar sesión :(</h3>
+                    <p class="py-4">No existe un usuario con este correo o la contraseña es incorrecta</p>
+                }
+                else
+                {
+                    <h3 class="text-lg font-bold">Acción exitosa</h3>
+                    <p class="py-4">Has cambiado tu contraseña. Vuelve a iniciar sesión</p>
+                }
+                <div class="modal-action">
+                    <form method="dialog">
+                        <button class="btn btn-primary font-medium">Cerrar</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+
+        <script>errorModal.showModal()</script>
     }
 }

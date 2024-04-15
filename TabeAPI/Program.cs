@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET;
 using ProyectoASPNET.Data;
-using Microsoft.OpenApi.Models;
 using ProyectoASPNET.Helpers;
 using TabeAPI.Helpers;
+using NSwag.Generation.Processors.Security;
+using NSwag;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,8 @@ HelperActionServicesOAuth helper =
     new HelperActionServicesOAuth(builder.Configuration);
 builder.Services
     .AddSingleton<HelperActionServicesOAuth>(helper);
-// Habilitamos los servicios de Authentication que
-// hemos creado en el helper con Action<>
 builder.Services.AddAuthentication
-    (helper.GetAuthenticateSchema())
-    .AddJwtBearer(helper.GetJwtBearerOptions());
+    (helper.GetAuthenticateSchema()).AddJwtBearer(helper.GetJwtBearerOptions());
 
 
 string connectionString =
@@ -36,26 +34,33 @@ builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 
 
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddOpenApiDocument(document =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Tabe API",
-        Description = "API de la app de Tabe"
-    });
-    options.OrderActionsBy(a => a.RelativePath);
+    document.Title = "Tabe API";
+    document.Description = "API de la app de Tabe";
+    document.AddSecurity("JWT", Enumerable.Empty<string>(),
+        new NSwag.OpenApiSecurityScheme
+        {
+            Type = OpenApiSecuritySchemeType.ApiKey,
+            Name = "Authorization",
+            In = OpenApiSecurityApiKeyLocation.Header,
+            Description = "Copia y pega el Token en el campo 'Value:' así: Bearer {Token JWT}."
+        }
+    );
+    document.OperationProcessors.Add(
+    new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
 var app = builder.Build();
 
-app.UseSwagger();
+app.UseOpenApi();
 app.UseSwaggerUI(options =>
 {
+    options.InjectStylesheet("/css/theme-material.css");
     options.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "Tabe API");
     options.RoutePrefix = "";
 });
@@ -67,7 +72,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 

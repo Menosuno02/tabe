@@ -55,6 +55,7 @@ GO
 
 public class RepositoryRestaurantes
 {
+    /*
     private RestaurantesContext context;
     private HelperGoogleApiDirections helperGoogleApi;
     private HelperUploadFiles helperUploadFiles;
@@ -327,13 +328,6 @@ public class RepositoryRestaurantes
 
     public async Task<List<Producto>> GetProductosByCategoriaAsync(int restaurante, int categoria)
     {
-        /*
-        string sql = "SP_PRODUCTOS_CATEGORIA @RESTAURANTE, @CATEGORIA";
-        SqlParameter paramRestaurante = new SqlParameter("@RESTAURANTE", restaurante);
-        SqlParameter paramCategoria = new SqlParameter("@CATEGORIA", categoria);
-        var consulta = this.context.Productos.FromSqlRaw(sql, paramRestaurante, paramCategoria);
-        return await consulta.ToListAsync();
-        */
         return await this.context.Productos.Join(this.context.ProductoCategorias
             .Where(pc => pc.IdCategoria == categoria),
             p => p.IdProducto,
@@ -616,4 +610,5 @@ public class RepositoryRestaurantes
         await this.context.SaveChangesAsync();
     }
     #endregion
+    */
 }

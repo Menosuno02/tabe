@@ -19,6 +19,14 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
+        // GET: api/Restaurantes
+        /// <summary>
+        /// Devuelve todos los restaurantes
+        /// </summary>
+        /// <remarks>
+        /// Permite obtener todos los restaurantes de la BBDD
+        /// </remarks>
+        /// <response code="200">Devuelve el conjunto de restaurantes</response>
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<List<Restaurante>>> GetRestaurantes()
@@ -26,68 +34,101 @@ namespace TabeAPI.Controllers
             return await this.repo.GetRestaurantesAsync();
         }
 
+        // GET: api/Restaurantes/{id}
+        /// <summary>
+        /// Busca un restaurante
+        /// </summary>
+        /// <remarks>
+        /// Permite obtener un restaurante según su ID
+        /// </remarks>
+        /// <param name="id">ID del restaurante</param>
+        /// <response code="200">Devuelve el restaurante</response>
         [HttpGet]
-        [Route("[action]/{id}")]
+        [Route("{id}")]
         [Authorize]
         public async Task<ActionResult<Restaurante>> FindRestaurante(int id)
         {
             return await this.repo.FindRestauranteAsync(id);
         }
 
+        // GET: api/Restaurantes/GetRestauranteFromLoggedUser
+        /// <summary>
+        /// Busca el restaurante del usuario logeado (debe ser de tipo Restaurante)
+        /// </summary>
+        /// <response code="200">Devuelve el restaurante</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante</response>
         [HttpGet]
         [Route("[action]")]
         [Authorize]
-        public async Task<ActionResult<Restaurante>>
-            GetRestauranteFromLoggedUser()
+        public async Task<ActionResult<Restaurante>> GetRestauranteFromLoggedUser()
         {
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            return await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+            if (usuario.TipoUsuario == 3) return await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+            return Unauthorized();
         }
 
-        [HttpGet]
-        [Route("[action]/{restaurantecorreo}")]
-        [Authorize]
-        public async Task<ActionResult<Usuario>>
-            GetUsuarioFromRestaurante(string restaurantecorreo)
-        {
-            return await this.repo.GetUsuarioFromRestauranteAsync(restaurantecorreo);
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        [Authorize]
-        public async Task<ActionResult<int>> GetMaxIdRestaurante()
-        {
-            return await this.repo.GetMaxIdRestauranteAsync();
-        }
-
+        // POST: api/Restaurantes
+        /// <summary>
+        /// Crea un nuevo restaurante
+        /// </summary>
+        /// <param name="model">Datos del nuevo restaurante + nueva contraseña</param>
+        /// <response code="200">Devuelve el nuevo restaurante</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Restaurante>> CreateRestaurante
-            (RestauranteAPIModel model)
+        public async Task<ActionResult<Restaurante>> CreateRestaurante(RestauranteAPIModel model)
         {
-            return await this.repo.CreateRestauranteAsync(model.Restaurante, model.Password);
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            if (usuario.TipoUsuario == 2) return await this.repo.CreateRestauranteAsync(model.Restaurante, model.Password);
+            return Unauthorized();
         }
 
+        // PUT: api/Restaurantes
+        /// <summary>
+        /// Modifica un restaurante
+        /// </summary>
+        /// <param name="restaurante">Datos nuevos del restaurante</param>
+        /// <response code="200">Devuelve el restaurante modificado</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult<Restaurante>> EditRestaurante(Restaurante restaurante)
         {
-            return await this.repo.EditRestauranteAsync(restaurante);
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            if (usuario.TipoUsuario != 1) return await this.repo.EditRestauranteAsync(restaurante);
+            return Unauthorized();
         }
 
+        // DELETE: api/Restaurantes/{id}
+        /// <summary>
+        /// Elimina un restaurante
+        /// </summary>
+        /// <param name="id">ID del restaurante</param>
+        /// <response code="200">Restaurante eliminado con éxito</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult> DeleteRestaurante(int id)
         {
-            if (await this.repo.FindRestauranteAsync(id) == null) return NotFound();
-            else
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            if (usuario.TipoUsuario == 2)
             {
-                await this.repo.DeleteRestauranteAsync(id);
-                return Ok();
+                if (await this.repo.FindRestauranteAsync(id) == null) return NotFound();
+                else
+                {
+                    await this.repo.DeleteRestauranteAsync(id);
+                    return Ok();
+                }
             }
+            return Unauthorized();
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Text;
 using TabeAPI.Models;
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProyectoASPNET.Services
 {
@@ -16,6 +18,7 @@ namespace ProyectoASPNET.Services
         private HelperUploadFiles helperUploadFiles;
         private HelperCryptography helperCryptography;
         private IHttpContextAccessor httpContextAccessor;
+        private RestaurantesContext context;
 
         public ServiceApiRestaurantes
             (IConfiguration configuration,
@@ -29,6 +32,7 @@ namespace ProyectoASPNET.Services
             this.helperUploadFiles = helperUploadFiles;
             this.helperCryptography = helperCryptography;
             this.httpContextAccessor = httpContextAccessor;
+            this.context = context;
         }
 
         private async Task<T> CallApiAsync<T>(string request)
@@ -71,6 +75,12 @@ namespace ProyectoASPNET.Services
         }
 
         #region RESTAURANTES
+        private async Task<int> GetMaxIdRestauranteAsync()
+        {
+            if (this.context.Restaurantes.Count() == 0) return 1;
+            return await this.context.Restaurantes.MaxAsync(r => r.IdRestaurante) + 1;
+        }
+
         public async Task<List<Restaurante>> GetRestaurantesAsync()
         {
             string request = "api/Restaurantes";
@@ -79,7 +89,7 @@ namespace ProyectoASPNET.Services
 
         public async Task<Restaurante> FindRestauranteAsync(int id)
         {
-            string request = "api/Restaurantes/FindRestaurante/" + id;
+            string request = "api/Restaurantes/" + id;
             return await this.CallApiAsync<Restaurante>(request);
         }
 
@@ -95,7 +105,7 @@ namespace ProyectoASPNET.Services
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                restaurante.IdRestaurante = await this.CallApiAsync<int>("api/Restaurantes/GetMaxIdRestaurante");
+                restaurante.IdRestaurante = await GetMaxIdRestauranteAsync();
                 restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
                 RestauranteAPIModel model = new RestauranteAPIModel
                 {
@@ -156,12 +166,6 @@ namespace ProyectoASPNET.Services
             string request = "api/Restaurantes/GetRestauranteFromLoggedUser";
             return await this.CallApiAsync<Restaurante>(request);
         }
-
-        public async Task<Usuario> GetUsuarioFromRestauranteAsync(string restCorreo)
-        {
-            string request = "api/Restaurantes/GetUsuarioFromRestaurante/" + restCorreo;
-            return await this.CallApiAsync<Usuario>(request);
-        }
         #endregion
 
         #region V_RESTAURANTES
@@ -174,20 +178,13 @@ namespace ProyectoASPNET.Services
 
         public async Task<RestauranteView> FindRestauranteViewAsync(int id)
         {
-            string request = "api/ViewRestaurantes/FindRestauranteView/" + id;
+            string request = "api/ViewRestaurantes/Find/" + id;
             return await this.CallApiAsync<RestauranteView>(request);
         }
 
-        public async Task<List<RestauranteView>> GetPaginationRestaurantesViewAsync(string searchquery)
+        public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, string searchquery)
         {
-            string request = "api/ViewRestaurantes/GetPaginationRestaurantesView?";
-            if (searchquery != "") request += "searchquery=" + searchquery;
-            return await this.CallApiAsync<List<RestauranteView>>(request);
-        }
-
-        public async Task<List<RestauranteView>> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery)
-        {
-            string request = "api/ViewRestaurantes/FilterPaginationRestaurantesView?categoria=" + categoria + "&";
+            string request = "api/ViewRestaurantes/Filter?categoria=" + categoria + "&";
             if (searchquery != "") request += "searchquery=" + searchquery;
             return await this.CallApiAsync<List<RestauranteView>>(request);
         }
@@ -260,6 +257,12 @@ namespace ProyectoASPNET.Services
         #endregion
 
         #region PRODUCTOS
+        private async Task<int> GetMaxIdProductoAsync()
+        {
+            if (this.context.Productos.Count() == 0) return 1;
+            return await this.context.Productos.MaxAsync(r => r.IdProducto) + 1;
+        }
+
         public async Task<List<Producto>> GetProductosAsync()
         {
             string request = "api/Productos";
@@ -306,7 +309,7 @@ namespace ProyectoASPNET.Services
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                producto.IdProducto = await this.CallApiAsync<int>("api/Productos/GetMaxIdProducto");
+                producto.IdProducto = await GetMaxIdProductoAsync();
                 producto.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
                 ProductoAPIModel model = new ProductoAPIModel
                 {
@@ -459,7 +462,7 @@ namespace ProyectoASPNET.Services
             }
         }
 
-        public async Task<bool> ModificarContrasenyaAsync(Usuario usu, string actual, string nueva)
+        public async Task<bool> ModificarContrasenyaAsync(string actual, string nueva)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -473,7 +476,6 @@ namespace ProyectoASPNET.Services
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 ModifyPasswordAPIModel model = new ModifyPasswordAPIModel
                 {
-                    IdUsuario = usu.IdUsuario,
                     NewPassword = nueva,
                     OldPassword = actual
                 };
@@ -484,6 +486,12 @@ namespace ProyectoASPNET.Services
                     await client.PutAsync(request, context);
                 return await response.Content.ReadAsAsync<bool>();
             }
+        }
+
+        public async Task<string> GetDireccionUsuario(int idusuario)
+        {
+            string request = "api/Usuarios/GetDireccion/" + idusuario;
+            return await this.CallApiAsync<string>(request);
         }
         #endregion
 

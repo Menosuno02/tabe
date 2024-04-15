@@ -17,10 +17,17 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
+        // GET: api/CategoriasRestaurantes
+        /// <summary>
+        /// Devuelve todas las categorías para restaurantes
+        /// </summary>
+        /// <remarks>
+        /// Permite obtener las categorías para restaurantes de la BBDD
+        /// </remarks>
+        /// <response code="200">Devuelve el conjunto de categorías para los restaurantes</response>
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<List<CategoriaRestaurante>>>
-            GetCategoriasRestaurantes()
+        public async Task<ActionResult<List<CategoriaRestaurante>>> GetCategoriasRestaurantes()
         {
             return await this.repo.GetCategoriasRestaurantesAsync();
         }

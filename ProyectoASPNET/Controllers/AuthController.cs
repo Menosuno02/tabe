@@ -33,12 +33,14 @@ namespace ProyectoASPNET.Controllers
             else return RedirectToAction("Logout", "Auth"); // redirige al login
         }
 
-        public IActionResult Login()
+        public IActionResult Login(bool? passwordchanged)
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("CheckRoutes");
             }
+            if (passwordchanged != null)
+                ViewData["MENSAJE"] = "Contraseña";
             return View();
         }
 
@@ -87,12 +89,14 @@ namespace ProyectoASPNET.Controllers
             return RedirectToAction("Login");
         }
 
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(bool? passwordchanged)
         {
             await HttpContext.SignOutAsync
                 (CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Remove("CESTA");
             HttpContext.Session.Remove("RESTAURANTE");
+            if (passwordchanged != null)
+                return RedirectToAction("Login", "Auth", new { passwordchanged = true });
             return RedirectToAction("Index", "Home");
         }
     }

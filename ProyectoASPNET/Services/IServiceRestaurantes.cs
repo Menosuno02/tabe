@@ -16,17 +16,14 @@ namespace ProyectoASPNET.Services
         public Task DeleteRestauranteAsync(int id);
 
         public Task<Restaurante> GetRestauranteFromLoggedUserAsync();
-
-        public Task<Usuario> GetUsuarioFromRestauranteAsync(string restCorreo);
         #endregion
 
         #region V_RESTAURANTES
         public Task<List<RestauranteView>> GetRestaurantesViewAsync(string searchquery);
 
         public Task<RestauranteView> FindRestauranteViewAsync(int id);
-        public Task<List<RestauranteView>> GetPaginationRestaurantesViewAsync(string searchquery);
 
-        public Task<List<RestauranteView>> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery);
+        public Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, string searchquery);
         #endregion
 
         #region CATEGORIAS_RESTAURANTES
@@ -74,12 +71,13 @@ namespace ProyectoASPNET.Services
 
         public Task EditUsuarioAsync(Usuario user);
 
-        public Task<bool> ModificarContrasenyaAsync(Usuario usu, string actual, string nueva);
+        public Task<bool> ModificarContrasenyaAsync(string actual, string nueva);
+
+        public Task<string> GetDireccionUsuario(int idusuario);
         #endregion
 
         #region PEDIDOS
-        public Task<Pedido> CreatePedidoAsync
-            (int idrestaurante, List<ProductoCesta> cesta);
+        public Task<Pedido> CreatePedidoAsync(int idrestaurante, List<ProductoCesta> cesta);
 
         public Task<List<Pedido>> GetPedidosUsuarioAsync();
 

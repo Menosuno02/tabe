@@ -19,13 +19,22 @@ namespace TabeAPI.Controllers
 
         private HelperActionServicesOAuth helper;
 
-        public AuthController
-            (RepositoryRestaurantes repo, HelperActionServicesOAuth helper)
+        public AuthController(RepositoryRestaurantes repo, HelperActionServicesOAuth helper)
         {
             this.repo = repo;
             this.helper = helper;
         }
 
+        // POST: api/Auth/Login
+        /// <summary>
+        /// Devuelve un token para usar la API al iniciar sesión con correo y contraseña
+        /// </summary>
+        /// <remarks>
+        /// Permite iniciar sesión con un correo y una contraseña. Si son válidos, devolverá un token que permitirá usar el resto de la API
+        /// </remarks>
+        /// <param name="model">LoginModel, contiene el correo y la contraseña introducidos</param>
+        /// <response code="200">Devuelve el token</response>
+        /// <response code="401">No autorizado, inicio de sesión inválido</response>
         [HttpPost]
         [Route("[action]")]
         public async Task<ActionResult> Login(LoginModel model)

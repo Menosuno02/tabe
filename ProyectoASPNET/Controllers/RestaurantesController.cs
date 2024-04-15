@@ -42,9 +42,9 @@ namespace ProyectoASPNET.Controllers
         {
             List<RestauranteView> restaurantes = new List<RestauranteView>();
             if (categoria != null)
-                restaurantes = await this.service.FilterPaginationRestaurantesViewAsync(categoria, searchquery);
+                restaurantes = await this.service.FilterRestaurantesViewAsync(categoria, searchquery);
             else
-                restaurantes = await this.service.GetPaginationRestaurantesViewAsync(searchquery);
+                restaurantes = await this.service.GetRestaurantesViewAsync(searchquery);
             ViewData["POSICION"] = posicion;
             ViewData["NUMREGISTROS"] = restaurantes.Count();
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);

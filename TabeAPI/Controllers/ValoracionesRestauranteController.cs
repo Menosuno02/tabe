@@ -18,6 +18,16 @@ namespace TabeAPI.Controllers
             this.repo = repo;
         }
 
+        // GET: api/ValoracionesRestaurante/ValRestauranteUsuario/{idrestaurante}
+        /// <summary>
+        /// Devuelve la valoración a un restaurante del usuario logeado
+        /// </summary>
+        /// <remarks>
+        /// Permite obtener la valoración a un restaurante del usuario logeado
+        /// </remarks>
+        /// <param name="idrestaurante">ID del restaurante</param>
+        /// <response code="200">Devuelve la valoración</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin</response>
         [HttpGet("[action]/{idrestaurante}")]
         [Authorize]
         public async Task<ActionResult<ValoracionRestaurante>> ValRestauranteUsuario(int idrestaurante)
@@ -25,16 +35,33 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            return await this.repo.GetValoracionRestauranteAsync(idrestaurante, usuario.IdUsuario);
+            if (usuario.TipoUsuario != 3) return await this.repo.GetValoracionRestauranteAsync(idrestaurante, usuario.IdUsuario);
+            return Unauthorized();
         }
 
+        // PUT: api/ValoracionesRestaurante/UpdateValoracionRestaurante
+        /// <summary>
+        /// Modifica la valoración a un restaurante
+        /// </summary>
+        /// <remarks>
+        /// Permite editar la valoración realizada a un restaurante
+        /// </remarks>
+        /// <param name="valoracion">ID del restaurante, ID del usuario y valoración</param>
+        /// <response code="200">Valoración modificada</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin</response>
         [HttpPut]
         [Authorize]
-        public async Task<ActionResult>
-            UpdateValoracionRestaurante(ValoracionRestaurante valoracion)
+        public async Task<ActionResult> UpdateValoracionRestaurante(ValoracionRestaurante valoracion)
         {
-            await this.repo.UpdateValoracionRestauranteAsync(valoracion);
-            return Ok();
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            if (usuario.TipoUsuario != 3)
+            {
+                await this.repo.UpdateValoracionRestauranteAsync(valoracion);
+                return Ok();
+            }
+            return Unauthorized();
         }
     }
 }

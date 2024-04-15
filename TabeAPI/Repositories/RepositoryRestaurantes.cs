@@ -66,12 +66,6 @@ public class RepositoryRestaurantes
     }
 
     #region RESTAURANTES
-    public async Task<int> GetMaxIdRestauranteAsync()
-    {
-        if (this.context.Restaurantes.Count() == 0) return 1;
-        return await this.context.Restaurantes.MaxAsync(r => r.IdRestaurante) + 1;
-    }
-
     public async Task<List<Restaurante>> GetRestaurantesAsync()
     {
         return await this.context.Restaurantes.ToListAsync();
@@ -167,12 +161,6 @@ public class RepositoryRestaurantes
         return await this.context.Restaurantes
             .FirstOrDefaultAsync(r => r.Correo == usuario.Correo);
     }
-
-    public async Task<Usuario> GetUsuarioFromRestauranteAsync(string restCorreo)
-    {
-        return await this.context.Usuarios
-            .FirstOrDefaultAsync(u => u.Correo == restCorreo);
-    }
     #endregion
 
     #region V_RESTAURANTES
@@ -196,20 +184,7 @@ public class RepositoryRestaurantes
             .FirstOrDefaultAsync();
     }
 
-    public async Task<List<RestauranteView>> GetPaginationRestaurantesViewAsync(string searchquery)
-    {
-        List<RestauranteView> restaurantes = await this.context.RestaurantesView
-            .OrderByDescending(r => r.Valoracion)
-            .ToListAsync();
-        if (searchquery != "")
-            restaurantes = restaurantes
-                .Where(r => r.Nombre
-                .Contains(searchquery, StringComparison.InvariantCultureIgnoreCase))
-                .ToList();
-        return restaurantes;
-    }
-
-    public async Task<List<RestauranteView>> FilterPaginationRestaurantesViewAsync(string categoria, string searchquery)
+    public async Task<List<RestauranteView>> FilterRestaurantesViewAsync(string categoria, string searchquery)
     {
         List<RestauranteView> restaurantes = await this.context.RestaurantesView
             .Where(r => r.CategoriaRestaurante == categoria)
@@ -295,12 +270,6 @@ public class RepositoryRestaurantes
     #endregion
 
     #region PRODUCTOS
-    public async Task<int> GetMaxIdProductoAsync()
-    {
-        if (this.context.Productos.Count() == 0) return 1;
-        return await this.context.Productos.MaxAsync(r => r.IdProducto) + 1;
-    }
-
     public async Task<List<Producto>> GetProductosAsync()
     {
         return await this.context.Productos.ToListAsync();
@@ -484,6 +453,19 @@ public class RepositoryRestaurantes
         }
         else
             return false;
+    }
+
+    public async Task<Usuario> GetUsuarioFromRestauranteAsync(string restCorreo)
+    {
+        return await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.Correo == restCorreo);
+    }
+
+    public async Task<string> GetDireccionUsuario(int idusuario)
+    {
+        Usuario usu = await this.context.Usuarios
+            .FirstOrDefaultAsync(u => u.IdUsuario == idusuario);
+        return usu.Direccion;
     }
     #endregion
 

@@ -61,11 +61,8 @@ namespace ProyectoASPNET.Controllers
                 ViewData["CASO"] = "1";
             else
             {
-                int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                Usuario usu = await this.service.FindUsuarioAsync(idusuario);
-                if (!await this.service.ModificarContrasenyaAsync(usu, actual, nueva))
-                    ViewData["CASO"] = "2";
-                else ViewData["CASO"] = "3";
+                if (!await this.service.ModificarContrasenyaAsync(actual, nueva)) ViewData["CASO"] = "2";
+                else return RedirectToAction("Logout", "Auth", new { passwordchanged = true });
             }
             return View();
         }
