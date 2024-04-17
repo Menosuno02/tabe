@@ -35,7 +35,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 3) return await this.repo.GetValoracionRestauranteAsync(idrestaurante, usuario.IdUsuario);
+            if (usuario.TipoUsuario != 3)
+                return await this.repo.GetValoracionRestauranteAsync(idrestaurante, usuario.IdUsuario);
             return Unauthorized();
         }
 
@@ -48,7 +49,7 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="valoracion">ID del restaurante, ID del usuario y valoración</param>
         /// <response code="200">Valoración modificada</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin o es un Usuario intentando modificar la valoración de otro usuario</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult> UpdateValoracionRestaurante(ValoracionRestaurante valoracion)
@@ -58,6 +59,8 @@ namespace TabeAPI.Controllers
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 3)
             {
+                if (usuario.TipoUsuario == 1 && usuario.IdUsuario != valoracion.IdUsuario)
+                    return Unauthorized();
                 await this.repo.UpdateValoracionRestauranteAsync(valoracion);
                 return Ok();
             }

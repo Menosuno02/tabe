@@ -15,24 +15,25 @@ namespace ProyectoASPNET.Services
         private string UrlApi;
         private MediaTypeWithQualityHeaderValue Header;
         private string EncryptKey;
-        private HelperUploadFiles helperUploadFiles;
         private HelperCryptography helperCryptography;
         private IHttpContextAccessor httpContextAccessor;
         private RestaurantesContext context;
+        private ServiceStorageBlobs serviceBlobs;
 
         public ServiceApiRestaurantes
             (IConfiguration configuration,
-            HelperUploadFiles helperUploadFiles,
             HelperCryptography helperCryptography,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            RestaurantesContext context,
+            ServiceStorageBlobs serviceBlobs)
         {
             this.UrlApi = configuration.GetValue<string>("ApiUrls:TabeApi");
             this.Header = new MediaTypeWithQualityHeaderValue("application/json");
             this.EncryptKey = configuration.GetValue<string>("EncryptKey");
-            this.helperUploadFiles = helperUploadFiles;
             this.helperCryptography = helperCryptography;
             this.httpContextAccessor = httpContextAccessor;
             this.context = context;
+            this.serviceBlobs = serviceBlobs;
         }
 
         private async Task<T> CallApiAsync<T>(string request)
@@ -52,7 +53,8 @@ namespace ProyectoASPNET.Services
                     T data = await response.Content.ReadAsAsync<T>();
                     return data;
                 }
-                else return default(T);
+                else
+                    return default(T);
             }
         }
 
@@ -70,7 +72,8 @@ namespace ProyectoASPNET.Services
                     T data = await response.Content.ReadAsAsync<T>();
                     return data;
                 }
-                else return default(T);
+                else
+                    return default(T);
             }
         }
 
@@ -106,7 +109,8 @@ namespace ProyectoASPNET.Services
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 restaurante.IdRestaurante = await GetMaxIdRestauranteAsync();
-                restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+                // restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+                restaurante.Imagen = "img" + restaurante.IdRestaurante + ".jpeg";
                 RestauranteAPIModel model = new RestauranteAPIModel
                 {
                     Restaurante = restaurante,
@@ -117,6 +121,10 @@ namespace ProyectoASPNET.Services
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
                     await client.PostAsync(request, content);
+                using (Stream stream = imagen.OpenReadStream())
+                {
+                    await this.serviceBlobs.UploadBlobAsync("imagrestaurantes", restaurante.Imagen, stream);
+                }
                 return await response.Content.ReadAsAsync<Restaurante>();
             }
         }
@@ -135,8 +143,12 @@ namespace ProyectoASPNET.Services
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 if (imagen != null)
                 {
-                    restaurante.Imagen =
-                        await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+                    // restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
+                    restaurante.Imagen = "img" + restaurante.IdRestaurante + ".jpeg";
+                    using (Stream stream = imagen.OpenReadStream())
+                    {
+                        await this.serviceBlobs.UploadBlobAsync("imagrestaurantes", restaurante.Imagen, stream);
+                    }
                 }
                 string json = JsonConvert.SerializeObject(restaurante);
                 StringContent context = new StringContent
@@ -157,7 +169,9 @@ namespace ProyectoASPNET.Services
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+                Restaurante restaurante = await this.FindRestauranteAsync(id);
                 HttpResponseMessage response = await client.DeleteAsync(request);
+                await this.serviceBlobs.DeleteBlobAsync("imagrestaurantes", restaurante.Imagen);
             }
         }
 
@@ -310,17 +324,20 @@ namespace ProyectoASPNET.Services
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 producto.IdProducto = await GetMaxIdProductoAsync();
-                producto.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
+                // producto.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
+                producto.Imagen = "img" + producto.IdProducto + ".jpeg";
                 ProductoAPIModel model = new ProductoAPIModel
                 {
                     Producto = producto,
                     CategProducto = categproducto,
                 };
                 string json = JsonConvert.SerializeObject(model);
-                StringContent content = new StringContent
-                    (json, Encoding.UTF8, "application/json");
-                HttpResponseMessage response =
-                    await client.PostAsync(request, content);
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(request, content);
+                using (Stream stream = imagen.OpenReadStream())
+                {
+                    await this.serviceBlobs.UploadBlobAsync("imagproductos", producto.Imagen, stream);
+                }
                 return await response.Content.ReadAsAsync<Producto>();
             }
         }
@@ -339,8 +356,12 @@ namespace ProyectoASPNET.Services
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 if (imagen != null)
                 {
-                    producto.Imagen =
-                        await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
+                    // producto.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
+                    producto.Imagen = "img" + producto.IdProducto + ".jpeg";
+                    using (Stream stream = imagen.OpenReadStream())
+                    {
+                        await this.serviceBlobs.UploadBlobAsync("imagproductos", producto.Imagen, stream);
+                    }
                 }
                 ProductoAPIModel model = new ProductoAPIModel
                 {
@@ -366,8 +387,9 @@ namespace ProyectoASPNET.Services
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                HttpResponseMessage response =
-                    await client.DeleteAsync(request);
+                Producto prod = await this.FindProductoAsync(id);
+                HttpResponseMessage response = await client.DeleteAsync(request);
+                await this.serviceBlobs.DeleteBlobAsync("imagproductos", prod.Imagen);
             }
         }
         #endregion

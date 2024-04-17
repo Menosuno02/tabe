@@ -10,16 +10,19 @@ namespace ProyectoASPNET.Controllers
     public class CestaController : Controller
     {
         private IServiceRestaurantes service;
-        private HelperCesta helperCesta;
+        private ServiceStorageBlobs serviceBlobs;
+        private ServiceCacheRedis serviceRedis;
         private HelperMails helperMails;
 
         public CestaController
             (IServiceRestaurantes service,
-            HelperCesta helperCesta,
+            ServiceStorageBlobs serviceBlobs,
+            ServiceCacheRedis serviceRedis,
             HelperMails helperMails)
         {
             this.service = service;
-            this.helperCesta = helperCesta;
+            this.serviceBlobs = serviceBlobs;
+            this.serviceRedis = serviceRedis;
             this.helperMails = helperMails;
         }
 
@@ -30,7 +33,8 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            CestaView cestaView = await helperCesta.GetDatosCesta();
+            CestaView cestaView = await this.serviceRedis.GetDatosCesta();
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
             return View(cestaView);
         }
 
@@ -41,11 +45,11 @@ namespace ProyectoASPNET.Controllers
         {
             if (form == "borrar" && idproducto != null)
             {
-                this.helperCesta.DeleteProductoCesta(idproducto.Value);
+                await this.serviceRedis.DeleteProductoCesta(idproducto.Value);
             }
             else if (form == "pagar")
             {
-                Pedido pedido = await this.helperCesta.CreatePedido();
+                Pedido pedido = await this.serviceRedis.CreatePedido();
                 List<ProductoPedidoView> productosPedido = await this.service.GetProductosPedidoViewAsync(new List<int> { pedido.IdPedido });
                 string mensaje = "<h1 style=\"color: #6D28D9; margin-bottom:0px;\">Pedido realizado con éxito</h3>";
                 mensaje += $"<div style=\"padding: 1.25rem; border-width: 1px; border-bottom-width: 0; border-color: #E5E7EB; \">" +
@@ -85,18 +89,19 @@ namespace ProyectoASPNET.Controllers
                 await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
                 return RedirectToAction("Index", "Restaurantes");
             }
-            CestaView cestaView = await helperCesta.GetDatosCesta();
+            CestaView cestaView = await serviceRedis.GetDatosCesta();
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
             return View(cestaView);
         }
 
         [AuthorizeUser]
-        public IActionResult UpdateCesta(int idproducto, int cantidad)
+        public async Task<IActionResult> UpdateCesta(int idproducto, int cantidad)
         {
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            this.helperCesta.UpdateProductoCesta(idproducto, cantidad);
+            await this.serviceRedis.UpdateProductoCesta(idproducto, cantidad);
             return RedirectToAction("Index");
         }
     }

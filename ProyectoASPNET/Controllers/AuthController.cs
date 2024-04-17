@@ -11,10 +11,12 @@ namespace ProyectoASPNET.Controllers
     public class AuthController : Controller
     {
         private IServiceRestaurantes service;
+        private ServiceCacheRedis serviceRedis;
 
-        public AuthController(IServiceRestaurantes service)
+        public AuthController(IServiceRestaurantes service, ServiceCacheRedis serviceRedis)
         {
             this.service = service;
+            this.serviceRedis = serviceRedis;
         }
 
         public IActionResult CheckRoutes()
@@ -93,8 +95,7 @@ namespace ProyectoASPNET.Controllers
         {
             await HttpContext.SignOutAsync
                 (CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Remove("CESTA");
-            HttpContext.Session.Remove("RESTAURANTE");
+            await this.serviceRedis.ResetCesta();
             if (passwordchanged != null)
                 return RedirectToAction("Login", "Auth", new { passwordchanged = true });
             return RedirectToAction("Index", "Home");

@@ -36,7 +36,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario == 2) return await this.repo.GetUsuariosAsync();
+            if (usuario.TipoUsuario == 2)
+                return await this.repo.GetUsuariosAsync();
             return Unauthorized();
         }
 
@@ -58,9 +59,7 @@ namespace TabeAPI.Controllers
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario == 2 || usuario.IdUsuario == id)
-            {
                 return await this.repo.FindUsuarioAsync(id);
-            }
             return Unauthorized();
 
         }
@@ -96,9 +95,7 @@ namespace TabeAPI.Controllers
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1 || usuario.IdUsuario == id)
-            {
                 return await this.repo.GetDireccionUsuario(id);
-            }
             return Unauthorized();
 
         }
@@ -128,10 +125,16 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="user">Datos del del nuevo usuario a modificar</param>
         /// <response code="200">Usuario modificado con éxito</response>
+        /// <response code="401">No autorizado. El usuario no es Admin y está intentando modificar datos de otro usuario</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult> EditUsuario(Usuario user)
         {
+            string jsonUsuario = HttpContext.User
+                .FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            if (usuario.TipoUsuario != 2 && usuario.IdUsuario != user.IdUsuario)
+                return Unauthorized();
             await this.repo.EditUsuarioAsync(user);
             return Ok();
         }

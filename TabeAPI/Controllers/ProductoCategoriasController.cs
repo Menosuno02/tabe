@@ -35,7 +35,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 1) return await this.repo.GetCategoriasFromProductoAsync(id);
+            if (usuario.TipoUsuario != 1)
+                return await this.repo.GetCategoriasFromProductoAsync(id);
             return Unauthorized();
         }
     }

@@ -5,6 +5,7 @@ using ProyectoASPNET.Helpers;
 using TabeAPI.Helpers;
 using NSwag.Generation.Processors.Security;
 using NSwag;
+using Azure.Storage.Blobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,14 +18,15 @@ builder.Services
 builder.Services.AddAuthentication
     (helper.GetAuthenticateSchema()).AddJwtBearer(helper.GetJwtBearerOptions());
 
+string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
+BlobServiceClient blobServiceClient = new BlobServiceClient(azureKeys);
+builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
 
 string connectionString =
     builder.Configuration.GetConnectionString("SqlAzure");
 builder.Services.AddTransient<RepositoryRestaurantes>();
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
-
-builder.Services.AddTransient<HelperPathProvider>();
 
 string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
 builder.Services.AddTransient

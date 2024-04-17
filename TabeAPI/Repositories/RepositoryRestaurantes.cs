@@ -518,6 +518,12 @@ public class RepositoryRestaurantes
             .Where(p => p.IdRestaurante == rest.IdRestaurante && p.Estado != 4)
             .ToListAsync();
     }
+
+    public async Task<Pedido> FindPedidoAsync(int idpedido)
+    {
+        return await this.context.Pedidos
+            .FirstOrDefaultAsync(p => p.IdPedido == idpedido);
+    }
     #endregion
 
     #region ESTADOS_PEDIDO

@@ -35,7 +35,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 3) return await this.repo.GetPedidosUsuarioAsync(usuario.IdUsuario);
+            if (usuario.TipoUsuario != 3)
+                return await this.repo.GetPedidosUsuarioAsync(usuario.IdUsuario);
             return Unauthorized();
         }
 
@@ -56,7 +57,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 1) return await this.repo.GetPedidosRestauranteAsync(usuario);
+            if (usuario.TipoUsuario != 1)
+                return await this.repo.GetPedidosRestauranteAsync(usuario);
             return Unauthorized();
         }
 
@@ -78,7 +80,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 3) return await this.repo.CreatePedidoAsync(usuario.IdUsuario, idrestaurante, cesta);
+            if (usuario.TipoUsuario != 3)
+                return await this.repo.CreatePedidoAsync(usuario.IdUsuario, idrestaurante, cesta);
             return Unauthorized();
         }
     }

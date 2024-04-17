@@ -34,7 +34,8 @@
             <input type="text" readonly value="@Model.Correo" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
         </div>
         <div class="col-span-6">
-            <img class="h-[293px] w-full rounded-xl object-cover" src="~/images/imag_restaurantes/@Model.Imagen" />
+            @* <img class="h-[293px] w-full rounded-xl object-cover" src="~/images/imag_restaurantes/@Model.Imagen" /> *@
+            <img class="h-[293px] w-full rounded-xl object-cover" src="@Model.Imagen" />
         </div>
     </form>
 </div>

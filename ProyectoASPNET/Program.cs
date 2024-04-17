@@ -1,6 +1,6 @@
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using ProyectoASPNET;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Services;
@@ -22,21 +22,21 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
-/*
-builder.Services.AddSession(options =>
+
+string cacheRedisKeys =
+    builder.Configuration.GetValue<string>("AzureKeys:CacheRedis");
+builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Configuration = cacheRedisKeys;
 });
-*/
 
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddTransient<IServiceRestaurantes, ServiceApiRestaurantes>();
+builder.Services.AddTransient<ServiceStorageBlobs>();
+builder.Services.AddTransient<ServiceCacheRedis>();
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
-builder.Services.AddTransient<HelperPathProvider>();
-builder.Services.AddTransient<HelperCesta>();
-builder.Services.AddTransient<HelperUploadFiles>();
 builder.Services.AddTransient<HelperMails>();
 builder.Services.AddSingleton<HelperCryptography>();
 
@@ -45,6 +45,11 @@ builder.Services.AddTransient<HelperGoogleApiDirections>
     (h => new HelperGoogleApiDirections(googleApiKey, h.GetRequiredService<IHttpClientFactory>()));
 
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
+string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
+BlobServiceClient blobServiceClient = new BlobServiceClient(azureKeys);
+builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
+
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
 var app = builder.Build();
@@ -65,7 +70,5 @@ app.UseMvc(routes =>
         name: "default",
         template: "{controller=Home}/{action=Index}");
 });
-
-// app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}");
 
 app.Run();

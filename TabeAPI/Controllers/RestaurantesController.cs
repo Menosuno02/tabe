@@ -65,7 +65,8 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario == 3) return await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+            if (usuario.TipoUsuario == 3)
+                return await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
             return Unauthorized();
         }
 
@@ -75,6 +76,7 @@ namespace TabeAPI.Controllers
         /// </summary>
         /// <param name="model">Datos del nuevo restaurante + nueva contraseña</param>
         /// <response code="200">Devuelve el nuevo restaurante</response>
+        /// <response code="404">Bad Request. Puede ser por imagen nula</response>
         /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
         [HttpPost]
         [Authorize]
@@ -83,7 +85,11 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario == 2) return await this.repo.CreateRestauranteAsync(model.Restaurante, model.Password);
+            if (usuario.TipoUsuario == 2)
+            {
+                model.Restaurante.Imagen = "img" + model.Restaurante.IdRestaurante + ".jpeg";
+                return await this.repo.CreateRestauranteAsync(model.Restaurante, model.Password);
+            }
             return Unauthorized();
         }
 
@@ -93,7 +99,7 @@ namespace TabeAPI.Controllers
         /// </summary>
         /// <param name="restaurante">Datos nuevos del restaurante</param>
         /// <response code="200">Devuelve el restaurante modificado</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult<Restaurante>> EditRestaurante(Restaurante restaurante)
@@ -101,7 +107,17 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 1) return await this.repo.EditRestauranteAsync(restaurante);
+            if (usuario.TipoUsuario != 1)
+            {
+                restaurante.Imagen = "img" + restaurante.IdRestaurante + ".jpeg";
+                if (usuario.TipoUsuario == 3)
+                {
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != restaurante.IdRestaurante)
+                        return Unauthorized();
+                }
+                return await this.repo.EditRestauranteAsync(restaurante);
+            }
             return Unauthorized();
         }
 

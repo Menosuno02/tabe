@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using ProyectoASPNET;
 using ProyectoASPNET.Models;
 using TabeAPI.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TabeAPI.Controllers
 {
@@ -36,9 +37,7 @@ namespace TabeAPI.Controllers
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1)
-            {
                 return await this.repo.GetEstadoPedidosAsync();
-            }
             return Unauthorized();
         }
 
@@ -51,7 +50,8 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="model">Modelo con el ID del pedido y el ID del estado</param>
         /// <response code="200">Estado del pedido modificado con éxito</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando editar el estado de un pedido a otro restaurante</response>
+        /// <response code="404">Pedido no encontrado</response>
         [HttpPut]
         [Route("UpdateEstadoPedido")]
         [Authorize]
@@ -62,6 +62,15 @@ namespace TabeAPI.Controllers
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1)
             {
+                Pedido pedido = await this.repo.FindPedidoAsync(model.IdPedido);
+                if (pedido == null)
+                    return NotFound();
+                if (usuario.TipoUsuario == 3)
+                {
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != pedido.IdRestaurante)
+                        return Unauthorized();
+                }
                 await this.repo.UpdateEstadoPedidoAsync(model.IdPedido, model.Estado);
                 return Ok();
             }

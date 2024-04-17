@@ -44,7 +44,7 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="model">ID del restaurante de la categoría y nombre de la categoría</param>
         /// <response code="200">Devuelve el objeto creado</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando crear una categoría para otro restaurante</response>
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<CategoriaProducto>> CreateCategoriaProducto(CategoriaProductoAPIModel model)
@@ -54,6 +54,11 @@ namespace TabeAPI.Controllers
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1)
             {
+                if (usuario.TipoUsuario == 3)
+                {
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != model.IdRestaurante) return Unauthorized();
+                }
                 return await this.repo.CreateCategoriaProductoAsync(model.IdRestaurante, model.Categoria);
             }
             return Unauthorized();
@@ -68,7 +73,7 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="idcategoria">ID de la categoría</param>
         /// <response code="200">Categoría borrada con éxito</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando borrar una categoría de otro restaurante</response>
         /// <response code="404">Categoría no encontrada</response>
         [HttpDelete("{idcategoria}")]
         [Authorize]
@@ -79,12 +84,16 @@ namespace TabeAPI.Controllers
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1)
             {
-                if (await this.repo.FindProductoAsync(idcategoria) == null) return NotFound();
-                else
+                CategoriaProducto categ = await this.repo.FindCategoriaProductoAsync(idcategoria);
+                if (categ == null)
+                    return NotFound();
+                if (usuario.TipoUsuario == 3)
                 {
-                    await this.repo.DeleteCategoriaProductoAsync(idcategoria);
-                    return Ok();
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != categ.IdRestaurante) return Unauthorized();
                 }
+                await this.repo.DeleteCategoriaProductoAsync(idcategoria);
+                return Ok();
             }
             return Unauthorized();
         }

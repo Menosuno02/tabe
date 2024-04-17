@@ -41,9 +41,7 @@ namespace TabeAPI.Controllers
         {
             Usuario usuario = await this.repo.LoginUsuarioAsync(model.Email, model.Password);
             if (usuario == null)
-            {
                 return Unauthorized();
-            }
             else
             {
                 SigningCredentials credentials =

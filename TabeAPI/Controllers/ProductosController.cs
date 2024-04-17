@@ -107,7 +107,7 @@ namespace TabeAPI.Controllers
         /// </summary>
         /// <param name="model">Datos del nuevo producto + sus categorías</param>
         /// <response code="200">Devuelve el nuevo producto</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando crear un producto para otro restaurante</response>
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<Producto>> CreateProducto(ProductoAPIModel model)
@@ -115,7 +115,17 @@ namespace TabeAPI.Controllers
             string jsonUsuario = HttpContext.User
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
-            if (usuario.TipoUsuario != 1) return await this.repo.CreateProductoAsync(model.Producto, model.CategProducto);
+            if (usuario.TipoUsuario != 1)
+            {
+                if (usuario.TipoUsuario == 3)
+                {
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != model.Producto.IdRestaurante)
+                        return Unauthorized();
+                }
+                model.Producto.Imagen = "img" + model.Producto.IdProducto + ".jpeg";
+                return await this.repo.CreateProductoAsync(model.Producto, model.CategProducto);
+            }
             return Unauthorized();
         }
 
@@ -125,7 +135,7 @@ namespace TabeAPI.Controllers
         /// </summary>
         /// <param name="model">Datos nuevos del producto + nuevas categorías</param>
         /// <response code="200">Producto modificado con éxito</response>
-        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
+        /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando modificar un producto de otro restaurante</response>
         [HttpPut]
         [Authorize]
         public async Task<ActionResult> EditProducto(ProductoAPIModel model)
@@ -135,6 +145,13 @@ namespace TabeAPI.Controllers
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1)
             {
+                if (usuario.TipoUsuario == 3)
+                {
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != model.Producto.IdRestaurante)
+                        return Unauthorized();
+                }
+                model.Producto.Imagen = "img" + model.Producto.IdProducto + ".jpeg";
                 await this.repo.EditProductoAsync(model.Producto, model.CategProducto);
                 return Ok();
             }
@@ -148,6 +165,7 @@ namespace TabeAPI.Controllers
         /// <param name="id">ID del producto</param>
         /// <response code="200">Producto eliminado con éxito</response>
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
+        /// <response code="404">Producto no encontrado</response>
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult> DeleteProducto(int id)
@@ -157,12 +175,17 @@ namespace TabeAPI.Controllers
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 1)
             {
-                if (await this.repo.FindProductoAsync(id) == null) return NotFound();
-                else
+                Producto producto = await this.repo.FindProductoAsync(id);
+                if (producto == null)
+                    return NotFound();
+                if (usuario.TipoUsuario == 3)
                 {
-                    await this.repo.DeleteProductoAsync(id);
-                    return Ok();
+                    Restaurante rest = await this.repo.GetRestauranteFromLoggedUserAsync(usuario.IdUsuario);
+                    if (rest.IdRestaurante != producto.IdRestaurante)
+                        return Unauthorized();
                 }
+                await this.repo.DeleteProductoAsync(id);
+                return Ok();
             }
             return Unauthorized();
         }

@@ -6,9 +6,10 @@
         tipoUsuario = int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value);
     }
     int numCesta = 0;
-    if (Context.Session.GetObject<List<ProductoCesta>>("CESTA") != null)
+    if (serviceRedis.GetCesta() != null)
     {
-        numCesta = Context.Session.GetObject<List<ProductoCesta>>("CESTA").Sum(p => p.Cantidad);
+        List<ProductoCesta> cesta = await serviceRedis.GetCesta();
+        if (cesta != null) numCesta = cesta.Sum(p => p.Cantidad);
     }
 }
 

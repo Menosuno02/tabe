@@ -1,5 +1,9 @@
 ﻿@model List<CategoriaProducto>
 
+@{
+    List<BlobModel> blobs = ViewData["BLOBS"] as List<BlobModel>;
+}
+
 @using (Html.BeginForm("_CategoriasRestaurante", "PanelRestaurante", FormMethod.Post))
 {
     <div class="h-full p-6 sm:px-4">
@@ -41,9 +45,10 @@
                                                     await this.service.GetProductosByCategoriaAsync(categ.IdRestaurante, categ.IdCategoriaProducto);
                                                     foreach (Producto producto in productos)
                                                     {
+                                                        producto.Imagen = blobs.FirstOrDefault(b => b.Nombre == producto.Imagen).Url;
                                                         <div class="h-full w-1/6 p-1 md:w-1/4 lg:w-1/5">
-                                                            <img class="mx-auto aspect-square h-auto w-16 rounded-lg object-cover shadow-md" 
-                                                            src="~/images/imag_productos/@producto.Imagen" />
+                                                            @* <img class="mx-auto aspect-square h-auto w-16 rounded-lg object-cover shadow-md" src="~/images/imag_productos/@producto.Imagen" /> *@
+                                                            <img class="mx-auto aspect-square h-auto w-16 rounded-lg object-cover shadow-md" src="@producto.Imagen" />
                                                         </div>
                                                     }
                                                 }

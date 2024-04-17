@@ -11,16 +11,19 @@ namespace ProyectoASPNET.Controllers
     public class RestaurantesController : Controller
     {
         private IServiceRestaurantes service;
-        private HelperCesta helperCesta;
+        private ServiceStorageBlobs serviceBlobs;
+        private ServiceCacheRedis serviceRedis;
         private HelperGoogleApiDirections helperDistanceMatrix;
 
         public RestaurantesController
             (IServiceRestaurantes service,
-            HelperCesta helperCesta,
+            ServiceStorageBlobs serviceBlobs,
+            ServiceCacheRedis serviceRedis,
             HelperGoogleApiDirections helperDistanceMatrix)
         {
             this.service = service;
-            this.helperCesta = helperCesta;
+            this.serviceBlobs = serviceBlobs;
+            this.serviceRedis = serviceRedis;
             this.helperDistanceMatrix = helperDistanceMatrix;
         }
 
@@ -31,8 +34,8 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            ViewData["CATEGORIAS"] =
-                await this.service.GetCategoriasRestaurantesAsync();
+            ViewData["CATEGORIAS"] = await this.service.GetCategoriasRestaurantesAsync();
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("categoriasrestaurantes");
             return View();
         }
 
@@ -57,6 +60,7 @@ namespace ProyectoASPNET.Controllers
             if (orden != "valoracion")
                 restaurantes = restaurantes.OrderBy(r => r.InfoEntrega.TiempoEstimado).ToList();
             restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
             return PartialView("_ListRestaurantes", restaurantes);
         }
 
@@ -72,6 +76,8 @@ namespace ProyectoASPNET.Controllers
                 Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
                 CategoriasProductos = await this.service.GetCategoriasProductosAsync(idrestaurante)
             };
+            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
+            model.Restaurante.Imagen = blobs.FirstOrDefault(b => b.Nombre == model.Restaurante.Imagen).Url;
             return View(model);
         }
 
@@ -89,7 +95,7 @@ namespace ProyectoASPNET.Controllers
                 if (restauranteSession == 0
                     || (restauranteSession != 0 && restauranteSession == idrestaurante))
                 {
-                    await helperCesta.UpdateCesta(new ProductoCesta
+                    await serviceRedis.UpdateCesta(new ProductoCesta
                     {
                         IdProducto = idproducto,
                         Cantidad = cantidad
@@ -102,6 +108,8 @@ namespace ProyectoASPNET.Controllers
                 Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
                 CategoriasProductos = await this.service.GetCategoriasProductosAsync(idrestaurante)
             };
+            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
+            model.Restaurante.Imagen = blobs.FirstOrDefault(b => b.Nombre == model.Restaurante.Imagen).Url;
             return View(model);
         }
 
@@ -113,6 +121,7 @@ namespace ProyectoASPNET.Controllers
                 productos = await this.service.GetProductosRestauranteAsync(idrestaurante);
             else
                 productos = await this.service.GetProductosByCategoriaAsync(idrestaurante, categoria);
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
             return PartialView("_ListProductos", productos);
         }
 

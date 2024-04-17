@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Filters;
-using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
@@ -10,13 +9,12 @@ namespace ProyectoASPNET.Controllers
     public class PanelRestauranteController : Controller
     {
         private IServiceRestaurantes service;
-        private HelperCesta helperCesta;
+        private ServiceStorageBlobs serviceBlobs;
 
-        public PanelRestauranteController
-            (IServiceRestaurantes service, HelperCesta helperCesta)
+        public PanelRestauranteController(IServiceRestaurantes service, ServiceStorageBlobs serviceBlobs)
         {
             this.service = service;
-            this.helperCesta = helperCesta;
+            this.serviceBlobs = serviceBlobs;
         }
 
         [AuthorizeUser]
@@ -87,6 +85,7 @@ namespace ProyectoASPNET.Controllers
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             productos = await this.service.GetProductosRestauranteAsync(rest.IdRestaurante);
             ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
             return PartialView("_ProductosRestaurante", productos);
         }
 
@@ -119,6 +118,8 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             Producto prod = await this.service.FindProductoAsync(idprod);
+            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagproductos");
+            prod.Imagen = blobs.FirstOrDefault(b => b.Nombre == prod.Imagen).Url;
             return PartialView("_DetailsProducto", prod);
         }
 
@@ -164,6 +165,7 @@ namespace ProyectoASPNET.Controllers
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             List<CategoriaProducto> categorias = await this.service.GetCategoriasProductosAsync(rest.IdRestaurante);
             ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
             return PartialView("_CategoriasRestaurante", categorias);
         }
 
@@ -174,6 +176,7 @@ namespace ProyectoASPNET.Controllers
         {
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             CategoriaProducto categProducto = await this.service.CreateCategoriaProductoAsync(rest.IdRestaurante, categoria);
+            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
             return RedirectToAction("Index", new { nomvista = "_CategoriasRestaurante" });
         }
 
