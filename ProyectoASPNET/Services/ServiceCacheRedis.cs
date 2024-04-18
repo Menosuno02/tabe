@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Models;
@@ -22,7 +23,9 @@ namespace ProyectoASPNET.Services
 
         public async Task<List<ProductoCesta>> GetCesta()
         {
-            string json = await this.database.StringGetAsync("cesta");
+            HttpContext httpContext = this.httpContextAccessor.HttpContext;
+            int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string json = await this.database.StringGetAsync("cesta" + id);
             if (json == null)
                 return null;
             else
@@ -70,14 +73,16 @@ namespace ProyectoASPNET.Services
 
         public async Task UpdateCesta(ProductoCesta prod)
         {
+            HttpContext httpContext = this.httpContextAccessor.HttpContext;
+            int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (await GetCesta() == null)
             {
                 List<ProductoCesta> cesta = new List<ProductoCesta> { prod };
                 string json = JsonConvert.SerializeObject(cesta);
-                await this.database.StringSetAsync("cesta", json);
+                await this.database.StringSetAsync("cesta" + id, json);
                 Producto productoPivot = await this.service.FindProductoAsync(prod.IdProducto);
                 json = JsonConvert.SerializeObject(productoPivot.IdRestaurante);
-                await this.database.StringSetAsync("restaurante", json);
+                await this.database.StringSetAsync("restaurante" + id, json);
             }
             else
             {
@@ -95,7 +100,7 @@ namespace ProyectoASPNET.Services
                         .Cantidad += prod.Cantidad;
                 }
                 string json = JsonConvert.SerializeObject(cesta);
-                await this.database.StringSetAsync("cesta", json);
+                await this.database.StringSetAsync("cesta" + id, json);
             }
         }
 
@@ -103,6 +108,8 @@ namespace ProyectoASPNET.Services
         {
             if (await GetCesta() != null)
             {
+                HttpContext httpContext = this.httpContextAccessor.HttpContext;
+                int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 List<ProductoCesta> cesta = await GetCesta();
                 cesta.RemoveAll(p => p.IdProducto == idproducto);
                 if (cesta.Count() == 0)
@@ -110,7 +117,7 @@ namespace ProyectoASPNET.Services
                 else
                 {
                     string json = JsonConvert.SerializeObject(cesta);
-                    await this.database.StringSetAsync("cesta", json);
+                    await this.database.StringSetAsync("cesta" + id, json);
                 }
             }
         }
@@ -122,12 +129,13 @@ namespace ProyectoASPNET.Services
             else
             {
                 HttpContext httpContext = this.httpContextAccessor.HttpContext;
+                int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 List<ProductoCesta> cesta = await GetCesta();
                 cesta
                     .FirstOrDefault(p => p.IdProducto == idproducto)
                     .Cantidad = cantidad;
                 string json = JsonConvert.SerializeObject(cesta);
-                await this.database.StringSetAsync("cesta", json);
+                await this.database.StringSetAsync("cesta" + id, json);
             }
         }
 
@@ -135,8 +143,10 @@ namespace ProyectoASPNET.Services
         {
             if (await GetCesta() != null)
             {
+                HttpContext httpContext = this.httpContextAccessor.HttpContext;
+                int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 List<ProductoCesta> cesta = await GetCesta();
-                string json = await this.database.StringGetAsync("restaurante");
+                string json = await this.database.StringGetAsync("restaurante" + id);
                 int idrestaurante = JsonConvert.DeserializeObject<int>(json);
                 Pedido pedido =
                     await this.service.CreatePedidoAsync(idrestaurante, cesta);
@@ -148,8 +158,10 @@ namespace ProyectoASPNET.Services
 
         public async Task ResetCesta()
         {
-            await this.database.KeyDeleteAsync("cesta");
-            await this.database.KeyDeleteAsync("restaurante");
+            HttpContext httpContext = this.httpContextAccessor.HttpContext;
+            int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            await this.database.KeyDeleteAsync("cesta" + id);
+            await this.database.KeyDeleteAsync("restaurante" + id);
         }
     }
 }

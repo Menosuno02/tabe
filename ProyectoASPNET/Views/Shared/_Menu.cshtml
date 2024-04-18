@@ -1,15 +1,18 @@
 ﻿@using System.Security.Claims
 @{
     int tipoUsuario = 0;
+    int numCesta = 0;
     if (Context.User.Identity.IsAuthenticated)
     {
         tipoUsuario = int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value);
-    }
-    int numCesta = 0;
-    if (serviceRedis.GetCesta() != null)
-    {
-        List<ProductoCesta> cesta = await serviceRedis.GetCesta();
-        if (cesta != null) numCesta = cesta.Sum(p => p.Cantidad);
+        if (tipoUsuario == 1)
+        {
+            if (serviceRedis.GetCesta() != null)
+            {
+                List<ProductoCesta> cesta = await serviceRedis.GetCesta();
+                if (cesta != null) numCesta = cesta.Sum(p => p.Cantidad);
+            }
+        }
     }
 }
 
