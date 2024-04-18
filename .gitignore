@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /ProyectoASPNET/appsettings.Development.json
 /ProyectoASPNET/appsettings.json
 /TabeAPI/appsettings.json
+/ProyectoASPNET/Helpers/HelperCacheMultiplexer.cs
