@@ -7,7 +7,7 @@ namespace ProyectoASPNET.Helpers
         private static Lazy<ConnectionMultiplexer>
             CreateConnection = new Lazy<ConnectionMultiplexer>(() =>
             {
-                string cacheRedisKeys = "cacheredistabe.redis.cache.windows.net:6380,password=F9ovdQJxxDLGkAb4xlZUb5Ay0VVYX0SaKAzCaIvnnc4=,ssl=True,abortConnect=False";
+                string cacheRedisKeys = "";
                 return ConnectionMultiplexer.Connect(cacheRedisKeys);
             });
 
