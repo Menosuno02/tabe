@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Filters;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
 

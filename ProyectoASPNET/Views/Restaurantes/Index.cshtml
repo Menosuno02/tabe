@@ -1,6 +1,5 @@
 ﻿@{
     List<CategoriaRestaurante> categorias = ViewData["CATEGORIAS"] as List<CategoriaRestaurante>;
-    List<BlobModel> blobs = ViewData["BLOBS"] as List<BlobModel>;
     string baseUri = Context.Request.Scheme + "://" + Context.Request.Host;
 }
 
@@ -20,7 +19,6 @@
                     </label>
                     @foreach (CategoriaRestaurante categoria in categorias)
                     {
-                        categoria.IconoCategoria = blobs.FirstOrDefault(b => b.Nombre == categoria.IconoCategoria).Url;
                         <label class="w-20 text-center text-sm">
                             <input id="categoria-@categoria.Nombre"
                                    type="radio"

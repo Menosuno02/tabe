@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -30,6 +29,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
         [HttpGet("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<string>>> GetCategoriasFromProducto(int id)
         {
             string jsonUsuario = HttpContext.User

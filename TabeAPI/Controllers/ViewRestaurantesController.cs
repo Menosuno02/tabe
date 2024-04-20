@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -26,8 +25,11 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="searchquery">Parámetro de búsqueda (opcional)</param>
         /// <response code="200">Devuelve el conjunto de restaurantes</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<RestauranteView>>> GetRestaurantesView(string? searchquery = "")
         {
             return await this.repo.GetRestaurantesViewAsync(searchquery);
@@ -42,9 +44,12 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="id">ID del restaurante</param>
         /// <response code="200">Devuelve el restaurante</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Route("Find/{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<RestauranteView>> FindRestauranteView(int id)
         {
             return await this.repo.FindRestauranteViewAsync(id);
@@ -60,8 +65,11 @@ namespace TabeAPI.Controllers
         /// <param name="categoria">Categoría de los restaurantes</param>
         /// <param name="searchquery">Parámetro de búsqueda (opcional)</param>
         /// <response code="200">Devuelve el conjunto de restaurantes</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Route("Filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<RestauranteView>>> FilterRestaurantesView([FromQuery] string categoria, [FromQuery] string? searchquery = "")
         {
             return await this.repo.FilterRestaurantesViewAsync(categoria, searchquery);

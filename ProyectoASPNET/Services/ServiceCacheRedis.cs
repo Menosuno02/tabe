@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Helpers;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using StackExchange.Redis;
 using System.Security.Claims;
 

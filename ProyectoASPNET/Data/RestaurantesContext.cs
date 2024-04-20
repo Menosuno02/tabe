@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace ProyectoASPNET.Data
 {

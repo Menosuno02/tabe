@@ -1,6 +1,4 @@
-﻿using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
-using ProyectoASPNET.Models;
+﻿using Azure.Storage.Blobs;
 
 namespace ProyectoASPNET.Services
 {
@@ -13,6 +11,7 @@ namespace ProyectoASPNET.Services
             this.client = client;
         }
 
+        /*
         public async Task<List<BlobModel>> GetBlobsAsync(string containerName)
         {
             BlobContainerClient containerClient =
@@ -31,6 +30,7 @@ namespace ProyectoASPNET.Services
             }
             return models;
         }
+        */
 
         public async Task UploadBlobAsync(string containerName, string blobName, Stream stream)
         {

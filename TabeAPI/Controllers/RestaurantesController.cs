@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
-using TabeAPI.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -27,8 +25,11 @@ namespace TabeAPI.Controllers
         /// Permite obtener todos los restaurantes de la BBDD
         /// </remarks>
         /// <response code="200">Devuelve el conjunto de restaurantes</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Restaurante>>> GetRestaurantes()
         {
             return await this.repo.GetRestaurantesAsync();
@@ -43,9 +44,12 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="id">ID del restaurante</param>
         /// <response code="200">Devuelve el restaurante</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Route("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Restaurante>> FindRestaurante(int id)
         {
             return await this.repo.FindRestauranteAsync(id);
@@ -60,6 +64,8 @@ namespace TabeAPI.Controllers
         [HttpGet]
         [Route("[action]")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Restaurante>> GetRestauranteFromLoggedUser()
         {
             string jsonUsuario = HttpContext.User
@@ -76,10 +82,13 @@ namespace TabeAPI.Controllers
         /// </summary>
         /// <param name="model">Datos del nuevo restaurante + nueva contraseña</param>
         /// <response code="200">Devuelve el nuevo restaurante</response>
-        /// <response code="404">Bad Request. Puede ser por imagen nula</response>
         /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
+        /// <response code="404">Bad Request. Puede ser por imagen nula</response>
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Restaurante>> CreateRestaurante(RestauranteAPIModel model)
         {
             string jsonUsuario = HttpContext.User
@@ -102,6 +111,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
         [HttpPut]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Restaurante>> EditRestaurante(Restaurante restaurante)
         {
             string jsonUsuario = HttpContext.User
@@ -130,6 +141,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
         [HttpDelete("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> DeleteRestaurante(int id)
         {
             string jsonUsuario = HttpContext.User

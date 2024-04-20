@@ -2,8 +2,7 @@
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
-using TabeAPI.Models;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Data;
 using Microsoft.EntityFrameworkCore;

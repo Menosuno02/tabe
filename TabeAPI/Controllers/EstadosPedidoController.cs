@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
-using TabeAPI.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -31,6 +28,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<EstadoPedido>>> GetEstadosPedido()
         {
             string jsonUsuario = HttpContext.User
@@ -55,6 +54,9 @@ namespace TabeAPI.Controllers
         [HttpPut]
         [Route("UpdateEstadoPedido")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateEstadoPedido(EstadoPedidoAPIModel model)
         {
             string jsonUsuario = HttpContext.User

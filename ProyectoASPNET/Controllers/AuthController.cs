@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using ProyectoASPNET.Helpers;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
 

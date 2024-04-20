@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
-using System.Security.Claims;
-using TabeAPI.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -31,6 +28,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Admin</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Usuario>>> GetUsuarios()
         {
             string jsonUsuario = HttpContext.User
@@ -53,6 +52,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Admin o la ID que busca no coincide con su ID logeada</response>
         [HttpGet("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Usuario>> FindUsuario(int id)
         {
             string jsonUsuario = HttpContext.User
@@ -69,9 +70,12 @@ namespace TabeAPI.Controllers
         /// Devuelve el usuario logeado
         /// </summary>
         /// <response code="200">Devuelve el usuario</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Route("[action]")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Usuario>> GetLoggedUsuario()
         {
             string jsonUsuario = HttpContext.User
@@ -89,6 +93,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Admin o Restaurante o la ID que busca no coincide con su ID logeada</response>
         [HttpGet("[action]/{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<string>> GetDireccion(int id)
         {
             string jsonUsuario = HttpContext.User
@@ -109,8 +115,11 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="model">Datos del nuevo usuario a registrar</param>
         /// <response code="200">Devuelve el nuevo usuario</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpPost]
         [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Usuario>> RegisterUsuario(RegisterUserAPIModel model)
         {
             return await this.repo.RegisterUsuarioAsync(model.Usuario, model.RawPassword);
@@ -128,6 +137,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es Admin y está intentando modificar datos de otro usuario</response>
         [HttpPut]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> EditUsuario(Usuario user)
         {
             string jsonUsuario = HttpContext.User
@@ -145,9 +156,12 @@ namespace TabeAPI.Controllers
         /// </summary>
         /// <param name="model">Nueva y antigua contraseña</param>
         /// <response code="200">Contraseña modificada con éxito</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpPut]
         [Route("[action]")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<bool>> ModificarContrasenya(ModifyPasswordAPIModel model)
         {
             string jsonUsuario = HttpContext.User

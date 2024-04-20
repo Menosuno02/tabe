@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -25,8 +24,11 @@ namespace TabeAPI.Controllers
         /// Permite obtener las categorías para restaurantes de la BBDD
         /// </remarks>
         /// <response code="200">Devuelve el conjunto de categorías para los restaurantes</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<CategoriaRestaurante>>> GetCategoriasRestaurantes()
         {
             return await this.repo.GetCategoriasRestaurantesAsync();

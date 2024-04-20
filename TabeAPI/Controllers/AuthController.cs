@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TabeAPI.Helpers;
-using TabeAPI.Models;
 
 namespace TabeAPI.Controllers
 {
@@ -37,6 +35,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado, inicio de sesión inválido</response>
         [HttpPost]
         [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Login(LoginModel model)
         {
             Usuario usuario = await this.repo.LoginUsuarioAsync(model.Email, model.Password);

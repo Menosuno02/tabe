@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Services;
 
 namespace ProyectoASPNET;

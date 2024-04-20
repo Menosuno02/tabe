@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -30,6 +29,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin</response>
         [HttpGet("[action]/{idrestaurante}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<ValoracionRestaurante>> ValRestauranteUsuario(int idrestaurante)
         {
             string jsonUsuario = HttpContext.User
@@ -52,6 +53,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin o es un Usuario intentando modificar la valoración de otro usuario</response>
         [HttpPut]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> UpdateValoracionRestaurante(ValoracionRestaurante valoracion)
         {
             string jsonUsuario = HttpContext.User

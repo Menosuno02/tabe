@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -29,6 +28,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<ProductoPedidoView>>> GetProductosPedidoView([FromQuery] List<int> idpedido)
         {
             return await this.repo.GetProductosPedidoViewAsync(idpedido);

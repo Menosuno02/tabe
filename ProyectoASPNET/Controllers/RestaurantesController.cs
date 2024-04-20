@@ -2,7 +2,7 @@
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
 
@@ -14,17 +14,24 @@ namespace ProyectoASPNET.Controllers
         private ServiceStorageBlobs serviceBlobs;
         private ServiceCacheRedis serviceRedis;
         private HelperGoogleApiDirections helperDistanceMatrix;
+        private string UrlBlobProductos;
+        private string UrlBlobRestaurantes;
+        private string UrlBlobCategorias;
 
         public RestaurantesController
             (IServiceRestaurantes service,
             ServiceStorageBlobs serviceBlobs,
             ServiceCacheRedis serviceRedis,
-            HelperGoogleApiDirections helperDistanceMatrix)
+            HelperGoogleApiDirections helperDistanceMatrix,
+            IConfiguration configuration)
         {
             this.service = service;
             this.serviceBlobs = serviceBlobs;
             this.serviceRedis = serviceRedis;
             this.helperDistanceMatrix = helperDistanceMatrix;
+            UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
+            UrlBlobRestaurantes = configuration.GetValue<string>("BlobUrls:UrlRestaurantes");
+            UrlBlobCategorias = configuration.GetValue<string>("BlobUrls:UrlCategorias");
         }
 
         [AuthorizeUser]
@@ -34,8 +41,9 @@ namespace ProyectoASPNET.Controllers
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-            ViewData["CATEGORIAS"] = await this.service.GetCategoriasRestaurantesAsync();
-            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("categoriasrestaurantes");
+            List<CategoriaRestaurante> categorias = await this.service.GetCategoriasRestaurantesAsync();
+            categorias.ForEach(c => c.IconoCategoria = UrlBlobCategorias + c.IconoCategoria);
+            ViewData["CATEGORIAS"] = categorias;
             return View();
         }
 
@@ -60,7 +68,7 @@ namespace ProyectoASPNET.Controllers
             if (orden != "valoracion")
                 restaurantes = restaurantes.OrderBy(r => r.InfoEntrega.TiempoEstimado).ToList();
             restaurantes = restaurantes.Skip(8 * (posicion - 1)).Take(8).ToList();
-            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
+            restaurantes.ForEach(r => r.Imagen = UrlBlobRestaurantes + r.Imagen);
             return PartialView("_ListRestaurantes", restaurantes);
         }
 
@@ -76,8 +84,7 @@ namespace ProyectoASPNET.Controllers
                 Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
                 CategoriasProductos = await this.service.GetCategoriasProductosAsync(idrestaurante)
             };
-            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
-            model.Restaurante.Imagen = blobs.FirstOrDefault(b => b.Nombre == model.Restaurante.Imagen).Url;
+            model.Restaurante.Imagen = UrlBlobRestaurantes + model.Restaurante.Imagen;
             return View(model);
         }
 
@@ -108,8 +115,7 @@ namespace ProyectoASPNET.Controllers
                 Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
                 CategoriasProductos = await this.service.GetCategoriasProductosAsync(idrestaurante)
             };
-            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
-            model.Restaurante.Imagen = blobs.FirstOrDefault(b => b.Nombre == model.Restaurante.Imagen).Url;
+            model.Restaurante.Imagen = UrlBlobRestaurantes + model.Restaurante.Imagen;
             return View(model);
         }
 
@@ -121,7 +127,7 @@ namespace ProyectoASPNET.Controllers
                 productos = await this.service.GetProductosRestauranteAsync(idrestaurante);
             else
                 productos = await this.service.GetProductosByCategoriaAsync(idrestaurante, categoria);
-            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
+            productos.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return PartialView("_ListProductos", productos);
         }
 

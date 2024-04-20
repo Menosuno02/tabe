@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -30,6 +29,8 @@ namespace TabeAPI.Controllers
         [HttpGet]
         [Route("[action]")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Pedido>>> GetPedidosUsuario()
         {
             string jsonUsuario = HttpContext.User
@@ -52,6 +53,8 @@ namespace TabeAPI.Controllers
         [HttpGet]
         [Route("[action]")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Pedido>>> GetPedidosRestaurante()
         {
             string jsonUsuario = HttpContext.User
@@ -75,6 +78,8 @@ namespace TabeAPI.Controllers
         [HttpPost]
         [Route("{idrestaurante}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Pedido>> CreatePedido(int idrestaurante, List<ProductoCesta> cesta)
         {
             string jsonUsuario = HttpContext.User

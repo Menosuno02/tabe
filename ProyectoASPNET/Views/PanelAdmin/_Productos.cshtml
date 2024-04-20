@@ -1,9 +1,5 @@
 ﻿@model List<Producto>
 
-@{
-    List<BlobModel> blobs = ViewData["BLOBS"] as List<BlobModel>;
-}
-
 <div class="p-6 sm:px-4">
     <div class="flex flex-wrap lg:px-16">
         @if (ViewData["IDRESTAURANTE"] != null)
@@ -36,7 +32,6 @@
                             <tbody class="divide-gray-200 divide-y">
                                 @foreach (Producto prod in Model)
                                 {
-                                    prod.Imagen = blobs.FirstOrDefault(b => b.Nombre == prod.Imagen).Url;
                                     <tr>
                                         <td class="flex justify-center">
                                             @* <img src="~/images/imag_productos/@prod.Imagen" class="h-16 max-h-full w-16 rounded-3xl object-cover px-0.5 py-1.5 text-center md:w-24 md:h-24"> *@

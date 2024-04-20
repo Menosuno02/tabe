@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
 
@@ -10,20 +10,20 @@ namespace ProyectoASPNET.Controllers
     public class CestaController : Controller
     {
         private IServiceRestaurantes service;
-        private ServiceStorageBlobs serviceBlobs;
         private ServiceCacheRedis serviceRedis;
         private HelperMails helperMails;
+        private string UrlBlobProductos;
 
         public CestaController
             (IServiceRestaurantes service,
-            ServiceStorageBlobs serviceBlobs,
             ServiceCacheRedis serviceRedis,
-            HelperMails helperMails)
+            HelperMails helperMails,
+            IConfiguration configuration)
         {
             this.service = service;
-            this.serviceBlobs = serviceBlobs;
             this.serviceRedis = serviceRedis;
             this.helperMails = helperMails;
+            UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
         }
 
         [AuthorizeUser]
@@ -34,7 +34,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             CestaView cestaView = await this.serviceRedis.GetDatosCesta();
-            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
+            cestaView.Cesta.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return View(cestaView);
         }
 
@@ -90,7 +90,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await serviceRedis.GetDatosCesta();
-            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
+            cestaView.Cesta.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return View(cestaView);
         }
 

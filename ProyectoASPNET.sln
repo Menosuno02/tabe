@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProyectoASPNET", "ProyectoASPNET\ProyectoASPNET.csproj", "{F20F0681-09EF-46DF-9B53-93D681ABB3BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabeAPI", "TabeAPI\TabeAPI.csproj", "{7D298A32-969B-4ED5-963A-061147E22451}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TabeAPI", "TabeAPI\TabeAPI.csproj", "{7D298A32-969B-4ED5-963A-061147E22451}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabeNuget", "TabeNuget\TabeNuget.csproj", "{B8920C61-41C7-4924-ABB2-8EA5899B5869}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7D298A32-969B-4ED5-963A-061147E22451}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D298A32-969B-4ED5-963A-061147E22451}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D298A32-969B-4ED5-963A-061147E22451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8920C61-41C7-4924-ABB2-8EA5899B5869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8920C61-41C7-4924-ABB2-8EA5899B5869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8920C61-41C7-4924-ABB2-8EA5899B5869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8920C61-41C7-4924-ABB2-8EA5899B5869}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,5 @@
 ﻿@model CestaView
 
-@{
-    List<BlobModel> blobs = ViewData["BLOBS"] as List<BlobModel>;
-}
-
 <div class="mx-auto flex w-10/12 flex-wrap py-8 sm:py-12">
     @if (Model.Cesta != null && Model.Cesta.Count() > 0)
     {
@@ -16,7 +12,6 @@
                     <ul class="space-y-4">
                         @foreach (ProductoCestaView prod in Model.Cesta)
                         {
-                            prod.Imagen = blobs.FirstOrDefault(b => b.Nombre == prod.Imagen).Url;
                             <li class="flex items-center gap-4">
                                 @* <img src="~/images/imag_productos/@prod.Imagen" class="size-24 rounded object-cover" /> *@
                                 <img src="@prod.Imagen" class="size-24 rounded object-cover" />

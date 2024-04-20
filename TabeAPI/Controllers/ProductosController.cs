@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
-using TabeAPI.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -27,8 +25,11 @@ namespace TabeAPI.Controllers
         /// Permite obtener todos los productos de la BBDD
         /// </remarks>
         /// <response code="200">Devuelve el conjunto de productos</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Producto>>> GetProductos()
         {
             return await this.repo.GetProductosAsync();
@@ -43,8 +44,11 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="id">ID del producto</param>
         /// <response code="200">Devuelve el producto</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Producto>> FindProducto(int id)
         {
             return await this.repo.FindProductoAsync(id);
@@ -59,9 +63,12 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="id">ID del restaurante</param>
         /// <response code="200">Devuelve el conjunto de productos</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Route("[action]/{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Producto>>> ProductosRestaurante(int id)
         {
             return await this.repo.GetProductosRestauranteAsync(id);
@@ -77,9 +84,12 @@ namespace TabeAPI.Controllers
         /// <param name="restaurante">ID del restaurante</param>
         /// <param name="categoria">ID de la categoría</param>
         /// <response code="200">Devuelve el conjunto de productos</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]
         [Route("[action]/{restaurante}/{categoria}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Producto>>> ProductosByCategoria(int restaurante, int categoria)
         {
             return await this.repo.GetProductosByCategoriaAsync(restaurante, categoria);
@@ -94,8 +104,11 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="idprod">IDs de los productos</param>
         /// <response code="200">Devuelve el conjunto de productos</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet("[action]")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<Producto>>> ListProductos([FromQuery] List<int> idprod)
         {
             return await this.repo.FindListProductosAsync(idprod);
@@ -110,6 +123,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando crear un producto para otro restaurante</response>
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Producto>> CreateProducto(ProductoAPIModel model)
         {
             string jsonUsuario = HttpContext.User
@@ -138,6 +153,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando modificar un producto de otro restaurante</response>
         [HttpPut]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> EditProducto(ProductoAPIModel model)
         {
             string jsonUsuario = HttpContext.User
@@ -168,6 +185,9 @@ namespace TabeAPI.Controllers
         /// <response code="404">Producto no encontrado</response>
         [HttpDelete("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteProducto(int id)
         {
             string jsonUsuario = HttpContext.User

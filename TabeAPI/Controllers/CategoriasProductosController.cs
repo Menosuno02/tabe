@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
-using ProyectoASPNET.Models;
-using TabeAPI.Models;
+using TabeNuget;
 
 namespace TabeAPI.Controllers
 {
@@ -28,8 +26,11 @@ namespace TabeAPI.Controllers
         /// </remarks>
         /// <param name="idrestaurante">ID del restaurante</param>
         /// <response code="200">Devuelve el conjunto de categorías</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet("{idrestaurante}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<List<CategoriaProducto>>> GetCategoriasProductos(int idrestaurante)
         {
             return await this.repo.GetCategoriasProductosAsync(idrestaurante);
@@ -47,6 +48,8 @@ namespace TabeAPI.Controllers
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando crear una categoría para otro restaurante</response>
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<CategoriaProducto>> CreateCategoriaProducto(CategoriaProductoAPIModel model)
         {
             string jsonUsuario = HttpContext.User
@@ -77,6 +80,9 @@ namespace TabeAPI.Controllers
         /// <response code="404">Categoría no encontrada</response>
         [HttpDelete("{idcategoria}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteCategoriaProducto(int idcategoria)
         {
             string jsonUsuario = HttpContext.User

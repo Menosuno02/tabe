@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Filters;
-using ProyectoASPNET.Models;
+using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
 
@@ -9,12 +9,15 @@ namespace ProyectoASPNET.Controllers
     public class PanelAdminController : Controller
     {
         private IServiceRestaurantes service;
-        private ServiceStorageBlobs serviceBlobs;
+        private string UrlBlobProductos;
+        private string UrlBlobRestaurantes;
 
-        public PanelAdminController(IServiceRestaurantes service, ServiceStorageBlobs serviceBlobs)
+
+        public PanelAdminController(IServiceRestaurantes service, IConfiguration configuration)
         {
             this.service = service;
-            this.serviceBlobs = serviceBlobs;
+            UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
+            UrlBlobRestaurantes = configuration.GetValue<string>("BlobUrls:UrlRestaurantes");
         }
 
         [AuthorizeUser]
@@ -75,8 +78,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             RestauranteView rest = await this.service.FindRestauranteViewAsync(idrest);
-            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagrestaurantes");
-            rest.Imagen = blobs.FirstOrDefault(b => b.Nombre == rest.Imagen).Url;
+            rest.Imagen = UrlBlobRestaurantes + rest.Imagen;
             return PartialView("_DetailsRestaurante", rest);
         }
 
@@ -144,7 +146,7 @@ namespace ProyectoASPNET.Controllers
             {
                 productos = await this.service.GetProductosAsync();
             }
-            ViewData["BLOBS"] = await this.serviceBlobs.GetBlobsAsync("imagproductos");
+            productos.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return PartialView("_Productos", productos);
         }
 
@@ -182,8 +184,7 @@ namespace ProyectoASPNET.Controllers
                 return RedirectToAction("CheckRoutes", "Auth");
             }
             Producto prod = await this.service.FindProductoAsync(idprod);
-            List<BlobModel> blobs = await this.serviceBlobs.GetBlobsAsync("imagproductos");
-            prod.Imagen = blobs.FirstOrDefault(b => b.Nombre == prod.Imagen).Url;
+            prod.Imagen = UrlBlobProductos + prod.Imagen;
             return PartialView("_DetailsProducto", prod);
         }
 
