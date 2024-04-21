@@ -64,6 +64,12 @@ public class RepositoryRestaurantes
     }
 
     #region RESTAURANTES
+    private async Task<int> GetMaxIdRestauranteAsync()
+    {
+        if (this.context.Restaurantes.Count() == 0) return 1;
+        return await this.context.Restaurantes.MaxAsync(r => r.IdRestaurante) + 1;
+    }
+
     public async Task<List<Restaurante>> GetRestaurantesAsync()
     {
         return await this.context.Restaurantes.ToListAsync();
@@ -79,6 +85,7 @@ public class RepositoryRestaurantes
     public async Task<Restaurante> CreateRestauranteAsync(Restaurante restaurante, string password)
     {
         restaurante.Direccion = await helperGoogleApi.GetValidatedDireccionAsync(restaurante.Direccion);
+        restaurante.IdRestaurante = await GetMaxIdRestauranteAsync();
         await this.context.Restaurantes.AddAsync(restaurante);
         Usuario usuRestaurante = new Usuario
         {
@@ -268,6 +275,12 @@ public class RepositoryRestaurantes
     #endregion
 
     #region PRODUCTOS
+    private async Task<int> GetMaxIdProductoAsync()
+    {
+        if (this.context.Productos.Count() == 0) return 1;
+        return await this.context.Productos.MaxAsync(r => r.IdProducto) + 1;
+    }
+
     public async Task<List<Producto>> GetProductosAsync()
     {
         return await this.context.Productos.ToListAsync();
@@ -315,6 +328,7 @@ public class RepositoryRestaurantes
 
     public async Task<Producto> CreateProductoAsync(Producto producto, int[] categproducto)
     {
+        producto.IdProducto = await GetMaxIdProductoAsync();
         await this.context.Productos.AddAsync(producto);
         await this.context.SaveChangesAsync();
         foreach (int categoria in categproducto)

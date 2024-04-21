@@ -107,7 +107,6 @@ namespace ProyectoASPNET.Services
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                restaurante.IdRestaurante = await GetMaxIdRestauranteAsync();
                 // restaurante.Imagen = await helperUploadFiles.UploadFileAsync(imagen, Folders.ImagRestaurantes, restaurante.IdRestaurante);
                 restaurante.Imagen = "img" + restaurante.IdRestaurante + ".jpeg";
                 RestauranteAPIModel model = new RestauranteAPIModel
@@ -150,10 +149,10 @@ namespace ProyectoASPNET.Services
                     }
                 }
                 string json = JsonConvert.SerializeObject(restaurante);
-                StringContent context = new StringContent
+                StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PutAsync(request, context);
+                    await client.PutAsync(request, content);
             }
         }
 
@@ -322,7 +321,6 @@ namespace ProyectoASPNET.Services
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-                producto.IdProducto = await GetMaxIdProductoAsync();
                 // producto.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.ImagProductos, producto.IdProducto);
                 producto.Imagen = "img" + producto.IdProducto + ".jpeg";
                 ProductoAPIModel model = new ProductoAPIModel
@@ -441,10 +439,10 @@ namespace ProyectoASPNET.Services
                     RawPassword = password
                 };
                 string json = JsonConvert.SerializeObject(model);
-                StringContent context = new StringContent
+                StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PostAsync(request, context);
+                    await client.PostAsync(request, content);
                 string jsonUsuario = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             }
@@ -476,10 +474,10 @@ namespace ProyectoASPNET.Services
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 user.Contrasenya = new byte[] { };
                 string json = JsonConvert.SerializeObject(user);
-                StringContent context = new StringContent
+                StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PutAsync(request, context);
+                    await client.PutAsync(request, content);
             }
         }
 
@@ -501,10 +499,10 @@ namespace ProyectoASPNET.Services
                     OldPassword = actual
                 };
                 string json = JsonConvert.SerializeObject(model);
-                StringContent context = new StringContent
+                StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PutAsync(request, context);
+                    await client.PutAsync(request, content);
                 return await response.Content.ReadAsAsync<bool>();
             }
         }
@@ -577,10 +575,10 @@ namespace ProyectoASPNET.Services
                     Estado = estado
                 };
                 string json = JsonConvert.SerializeObject(model);
-                StringContent context = new StringContent
+                StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PutAsync(request, context);
+                    await client.PutAsync(request, content);
             }
         }
         #endregion
@@ -617,10 +615,10 @@ namespace ProyectoASPNET.Services
                 if (token != null)
                     client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 string json = JsonConvert.SerializeObject(val);
-                StringContent context = new StringContent
+                StringContent content = new StringContent
                     (json, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PutAsync(request, context);
+                    await client.PutAsync(request, content);
             }
         }
         #endregion

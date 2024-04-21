@@ -121,10 +121,12 @@ namespace TabeAPI.Controllers
         /// <param name="model">Datos del nuevo producto + sus categorías</param>
         /// <response code="200">Devuelve el nuevo producto</response>
         /// <response code="401">No autorizado. El usuario no es de tipo Restaurante o Admin, o es un Restaurante intentando crear un producto para otro restaurante</response>
+        /// <response code="404">Bad Request. Puede ser por imagen nula</response>
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Producto>> CreateProducto(ProductoAPIModel model)
         {
             string jsonUsuario = HttpContext.User
