@@ -1,11 +1,23 @@
+using Azure.Security.KeyVault.Secrets;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.DependencyInjection;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAzureClients(factory =>
+{
+    factory.AddSecretClient
+        (builder.Configuration.GetSection("KeyVault"));
+});
+
+SecretClient secretClient = builder.Services.BuildServiceProvider()
+    .GetService<SecretClient>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -23,15 +35,17 @@ builder.Services.AddHttpClient();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
-string cacheRedisKeys =
-    builder.Configuration.GetValue<string>("AzureKeys:CacheRedis");
+KeyVaultSecret secretCacheRedis = await secretClient.GetSecretAsync("CacheRedisKey");
+string cacheRedisKey = secretCacheRedis.Value;
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = cacheRedisKeys;
+    options.Configuration = cacheRedisKey;
 });
 
-string connectionString = builder.Configuration.GetConnectionString("SqlServer");
-builder.Services.AddTransient<IServiceRestaurantes, ServiceApiRestaurantes>();
+KeyVaultSecret secretConnectionString = await secretClient.GetSecretAsync("SqlAzure");
+string connectionString = secretConnectionString.Value;
+builder.Services.AddTransient<IServiceRestaurantes, ServiceApiRestaurantes>
+    (s => new ServiceApiRestaurantes(secretClient, s.GetRequiredService<HelperCryptography>(), s.GetRequiredService<IHttpContextAccessor>(), s.GetRequiredService<RestaurantesContext>(), s.GetRequiredService<ServiceStorageBlobs>()));
 builder.Services.AddTransient<ServiceStorageBlobs>();
 builder.Services.AddTransient<ServiceCacheRedis>();
 builder.Services.AddDbContext<RestaurantesContext>
@@ -40,14 +54,16 @@ builder.Services.AddDbContext<RestaurantesContext>
 builder.Services.AddTransient<HelperMails>();
 builder.Services.AddSingleton<HelperCryptography>();
 
-string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
+KeyVaultSecret secretGoogleApi = await secretClient.GetSecretAsync("GoogleApiKey");
+string googleApiKey = secretGoogleApi.Value;
 builder.Services.AddTransient<HelperGoogleApiDirections>
     (h => new HelperGoogleApiDirections(googleApiKey, h.GetRequiredService<IHttpClientFactory>()));
 
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
-string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
-BlobServiceClient blobServiceClient = new BlobServiceClient(azureKeys);
+KeyVaultSecret secretStorageAccount = await secretClient.GetSecretAsync("StorageAccountKey");
+string storageAccountKey = secretStorageAccount.Value;
+BlobServiceClient blobServiceClient = new BlobServiceClient(storageAccountKey);
 builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
 
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);

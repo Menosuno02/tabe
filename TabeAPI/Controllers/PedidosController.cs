@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoASPNET;
@@ -11,10 +13,12 @@ namespace TabeAPI.Controllers
     public class PedidosController : ControllerBase
     {
         private RepositoryRestaurantes repo;
+        private TelemetryClient telemetryClient;
 
-        public PedidosController(RepositoryRestaurantes repo)
+        public PedidosController(RepositoryRestaurantes repo, TelemetryClient telemetryClient)
         {
             this.repo = repo;
+            this.telemetryClient = telemetryClient;
         }
 
         // GET: api/Pedidos/GetPedidosUsuario
@@ -86,7 +90,19 @@ namespace TabeAPI.Controllers
                 .FindFirst(x => x.Type == "UserData").Value;
             Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
             if (usuario.TipoUsuario != 3)
-                return await this.repo.CreatePedidoAsync(usuario.IdUsuario, idrestaurante, cesta);
+            {
+                Pedido pedido = await this.repo.CreatePedidoAsync(usuario.IdUsuario, idrestaurante, cesta);
+                List<ProductoPedidoView> productos = await this.repo.GetProductosPedidoViewAsync(new List<int> { pedido.IdPedido });
+                this.telemetryClient.TrackEvent("NuevoPedido");
+                MetricTelemetry metric = new MetricTelemetry();
+                metric.Name = "Nuevo pedido";
+                metric.Sum = (double)productos.Sum(p => p.Cantidad * p.Precio);
+                this.telemetryClient.TrackMetric(metric);
+                string mensaje = usuario.Correo + ": " + metric.Sum + "€";
+                TraceTelemetry traza = new TraceTelemetry(mensaje, SeverityLevel.Information);
+                this.telemetryClient.TrackTrace(traza);
+                return pedido;
+            }
             return Unauthorized();
         }
     }

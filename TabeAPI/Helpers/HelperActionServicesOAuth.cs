@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Azure.Security.KeyVault.Secrets;
 
 namespace TabeAPI.Helpers
 {
@@ -9,14 +10,22 @@ namespace TabeAPI.Helpers
     {
         public string Issuer { get; set; }
         public string Audience { get; set; }
-        private string SecretKey { get; set; }
+        public string SecretKey { get; set; }
+        private SecretClient secretClient;
 
         public HelperActionServicesOAuth
-            (IConfiguration configuration)
+            (SecretClient secretClient)
         {
-            this.Issuer = configuration.GetValue<string>("ApiOAuth:Issuer");
-            this.Audience = configuration.GetValue<string>("ApiOAuth:Audience");
-            this.SecretKey = configuration.GetValue<string>("ApiOAuth:SecretKey");
+            this.secretClient = secretClient;
+            Task.Run(async () =>
+            {
+                KeyVaultSecret secretIssuer = await this.secretClient.GetSecretAsync("Issuer");
+                this.Issuer = secretIssuer.Value;
+                KeyVaultSecret secretAudience = await this.secretClient.GetSecretAsync("Audience");
+                this.Audience = secretAudience.Value;
+                KeyVaultSecret secretKey = await this.secretClient.GetSecretAsync("SecretKey");
+                this.SecretKey = secretKey.Value;
+            });
         }
 
         public SymmetricSecurityKey GetKeyToken()

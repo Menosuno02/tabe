@@ -6,29 +6,40 @@ using TabeAPI.Helpers;
 using NSwag.Generation.Processors.Security;
 using NSwag;
 using Azure.Storage.Blobs;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAzureClients(factory =>
+{
+    factory.AddSecretClient
+        (builder.Configuration.GetSection("KeyVault"));
+});
+SecretClient secretClient = builder.Services.BuildServiceProvider().GetService<SecretClient>();
+
+
 builder.Services.AddHttpClient();
 
-HelperActionServicesOAuth helper =
-    new HelperActionServicesOAuth(builder.Configuration);
+HelperActionServicesOAuth helper = new HelperActionServicesOAuth(secretClient);
 builder.Services
     .AddSingleton<HelperActionServicesOAuth>(helper);
 builder.Services.AddAuthentication
     (helper.GetAuthenticateSchema()).AddJwtBearer(helper.GetJwtBearerOptions());
 
-string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
-BlobServiceClient blobServiceClient = new BlobServiceClient(azureKeys);
+KeyVaultSecret secretStorageAccount = await secretClient.GetSecretAsync("StorageAccountKey");
+string storageAccountKey = secretStorageAccount.Value;
+BlobServiceClient blobServiceClient = new BlobServiceClient(storageAccountKey);
 builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
 
-string connectionString =
-    builder.Configuration.GetConnectionString("SqlAzure");
+KeyVaultSecret secretConnectionString = await secretClient.GetSecretAsync("SqlAzure");
+string connectionString = secretConnectionString.Value;
 builder.Services.AddTransient<RepositoryRestaurantes>();
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
-string googleApiKey = builder.Configuration.GetValue<string>("GoogleApiKey");
+KeyVaultSecret secretGoogleApiKey = await secretClient.GetSecretAsync("GoogleApiKey");
+string googleApiKey = secretGoogleApiKey.Value;
 builder.Services.AddTransient
     (h => new HelperGoogleApiDirections(googleApiKey, h.GetRequiredService<IHttpClientFactory>()));
 

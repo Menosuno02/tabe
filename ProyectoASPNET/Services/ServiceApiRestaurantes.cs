@@ -6,6 +6,7 @@ using TabeNuget;
 using ProyectoASPNET.Helpers;
 using ProyectoASPNET.Data;
 using Microsoft.EntityFrameworkCore;
+using Azure.Security.KeyVault.Secrets;
 
 namespace ProyectoASPNET.Services
 {
@@ -18,17 +19,21 @@ namespace ProyectoASPNET.Services
         private IHttpContextAccessor httpContextAccessor;
         private RestaurantesContext context;
         private ServiceStorageBlobs serviceBlobs;
+        private SecretClient secretClient;
 
         public ServiceApiRestaurantes
-            (IConfiguration configuration,
+            (SecretClient secretClient,
             HelperCryptography helperCryptography,
             IHttpContextAccessor httpContextAccessor,
             RestaurantesContext context,
             ServiceStorageBlobs serviceBlobs)
         {
-            this.UrlApi = configuration.GetValue<string>("ApiUrls:TabeApi");
+            this.secretClient = secretClient;
+            KeyVaultSecret secretTabeAPI = this.secretClient.GetSecret("TabeAPI");
+            this.UrlApi = secretTabeAPI.Value;
+            KeyVaultSecret secretEncrypt = this.secretClient.GetSecret("EncryptKey");
+            this.EncryptKey = secretEncrypt.Value;
             this.Header = new MediaTypeWithQualityHeaderValue("application/json");
-            this.EncryptKey = configuration.GetValue<string>("EncryptKey");
             this.helperCryptography = helperCryptography;
             this.httpContextAccessor = httpContextAccessor;
             this.context = context;
