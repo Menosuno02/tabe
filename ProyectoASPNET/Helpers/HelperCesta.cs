@@ -16,6 +16,7 @@ namespace ProyectoASPNET.Helpers
             this.service = service;
         }
 
+        /*
         public List<ProductoCesta> GetCesta()
         {
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
@@ -143,5 +144,6 @@ namespace ProyectoASPNET.Helpers
             }
             return null;
         }
+        */
     }
 }

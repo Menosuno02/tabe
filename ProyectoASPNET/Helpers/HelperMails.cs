@@ -15,6 +15,7 @@ namespace ProyectoASPNET.Helpers
             this.secretClient = secretClient;
         }
 
+        /*
         private async Task<MailMessage> ConfigureMailMessage
             (string para, string asunto, string mensaje)
         {
@@ -62,5 +63,6 @@ namespace ProyectoASPNET.Helpers
             SmtpClient smtpClient = await ConfigureSmtpClient();
             await smtpClient.SendMailAsync(mail);
         }
+        */
     }
 }
