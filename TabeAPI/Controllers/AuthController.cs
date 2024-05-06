@@ -14,7 +14,6 @@ namespace TabeAPI.Controllers
     public class AuthController : ControllerBase
     {
         private RepositoryRestaurantes repo;
-
         private HelperActionServicesOAuth helper;
 
         public AuthController(RepositoryRestaurantes repo, HelperActionServicesOAuth helper)

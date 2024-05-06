@@ -47,6 +47,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(this.UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, MaxAge = TimeSpan.Zero };
                 string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
@@ -69,6 +70,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(this.UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, MaxAge = TimeSpan.Zero };
                 client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
                 HttpResponseMessage response = await client.GetAsync(request);
                 if (response.IsSuccessStatusCode)
@@ -108,6 +110,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, MaxAge = TimeSpan.Zero };
                 string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
@@ -140,6 +143,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, MaxAge = TimeSpan.Zero };
                 string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
@@ -322,6 +326,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, MaxAge = TimeSpan.Zero };
                 string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
@@ -352,6 +357,7 @@ namespace ProyectoASPNET.Services
                 client.BaseAddress = new Uri(UrlApi);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue { NoCache = true, MaxAge = TimeSpan.Zero };
                 string token = httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == "TOKEN").Value;
                 token = helperCryptography.DecryptString(this.EncryptKey, token);
                 if (token != null)
