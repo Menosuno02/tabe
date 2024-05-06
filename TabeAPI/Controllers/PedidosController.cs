@@ -76,7 +76,7 @@ namespace TabeAPI.Controllers
         /// <remarks>
         /// Permite crear un nuevo pedido con el ID del restaurante y un conjunto de productos
         /// </remarks>
-        /// <param name="idrestaurante">ID del pedido e ID del estado</param>
+        /// <param name="idrestaurante">ID del restaurante</param>
         /// <response code="200">Devuelve el nuevo pedido</response>
         /// <response code="401">No autorizado. El usuario no es de tipo Usuario o Admin</response>
         [HttpPost]

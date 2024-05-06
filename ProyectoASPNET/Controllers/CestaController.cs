@@ -12,17 +12,20 @@ namespace ProyectoASPNET.Controllers
         private IServiceRestaurantes service;
         private ServiceCacheRedis serviceRedis;
         private HelperMails helperMails;
+        private ServiceLogicApps serviceLogicApps;
         private string UrlBlobProductos;
 
         public CestaController
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
             HelperMails helperMails,
+            ServiceLogicApps serviceLogicApps,
             IConfiguration configuration)
         {
             this.service = service;
             this.serviceRedis = serviceRedis;
             this.helperMails = helperMails;
+            this.serviceLogicApps = serviceLogicApps;
             UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
         }
 
@@ -86,7 +89,8 @@ namespace ProyectoASPNET.Controllers
                     $"</div>" +
                     $"</p>" +
                     $"</div>";
-                await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+                // await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+                await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await serviceRedis.GetDatosCesta();

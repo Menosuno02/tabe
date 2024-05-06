@@ -54,6 +54,20 @@
     <script src="~/js/datepicker.min.js"></script>
     <script src="~/js/flowbite.js"></script>
     <script src="~/js/tailwind.js"></script>
+    <script src="~/js/signalr.js"></script>
+    <script>
+        function connectToSignalR() {
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/estadoPedidoHub")
+                .build();
+            connection.start().then(() => {
+                console.log("SignalR connection established!");
+            }).catch(err => {
+                console.error("Error establishing connection:", err);
+            });
+            return connection;
+        }
+    </script>
     @await RenderSectionAsync("scripts", false)
 </body>
 

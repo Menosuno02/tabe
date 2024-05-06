@@ -6,6 +6,7 @@ using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.DependencyInjection;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Hubs;
 using ProyectoASPNET.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,10 @@ builder.Services.AddHttpClient();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
+KeyVaultSecret secretSignalR = await secretClient.GetSecretAsync("SignalRKey");
+string signalRKey = secretSignalR.Value;
+builder.Services.AddSignalR().AddAzureSignalR(signalRKey);
+
 KeyVaultSecret secretCacheRedis = await secretClient.GetSecretAsync("CacheRedisKey");
 string cacheRedisKey = secretCacheRedis.Value;
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -48,6 +53,7 @@ builder.Services.AddTransient<IServiceRestaurantes, ServiceApiRestaurantes>
     (s => new ServiceApiRestaurantes(secretClient, s.GetRequiredService<HelperCryptography>(), s.GetRequiredService<IHttpContextAccessor>(), s.GetRequiredService<RestaurantesContext>(), s.GetRequiredService<ServiceStorageBlobs>()));
 builder.Services.AddTransient<ServiceStorageBlobs>();
 builder.Services.AddTransient<ServiceCacheRedis>();
+builder.Services.AddTransient<ServiceLogicApps>();
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
@@ -86,5 +92,6 @@ app.UseMvc(routes =>
         name: "default",
         template: "{controller=Home}/{action=Index}");
 });
+app.MapHub<EstadoPedidoHub>("/estadoPedidoHub");
 
 app.Run();

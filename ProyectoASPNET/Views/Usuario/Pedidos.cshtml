@@ -15,7 +15,10 @@
                     <button type="button"
                             class="text-gray-500 border-b-0 border-gray-200 flex w-full items-center justify-between gap-3 rounded-t-xl border p-5 font-medium hover:bg-purple-100 focus:ring-4 focus:ring-purple-200 rtl:text-right"
                             data-accordion-target="#accordion-color-body-@pedido.IdPedido" aria-expanded="true" aria-controls="accordion-color-body-@pedido.IdPedido">
-                        <span>Pedido #@pedido.IdPedido (ESTADO: @productos.FirstOrDefault(p => p.IdPedido == pedido.IdPedido).Estado)</span>
+                        <span>
+                            Pedido #@pedido.IdPedido (ESTADO:
+                            <span id="estadopedido-@pedido.IdPedido">@productos.FirstOrDefault(p => p.IdPedido == pedido.IdPedido).Estado</span>)
+                        </span>
                         <svg data-accordion-icon class="shrink-0 h-3 w-3 rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
                         </svg>
@@ -71,3 +74,15 @@
         <h2 class="text-gray-900 mb-4 mt-2 text-xl font-bold">No tienes pedidos por entregar</h2>
     }
 </div>
+
+@section scripts {
+    <script>
+        const userConnection = connectToSignalR();
+        userConnection.on("orderStatusUpdated", (idpedido, estado) => {
+            const orderStatusElement = document.getElementById(`estadopedido-${idpedido}`);
+            if (orderStatusElement) {
+                orderStatusElement.textContent = estado;
+            }
+        });
+    </script>
+}

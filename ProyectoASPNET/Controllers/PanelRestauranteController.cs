@@ -4,6 +4,9 @@ using ProyectoASPNET.Filters;
 using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
+using Microsoft.AspNetCore.SignalR;
+using ProyectoASPNET.Hubs;
+using StackExchange.Redis;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -11,11 +14,13 @@ namespace ProyectoASPNET.Controllers
     {
         private IServiceRestaurantes service;
         private string UrlBlobProductos;
+        private readonly IHubContext<EstadoPedidoHub> _hubContext;
 
-        public PanelRestauranteController(IServiceRestaurantes service, IConfiguration configuration)
+        public PanelRestauranteController(IServiceRestaurantes service, IConfiguration configuration, IHubContext<EstadoPedidoHub> hubContext)
         {
             this.service = service;
             UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
+            _hubContext = hubContext;
         }
 
         [AuthorizeUser]
@@ -51,6 +56,8 @@ namespace ProyectoASPNET.Controllers
         public async Task<IActionResult> _PedidosRestaurante(int idpedido, int estado)
         {
             await this.service.UpdateEstadoPedidoAsync(idpedido, estado);
+            List<EstadoPedido> estados = await this.service.GetEstadoPedidosAsync();
+            await _hubContext.Clients.All.SendAsync("orderStatusUpdated", idpedido, estados.FirstOrDefault(e => e.IdEstado == estado).NombreEstado);
             return RedirectToAction("Index", new { nomvista = "_PedidosRestaurante" });
         }
 
