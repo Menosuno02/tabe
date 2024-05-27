@@ -10,6 +10,7 @@
     <Authors>Alejandro López Labajo, Menosuno02</Authors>
     <Description>Nuget con los modelos de Tabe</Description>
     <PackageIcon>a1.png</PackageIcon>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
