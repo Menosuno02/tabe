@@ -13,9 +13,10 @@ namespace ProyectoASPNET.Controllers
         private ServiceCacheRedis serviceRedis;
         private HelperMails helperMails;
         private ServiceLogicApps serviceLogicApps;
-        private string UrlBlobProductos;
+
 
         public CestaController
+
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
             HelperMails helperMails,
@@ -26,18 +27,19 @@ namespace ProyectoASPNET.Controllers
             this.serviceRedis = serviceRedis;
             this.helperMails = helperMails;
             this.serviceLogicApps = serviceLogicApps;
-            UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
+
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             CestaView cestaView = await this.serviceRedis.GetDatosCesta();
-            cestaView.Cesta.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return View(cestaView);
         }
 
@@ -55,6 +57,7 @@ namespace ProyectoASPNET.Controllers
                 Pedido pedido = await this.serviceRedis.CreatePedido();
                 List<ProductoPedidoView> productosPedido = await this.service.GetProductosPedidoViewAsync(new List<int> { pedido.IdPedido });
                 string mensaje = "<h1 style=\"color: #6D28D9; margin-bottom:0px;\">Pedido realizado con éxito</h3>";
+
                 mensaje += $"<div style=\"padding: 1.25rem; border-width: 1px; border-bottom-width: 0; border-color: #E5E7EB; \">" +
                     $"<p style=\"margin-bottom: 0.5rem; color: #4B5563; \"><span style=\"font-size: 1.5rem;line-height: 2rem; color: #374151; \">" +
                     $"<span style=\"font-weight: 700; \">{productosPedido.FirstOrDefault().Restaurante}</span>" +
@@ -70,6 +73,7 @@ namespace ProyectoASPNET.Controllers
                     $"</tr>" +
                     $"</thead>" +
                     $"<tbody>";
+
                 foreach (ProductoPedidoView producto in productosPedido)
                 {
                     decimal total = producto.Cantidad * producto.Precio;
@@ -90,21 +94,26 @@ namespace ProyectoASPNET.Controllers
                     $"</p>" +
                     $"</div>";
                 // await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+
+#pragma warning disable CS8604 // Possible null reference argument.
                 await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+#pragma warning restore CS8604 // Possible null reference argument.
+
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await serviceRedis.GetDatosCesta();
-            cestaView.Cesta.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return View(cestaView);
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> UpdateCesta(int idproducto, int cantidad)
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             await this.serviceRedis.UpdateProductoCesta(idproducto, cantidad);
             return RedirectToAction("Index");
         }

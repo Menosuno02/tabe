@@ -8,6 +8,7 @@ using NSwag;
 using Azure.Storage.Blobs;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Azure;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,8 +45,6 @@ builder.Services.AddTransient
     (h => new HelperGoogleApiDirections(googleApiKey, h.GetRequiredService<IHttpClientFactory>()));
 
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

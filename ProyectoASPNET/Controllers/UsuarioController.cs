@@ -18,7 +18,9 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Perfil()
         {
+
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             Usuario usu = await this.service.FindUsuarioAsync(idusuario);
             return View(usu);
         }
@@ -35,10 +37,12 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Pedidos()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             List<Pedido> pedidos = await this.service.GetPedidosUsuarioAsync();
             List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
             ViewData["PRODUCTOS"] = await this.service.GetProductosPedidoViewAsync(idPedidos);
@@ -46,7 +50,9 @@ namespace ProyectoASPNET.Controllers
         }
 
         [AuthorizeUser]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<IActionResult> ModificarContrasenya()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             return View();
         }

@@ -13,11 +13,12 @@ namespace TabeNuget
         public string EncryptKey { get; set; }
         public string GoogleApiKey { get; set; }
         public string Issuer { get; set; }
-        public string MySql { get; set; }
         public string SecretKey { get; set; }
         public string SignalRKey { get; set; }
-        public string StorageAccountKey { get; set; }
+        public string MySql { get; set; }
         public string TabeAPI { get; set; }
         public string TabeMailPass { get; set; }
+        public string BucketName { get; set; }
+        public string BucketUrl { get; set; }
     }
 }

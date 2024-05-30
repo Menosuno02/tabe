@@ -20,9 +20,12 @@ namespace ProyectoASPNET.Controllers
 
         public IActionResult CheckRoutes()
         {
+
             if (HttpContext.User.Identity.IsAuthenticated)
             {
+
                 int tipoUsuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.Role).Value);
+
                 if (tipoUsuario == 1)
                     return RedirectToAction("Index", "Restaurantes");
                 else if (tipoUsuario == 2)
@@ -32,14 +35,17 @@ namespace ProyectoASPNET.Controllers
                 else return RedirectToAction("Logout", "Auth");
             }
             else return RedirectToAction("Logout", "Auth"); // redirige al login
+
         }
 
         public IActionResult Login(bool? passwordchanged)
         {
+
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("CheckRoutes");
             }
+
             if (passwordchanged != null)
                 ViewData["MENSAJE"] = "Contraseña";
             return View();
@@ -58,7 +64,9 @@ namespace ProyectoASPNET.Controllers
                 identity.AddClaim(new Claim(ClaimTypes.Name, usuario.Correo));
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()));
                 identity.AddClaim(new Claim(ClaimTypes.Role, usuario.TipoUsuario.ToString()));
+#pragma warning disable CS8604 // Possible null reference argument.
                 identity.AddClaim(new Claim("TOKEN", HttpContext.Session.GetString("TOKEN")));
+#pragma warning restore CS8604 // Possible null reference argument.
                 ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync
                     (CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
@@ -81,10 +89,12 @@ namespace ProyectoASPNET.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Usuario usuario, string contrasenya, string provincia)
         {
+
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("CheckRoutes");
             }
+
             usuario.Direccion += ", " + provincia;
             Usuario user = await this.service.RegisterUsuarioAsync(usuario, contrasenya);
             return RedirectToAction("Login");

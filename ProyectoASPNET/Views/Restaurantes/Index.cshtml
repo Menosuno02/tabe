@@ -1,6 +1,7 @@
 ﻿@{
     List<CategoriaRestaurante> categorias = ViewData["CATEGORIAS"] as List<CategoriaRestaurante>;
     string baseUri = Context.Request.Scheme + "://" + Context.Request.Host;
+    string pathcategorias = "categoriasrestaurantes/";
 }
 
 <div class="p-6 sm:px-4">
@@ -14,8 +15,8 @@
                                name="categoria"
                                value="Todas"
                                class="sr-only" />
-                        <img class="bg-violet-700 bg-opacity-20 rounded-full" src="~/images/categ_restaurantes/todas.png" />
-                        <span class="text-categoria text-violet-700 font-bold">Todas</span>
+                        <img class="bg-opacity-20 rounded-full bg-violet-700" src="~/images/categ_restaurantes/todas.png" />
+                        <span class="text-categoria font-bold text-violet-700">Todas</span>
                     </label>
                     @foreach (CategoriaRestaurante categoria in categorias)
                     {
@@ -26,7 +27,7 @@
                                    value="@categoria.Nombre"
                                    class="sr-only" />
                             @* <img src="~/images/categ_restaurantes/@categoria.IconoCategoria" /> *@
-                            <img src="@categoria.IconoCategoria" />
+                            <img src="@keys.BucketUrl@pathcategorias@categoria.IconoCategoria" />
                             <span class="text-categoria">@categoria.Nombre</span>
                         </label>
                     }
@@ -36,15 +37,15 @@
         <div class="mx-auto flex w-11/12 flex-wrap lg:w-11/12 md:w-10/12">
             <div class="w-[49%] relative mx-auto mt-4">
                 <div class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3">
-                    <svg class="text-gray-500 h-4 w-4 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <svg class="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                     </svg>
                 </div>
-                <input type="search" value="" name="searchquery" class="text-gray-900 border-gray-300 bg-gray-50 block w-full rounded-lg border p-4 ps-10 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Busca restaurantes" />
+                <input type="search" value="" name="searchquery" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500" placeholder="Busca restaurantes" />
             </div>
             <div class="w-[49%] mx-auto mt-3">
                 <select id="selectOrden" name="idrestaurante"
-                        class="border-gray-300 text-gray-700 mt-1 w-full rounded-lg p-2 py-3.5 shadow-sm focus:ring focus:outline-none sm:py-4 sm:text-sm">
+                        class="mt-1 w-full rounded-lg border-gray-300 p-2 py-3.5 text-gray-700 shadow-sm focus:ring focus:outline-none sm:py-4 sm:text-sm">
                     <option value="valoracion">Ordenar por valoración</option>
                     <option value="distancia">Ordenar por tiempo estimado</option>
                 </select>

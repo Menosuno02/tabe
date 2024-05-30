@@ -13,23 +13,26 @@ namespace ProyectoASPNET.Controllers
     public class PanelRestauranteController : Controller
     {
         private IServiceRestaurantes service;
-        private string UrlBlobProductos;
         private readonly IHubContext<EstadoPedidoHub> _hubContext;
 
+
         public PanelRestauranteController(IServiceRestaurantes service, IConfiguration configuration, IHubContext<EstadoPedidoHub> hubContext)
+
         {
             this.service = service;
-            UrlBlobProductos = configuration.GetValue<string>("BlobUrls:UrlProductos");
+
             _hubContext = hubContext;
         }
 
         [AuthorizeUser]
         public IActionResult Index(string? nomvista)
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             if (nomvista != null)
             {
                 ViewData["NOMVISTA"] = nomvista;
@@ -40,10 +43,12 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _PedidosRestaurante()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             List<Pedido> pedidos = await this.service.GetPedidosRestauranteAsync();
             List<int> idPedidos = pedidos.Select(p => p.IdPedido).ToList();
             ViewData["PRODUCTOS"] = await this.service.GetProductosPedidoViewAsync(idPedidos);
@@ -57,17 +62,21 @@ namespace ProyectoASPNET.Controllers
         {
             await this.service.UpdateEstadoPedidoAsync(idpedido, estado);
             List<EstadoPedido> estados = await this.service.GetEstadoPedidosAsync();
+
             await _hubContext.Clients.All.SendAsync("orderStatusUpdated", idpedido, estados.FirstOrDefault(e => e.IdEstado == estado).NombreEstado);
+
             return RedirectToAction("Index", new { nomvista = "_PedidosRestaurante" });
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> _EditRestaurante()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             ViewData["CATEGORIAS"] = await this.service.GetCategoriasRestaurantesAsync();
             return PartialView("_EditRestaurante", rest);
@@ -85,25 +94,28 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _ProductosRestaurante()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             List<Producto> productos;
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             productos = await this.service.GetProductosRestauranteAsync(rest.IdRestaurante);
             ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
-            productos.ForEach(p => p.Imagen = UrlBlobProductos + p.Imagen);
             return PartialView("_ProductosRestaurante", productos);
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> _CreateProducto()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             ViewData["CATEGORIAS"] = await this.service.GetCategoriasProductosAsync(rest.IdRestaurante);
             return PartialView("_CreateProducto", rest);
@@ -121,22 +133,25 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _DetailsProducto(int idprod)
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             Producto prod = await this.service.FindProductoAsync(idprod);
-            prod.Imagen = UrlBlobProductos + prod.Imagen;
             return PartialView("_DetailsProducto", prod);
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> _EditProducto(int idprod)
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             Producto prod = await this.service.FindProductoAsync(idprod);
             ViewData["CATEGORIAS"] = await this.service.GetCategoriasProductosAsync(prod.IdRestaurante);
             return PartialView("_EditProducto", prod);
@@ -154,10 +169,12 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> DeleteProducto(int id)
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             await this.service.DeleteProductoAsync(id);
             return RedirectToAction("Index", new { nomvista = "_ProductosRestaurante" });
         }
@@ -165,14 +182,15 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> _CategoriasRestaurante()
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             Restaurante rest = await this.service.GetRestauranteFromLoggedUserAsync();
             List<CategoriaProducto> categorias = await this.service.GetCategoriasProductosAsync(rest.IdRestaurante);
             ViewData["IDRESTAURANTE"] = rest.IdRestaurante;
-            ViewData["BLOBURL"] = UrlBlobProductos;
             return PartialView("_CategoriasRestaurante", categorias);
         }
 
@@ -189,10 +207,12 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> DeleteCategoriaProducto(int idcategoria)
         {
+
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "3")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
+
             await this.service.DeleteCategoriaProductoAsync(idcategoria);
             return RedirectToAction("Index", new { nomvista = "_CategoriasRestaurante" });
         }

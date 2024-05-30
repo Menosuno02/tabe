@@ -7,13 +7,21 @@ namespace ProyectoASPNET.Extensions
         public static T GetObject<T>
             (this ISession session, string key)
         {
+
             string json = session.GetString(key);
+
             if (json == null)
             {
+
                 return default(T);
+
             }
+
             T data = JsonConvert.DeserializeObject<T>(json);
+
+
             return data;
+
         }
 
         public static void SetObject

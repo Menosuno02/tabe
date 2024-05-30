@@ -4,36 +4,49 @@ using ProyectoASPNET.Helpers;
 using TabeNuget;
 using StackExchange.Redis;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace ProyectoASPNET.Services
 {
     public class ServiceCacheRedis
     {
-        private IDatabase database;
         private IHttpContextAccessor httpContextAccessor;
         private IServiceRestaurantes service;
+        private IDistributedCache cache;
 
-        public ServiceCacheRedis(IHttpContextAccessor httpContextAccessor, IServiceRestaurantes service)
+        public ServiceCacheRedis(IDistributedCache cache, IHttpContextAccessor httpContextAccessor, IServiceRestaurantes service)
         {
-            this.database = HelperCacheMultiplexer.Connection.GetDatabase();
+            this.cache = cache;
             this.httpContextAccessor = httpContextAccessor;
             this.service = service;
         }
 
         public async Task<List<ProductoCesta>> GetCesta()
         {
+
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
+
             int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            string json = await this.database.StringGetAsync("cesta" + id);
+
+
+            string json = await this.cache.GetStringAsync("cesta" + id);
+
             if (json == null)
+
                 return null;
+
             else
+
                 return JsonConvert.DeserializeObject<List<ProductoCesta>>(json);
+
         }
 
         public async Task<CestaView> GetDatosCesta()
         {
+
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
             decimal total = 0;
             List<ProductoCestaView> cestaView = new List<ProductoCestaView>();
             List<ProductoCesta> cesta = await GetCesta();
@@ -44,9 +57,11 @@ namespace ProyectoASPNET.Services
                     await this.service.FindListProductosAsync(ids);
                 foreach (Producto producto in productos)
                 {
+
                     int cantidad = cesta
                         .FirstOrDefault(p => p.IdProducto == producto.IdProducto)
                         .Cantidad;
+
                     cestaView.Add(new ProductoCestaView
                     {
                         IdProducto = producto.IdProducto,
@@ -58,7 +73,9 @@ namespace ProyectoASPNET.Services
                     total += producto.Precio * cantidad;
                 }
             }
+
             int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             Usuario usuario = await this.service.FindUsuarioAsync(id);
             return new CestaView
             {
@@ -72,16 +89,20 @@ namespace ProyectoASPNET.Services
 
         public async Task UpdateCesta(ProductoCesta prod)
         {
+
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
+
             int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
             if (await GetCesta() == null)
             {
                 List<ProductoCesta> cesta = new List<ProductoCesta> { prod };
                 string json = JsonConvert.SerializeObject(cesta);
-                await this.database.StringSetAsync("cesta" + id, json);
+                await this.cache.SetStringAsync("cesta" + id, json);
                 Producto productoPivot = await this.service.FindProductoAsync(prod.IdProducto);
                 json = JsonConvert.SerializeObject(productoPivot.IdRestaurante);
-                await this.database.StringSetAsync("restaurante" + id, json);
+                await this.cache.SetStringAsync("restaurante" + id, json);
             }
             else
             {
@@ -94,12 +115,14 @@ namespace ProyectoASPNET.Services
                 }
                 else
                 {
+
                     cesta
                         .FirstOrDefault(p => p.IdProducto == prod.IdProducto)
                         .Cantidad += prod.Cantidad;
+
                 }
                 string json = JsonConvert.SerializeObject(cesta);
-                await this.database.StringSetAsync("cesta" + id, json);
+                await this.cache.SetStringAsync("cesta" + id, json);
             }
         }
 
@@ -107,8 +130,12 @@ namespace ProyectoASPNET.Services
         {
             if (await GetCesta() != null)
             {
+
                 HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
+
                 int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
                 List<ProductoCesta> cesta = await GetCesta();
                 cesta.RemoveAll(p => p.IdProducto == idproducto);
                 if (cesta.Count() == 0)
@@ -116,7 +143,7 @@ namespace ProyectoASPNET.Services
                 else
                 {
                     string json = JsonConvert.SerializeObject(cesta);
-                    await this.database.StringSetAsync("cesta" + id, json);
+                    await this.cache.SetStringAsync("cesta" + id, json);
                 }
             }
         }
@@ -127,14 +154,20 @@ namespace ProyectoASPNET.Services
                 await DeleteProductoCesta(idproducto);
             else
             {
+
                 HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
+
                 int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
                 List<ProductoCesta> cesta = await GetCesta();
+
                 cesta
                     .FirstOrDefault(p => p.IdProducto == idproducto)
                     .Cantidad = cantidad;
+
                 string json = JsonConvert.SerializeObject(cesta);
-                await this.database.StringSetAsync("cesta" + id, json);
+                await this.cache.SetStringAsync("cesta" + id, json);
             }
         }
 
@@ -142,25 +175,39 @@ namespace ProyectoASPNET.Services
         {
             if (await GetCesta() != null)
             {
+
                 HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
+
                 int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
                 List<ProductoCesta> cesta = await GetCesta();
-                string json = await this.database.StringGetAsync("restaurante" + id);
+
+                string json = await this.cache.GetStringAsync("restaurante" + id);
+
+#pragma warning disable CS8604 // Possible null reference argument.
                 int idrestaurante = JsonConvert.DeserializeObject<int>(json);
+#pragma warning restore CS8604 // Possible null reference argument.
                 Pedido pedido =
                     await this.service.CreatePedidoAsync(idrestaurante, cesta);
                 await ResetCesta();
                 return pedido;
             }
+
             return null;
+
         }
 
         public async Task ResetCesta()
         {
+
             HttpContext httpContext = this.httpContextAccessor.HttpContext;
+
+
             int id = int.Parse(httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            await this.database.KeyDeleteAsync("cesta" + id);
-            await this.database.KeyDeleteAsync("restaurante" + id);
+
+            await this.cache.RemoveAsync("cesta" + id);
+            await this.cache.RemoveAsync("restaurante" + id);
         }
     }
 }

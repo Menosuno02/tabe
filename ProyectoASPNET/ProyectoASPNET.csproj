@@ -9,6 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.300" />
+		<PackageReference Include="AWSSDK.S3" Version="3.7.308.6" />
 		<PackageReference Include="AWSSDK.SecretsManager" Version="3.7.303.4" />
 		<PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.6.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
