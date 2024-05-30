@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ProyectoASPNET.Data;
 using ProyectoASPNET.Helpers;
+using ProyectoASPNET.Hubs;
 using ProyectoASPNET.Services;
 using TabeNuget;
 
@@ -60,10 +61,8 @@ builder.Services.AddSignalR().AddAzureSignalR(signalRKey);
 //string connectionString = secretConnectionString.Value;
 builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddTransient<ServiceStorageAWS>();
-#pragma warning disable CS8604 // Possible null reference argument.
 builder.Services.AddTransient<IServiceRestaurantes, ServiceApiRestaurantes>
     (s => new ServiceApiRestaurantes(model, s.GetRequiredService<HelperCryptography>(), s.GetRequiredService<ServiceStorageAWS>(), s.GetRequiredService<IHttpContextAccessor>(), s.GetRequiredService<RestaurantesContext>()));
-#pragma warning restore CS8604 // Possible null reference argument.
 //builder.Services.AddTransient<ServiceStorageBlobs>();
 builder.Services.AddTransient<ServiceCacheRedis>();
 builder.Services.AddTransient<ServiceLogicApps>();
@@ -73,7 +72,7 @@ string connectionString = model.MySql;
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
-//builder.Services.AddTransient<HelperMails>();
+builder.Services.AddTransient<HelperMails>();
 builder.Services.AddSingleton<HelperCryptography>();
 
 //KeyVaultSecret secretGoogleApi = await secretClient.GetSecretAsync("GoogleApiKey");
@@ -108,6 +107,6 @@ app.UseMvc(routes =>
         name: "default",
         template: "{controller=Home}/{action=Index}");
 });
-//app.MapHub<EstadoPedidoHub>("/estadoPedidoHub");
+app.MapHub<EstadoPedidoHub>("/estadoPedidoHub");
 
 app.Run();

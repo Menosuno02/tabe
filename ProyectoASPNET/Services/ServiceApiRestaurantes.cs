@@ -18,20 +18,11 @@ namespace ProyectoASPNET.Services
         private HelperCryptography helperCryptography;
         private IHttpContextAccessor httpContextAccessor;
         private RestaurantesContext context;
-
         private ServiceStorageAWS serviceStorage;
-
-
         private KeysModel keys;
 
 
-
-
-
         public ServiceApiRestaurantes
-
-
-
             (KeysModel keys,
             HelperCryptography helperCryptography,
             ServiceStorageAWS serviceStorage,
@@ -68,9 +59,7 @@ namespace ProyectoASPNET.Services
                     return data;
                 }
                 else
-
                     return default(T);
-
             }
         }
 
@@ -90,9 +79,7 @@ namespace ProyectoASPNET.Services
                     return data;
                 }
                 else
-
                     return default(T);
-
             }
         }
 

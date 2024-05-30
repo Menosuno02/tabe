@@ -13,32 +13,26 @@ namespace ProyectoASPNET.Controllers
         private ServiceCacheRedis serviceRedis;
         private HelperMails helperMails;
         private ServiceLogicApps serviceLogicApps;
-
-
         public CestaController
 
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
             HelperMails helperMails,
-            ServiceLogicApps serviceLogicApps,
-            IConfiguration configuration)
+            ServiceLogicApps serviceLogicApps)
         {
             this.service = service;
             this.serviceRedis = serviceRedis;
             this.helperMails = helperMails;
             this.serviceLogicApps = serviceLogicApps;
-
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
-
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-
             CestaView cestaView = await this.serviceRedis.GetDatosCesta();
             return View(cestaView);
         }
@@ -94,11 +88,7 @@ namespace ProyectoASPNET.Controllers
                     $"</p>" +
                     $"</div>";
                 // await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
-
-#pragma warning disable CS8604 // Possible null reference argument.
                 await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
-#pragma warning restore CS8604 // Possible null reference argument.
-
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await serviceRedis.GetDatosCesta();
@@ -108,12 +98,10 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> UpdateCesta(int idproducto, int cantidad)
         {
-
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-
             await this.serviceRedis.UpdateProductoCesta(idproducto, cantidad);
             return RedirectToAction("Index");
         }
