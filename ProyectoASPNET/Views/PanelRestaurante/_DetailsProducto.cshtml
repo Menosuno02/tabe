@@ -1,6 +1,10 @@
 ﻿@model Producto
 
 @{
+    string pathProductos = "imagproductos/";
+}
+
+@{
     Restaurante rest = await this.service.FindRestauranteAsync(Model.IdRestaurante);
     List<string> categorias = await this.service.GetCategoriasFromProductoAsync(Model.IdProducto);
 }
@@ -39,7 +43,7 @@
         </div>
         <div class="col-span-6">
             @* <img class="h-[294px] w-full rounded-xl object-cover" src="~/images/imag_productos/@Model.Imagen" /> *@
-            <img class="h-[294px] w-full rounded-xl object-cover" src="@Model.Imagen" />
+            <img class="h-[294px] w-full rounded-xl object-cover" src="@keys.BucketUrl@pathProductos@Model.Imagen" />
         </div>
     </form>
 </div>

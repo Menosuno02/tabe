@@ -1,6 +1,10 @@
 ﻿@model Restaurante
 
 @{
+    string pathRestaurantes = "imagrestaurantes/";
+}
+
+@{
     List<CategoriaRestaurante> categorias = ViewData["CATEGORIAS"] as List<CategoriaRestaurante>;
 }
 
@@ -11,7 +15,7 @@
             <form method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="idrestaurante" value="@Model.IdRestaurante" />
-                <input type="hidden" name="imagen" value="@Model.Imagen" />
+                <input type="hidden" name="imagen" value="@keys.BucketUrl@pathRestaurantes@Model.Imagen" />
                 <div class="col-span-6 sm:col-span-3">
                     <label class="text-gray-700 block text-sm font-bold">Nombre</label>
                     <input required type="text" name="nombre" value="@Model.Nombre" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />

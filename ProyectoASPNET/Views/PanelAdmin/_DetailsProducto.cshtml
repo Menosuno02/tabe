@@ -5,6 +5,10 @@
     List<string> categorias = await this.service.GetCategoriasFromProductoAsync(Model.IdProducto);
 }
 
+@{
+    string pathProductos = "imagproductos/";
+}
+
 <div class="px-8 py-6">
     <form class="grid-cols-6 grid gap-6">
         <div class="col-span-6 sm:col-span-3">
@@ -39,7 +43,7 @@
         </div>
         <div class="col-span-6">
             @* <img class="h-[294px] w-full rounded-xl object-cover" src="~/images/imag_productos/@Model.Imagen" /> *@
-            <img class="h-[294px] w-full rounded-xl object-cover" src="@Model.Imagen" />
+            <img class="h-[294px] w-full rounded-xl object-cover" src="@keys.BucketUrl@pathProductos@Model.Imagen" />
         </div>
     </form>
 </div>
