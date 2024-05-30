@@ -11,18 +11,16 @@ namespace ProyectoASPNET.Controllers
     {
         private IServiceRestaurantes service;
         private ServiceCacheRedis serviceRedis;
-        private HelperMails helperMails;
         private ServiceLogicApps serviceLogicApps;
+
         public CestaController
 
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
-            HelperMails helperMails,
             ServiceLogicApps serviceLogicApps)
         {
             this.service = service;
             this.serviceRedis = serviceRedis;
-            this.helperMails = helperMails;
             this.serviceLogicApps = serviceLogicApps;
         }
 

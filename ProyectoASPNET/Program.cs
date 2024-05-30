@@ -15,10 +15,7 @@ async Task<string> GetSecretAsync()
 {
     return await HelperSecretManager.GetSecretsAsync();
 }
-
 KeysModel model = JsonConvert.DeserializeObject<KeysModel>(secret);
-
-
 builder.Services.AddTransient<KeysModel>(x => model);
 
 
@@ -72,7 +69,6 @@ string connectionString = model.MySql;
 builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
-builder.Services.AddTransient<HelperMails>();
 builder.Services.AddSingleton<HelperCryptography>();
 
 //KeyVaultSecret secretGoogleApi = await secretClient.GetSecretAsync("GoogleApiKey");
