@@ -4,6 +4,10 @@
     List<CategoriaProducto> categorias = ViewData["CATEGORIAS"] as List<CategoriaProducto>;
 }
 
+@{
+    string pathRestaurantes = "imagrestaurantes/";
+}
+
 @using (Html.BeginForm("_CreateProducto", "PanelRestaurante", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="px-8 py-6">
@@ -36,7 +40,7 @@
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label class="text-gray-700 block text-sm font-bold">Imagen</label>
-                    <input required type="file" name="fileimagen" value="@Model.Imagen" class="file-input w-full" />
+                    <input required type="file" name="fileimagen" value="@keys.BucketUrl@pathRestaurantes@Model.Imagen" class="file-input w-full" />
                 </div>
                 <div class="col-span-6">
                     <button class="btn btn-primary w-full font-medium">

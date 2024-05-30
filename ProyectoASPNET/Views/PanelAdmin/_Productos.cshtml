@@ -1,5 +1,9 @@
 ﻿@model List<Producto>
 
+@{
+    string pathProductos = "imagproductos/";
+}
+
 <div class="p-6 sm:px-4">
     <div class="flex flex-wrap lg:px-16">
         @if (ViewData["IDRESTAURANTE"] != null)
@@ -35,7 +39,7 @@
                                     <tr>
                                         <td class="flex justify-center">
                                             @* <img src="~/images/imag_productos/@prod.Imagen" class="h-16 max-h-full w-16 rounded-3xl object-cover px-0.5 py-1.5 text-center md:w-24 md:h-24"> *@
-                                            <img src="@prod.Imagen" class="aspect-square h-16 max-h-full w-16 rounded-3xl object-cover px-0.5 py-1.5 text-center md:w-24 md:h-24">
+                                            <img src="@keys.BucketUrl@pathProductos@prod.Imagen" class="aspect-square h-16 max-h-full w-16 rounded-3xl object-cover px-0.5 py-1.5 text-center md:w-24 md:h-24">
                                         </td>
                                         <td class="text-gray-800 whitespace-nowrap px-6 py-4 text-sm">@prod.Nombre</td>
                                         <td class="text-gray-800 whitespace-nowrap px-6 py-4 text-sm">@prod.Precio€</td>

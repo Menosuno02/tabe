@@ -19,25 +19,20 @@ namespace ProyectoASPNET.Services
         private IHttpContextAccessor httpContextAccessor;
         private RestaurantesContext context;
         private ServiceStorageBlobs serviceBlobs;
-        private SecretClient secretClient;
+        private KeysModel keys;
 
         public ServiceApiRestaurantes
-            (SecretClient secretClient,
+            (KeysModel keys,
             HelperCryptography helperCryptography,
             IHttpContextAccessor httpContextAccessor,
-            RestaurantesContext context,
-            ServiceStorageBlobs serviceBlobs)
+            RestaurantesContext context)
         {
-            this.secretClient = secretClient;
-            KeyVaultSecret secretTabeAPI = this.secretClient.GetSecret("TabeAPI");
-            this.UrlApi = secretTabeAPI.Value;
-            KeyVaultSecret secretEncrypt = this.secretClient.GetSecret("EncryptKey");
-            this.EncryptKey = secretEncrypt.Value;
+            this.UrlApi = keys.TabeAPI;
+            this.EncryptKey = keys.EncryptKey;
             this.Header = new MediaTypeWithQualityHeaderValue("application/json");
             this.helperCryptography = helperCryptography;
             this.httpContextAccessor = httpContextAccessor;
             this.context = context;
-            this.serviceBlobs = serviceBlobs;
         }
 
         private async Task<T> CallApiAsync<T>(string request)

@@ -1,6 +1,10 @@
 ﻿@model Producto
 
 @{
+    string pathProductos = "imagproductos/";
+}
+
+@{
     List<CategoriaProducto> categorias = ViewData["CATEGORIAS"] as List<CategoriaProducto>;
     List<string> categProducto = await this.service.GetCategoriasFromProductoAsync(Model.IdProducto);
 }
@@ -12,7 +16,7 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="idproducto" value="@Model.IdProducto" />
                 <input type="hidden" name="idrestaurante" value="@Model.IdRestaurante" />
-                <input type="hidden" name="imagen" value="@Model.Imagen" />
+                <input type="hidden" name="imagen" value="@keys.BucketUrl@pathProductos@Model.Imagen" />
                 <div class="col-span-6">
                     <label class="text-gray-700 block text-sm font-bold">Nombre</label>
                     <input required type="text" name="nombre" value="@Model.Nombre" class="border-gray-200 bg-white text-gray-700 mt-1 w-full rounded-md text-sm shadow-sm focus:ring focus:outline-none" />
