@@ -51,6 +51,7 @@ builder.Services.AddDbContext<RestaurantesContext>
     (options => options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<HelperCryptography>();
+builder.Services.AddTransient<HelperMails>();
 
 string googleApiKey = model.GoogleApiKey;
 builder.Services.AddTransient<HelperGoogleApiDirections>
