@@ -88,8 +88,8 @@ namespace ProyectoASPNET.Controllers
                     $"</div>" +
                     $"</p>" +
                     $"</div>";
-                await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
-                // await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+                // await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+                await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await serviceRedis.GetDatosCesta();
