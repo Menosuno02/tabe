@@ -8,13 +8,11 @@ namespace ProyectoASPNET.Helpers
     public class HelperMails
     {
         private IConfiguration configuration;
-        private SecretClient secretClient;
         private string pass;
 
-        public HelperMails(IConfiguration configuration, SecretClient secretClient, KeysModel keys)
+        public HelperMails(IConfiguration configuration, KeysModel keys)
         {
             this.configuration = configuration;
-            this.secretClient = secretClient;
             this.pass = keys.TabeMailPass;
         }
 
