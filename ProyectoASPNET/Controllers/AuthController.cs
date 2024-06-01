@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
+using TabeNuget;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -32,7 +32,6 @@ namespace ProyectoASPNET.Controllers
                 else return RedirectToAction("Logout", "Auth");
             }
             else return RedirectToAction("Logout", "Auth"); // redirige al login
-
         }
 
         public IActionResult Login(bool? passwordchanged)

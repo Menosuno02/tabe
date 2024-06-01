@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
-using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
+using TabeNuget;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -12,16 +12,19 @@ namespace ProyectoASPNET.Controllers
         private IServiceRestaurantes service;
         private ServiceCacheRedis serviceRedis;
         private ServiceLogicApps serviceLogicApps;
+        private HelperMails helperMails;
 
         public CestaController
 
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
-            ServiceLogicApps serviceLogicApps)
+            ServiceLogicApps serviceLogicApps,
+            HelperMails helperMails)
         {
             this.service = service;
             this.serviceRedis = serviceRedis;
             this.serviceLogicApps = serviceLogicApps;
+            this.helperMails = helperMails;
         }
 
         [AuthorizeUser]
@@ -85,8 +88,8 @@ namespace ProyectoASPNET.Controllers
                     $"</div>" +
                     $"</p>" +
                     $"</div>";
-                // await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
-                await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+                await helperMails.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
+                // await serviceLogicApps.SendMailAsync(HttpContext.User.Identity.Name, "Pedido realizado", mensaje);
                 return RedirectToAction("Index", "Restaurantes");
             }
             CestaView cestaView = await serviceRedis.GetDatosCesta();

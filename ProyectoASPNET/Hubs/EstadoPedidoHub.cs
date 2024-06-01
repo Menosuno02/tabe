@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using ProyectoASPNET.Services;
-using StackExchange.Redis;
-using TabeNuget;
 
 namespace ProyectoASPNET.Hubs
 {

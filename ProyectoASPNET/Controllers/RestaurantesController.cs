@@ -2,9 +2,9 @@
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
-using TabeNuget;
 using ProyectoASPNET.Services;
 using System.Security.Claims;
+using TabeNuget;
 
 namespace ProyectoASPNET.Controllers
 {
@@ -14,13 +14,7 @@ namespace ProyectoASPNET.Controllers
         private ServiceCacheRedis serviceRedis;
         private HelperGoogleApiDirections helperDistanceMatrix;
 
-
-
-
         public RestaurantesController
-
-
-
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
             HelperGoogleApiDirections helperDistanceMatrix,
@@ -29,18 +23,15 @@ namespace ProyectoASPNET.Controllers
             this.service = service;
             this.serviceRedis = serviceRedis;
             this.helperDistanceMatrix = helperDistanceMatrix;
-
         }
 
         [AuthorizeUser]
         public async Task<IActionResult> Index()
         {
-
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-
             List<CategoriaRestaurante> categorias = await this.service.GetCategoriasRestaurantesAsync();
             ViewData["CATEGORIAS"] = categorias;
             return View();
@@ -57,9 +48,7 @@ namespace ProyectoASPNET.Controllers
                 restaurantes = await this.service.GetRestaurantesViewAsync(searchquery);
             ViewData["POSICION"] = posicion;
             ViewData["NUMREGISTROS"] = restaurantes.Count();
-
             int idusuario = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             Usuario usu = await this.service.FindUsuarioAsync(idusuario);
             string direccionUsu = usu.Direccion;
             var tasks = restaurantes
@@ -75,12 +64,10 @@ namespace ProyectoASPNET.Controllers
         [AuthorizeUser]
         public async Task<IActionResult> Productos(int idrestaurante)
         {
-
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-
             ProductosActionModel model = new ProductosActionModel
             {
                 Restaurante = await this.service.FindRestauranteViewAsync(idrestaurante),
@@ -134,12 +121,10 @@ namespace ProyectoASPNET.Controllers
         public async Task<IActionResult> UpdateValoracionRestaurante
             (int idrestaurante, int idusuario, int valoracion)
         {
-
             if (HttpContext.User.FindFirst(ClaimTypes.Role).Value != "1")
             {
                 return RedirectToAction("CheckRoutes", "Auth");
             }
-
             await this.service.UpdateValoracionRestauranteAsync(
                 new ValoracionRestaurante
                 {

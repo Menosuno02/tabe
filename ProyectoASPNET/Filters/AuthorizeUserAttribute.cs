@@ -9,12 +9,10 @@ namespace ProyectoASPNET.Filters
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var user = context.HttpContext.User;
-
             if (!user.Identity.IsAuthenticated)
             {
                 context.Result = this.GetRoute("Auth", "Login");
             }
-
         }
 
         private RedirectToRouteResult GetRoute(string controller, string action)

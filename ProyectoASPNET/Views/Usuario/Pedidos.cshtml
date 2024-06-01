@@ -2,6 +2,11 @@
 
 @{
     List<ProductoPedidoView> productos = ViewData["PRODUCTOS"] as List<ProductoPedidoView>;
+    string idUsuario = "";
+    if (Model.Count > 0)
+    {
+        idUsuario = Model[0].IdUsuario.ToString();
+    }
 }
 
 <div class="px-12 py-6 md:px-16">
@@ -85,4 +90,48 @@
             }
         });
     </script>
+    @if (Model != null && Model.Count > 0)
+    {
+        <script>
+            function connectToWebSocket(connectionId, routeKey) {
+                console.log("Attempting to establish WebSocket connection...");
+
+                const socketUrl = `wss://1yh5c2yt2m.execute-api.us-east-1.amazonaws.com/prod`;
+                const socket = new WebSocket(socketUrl);
+                console.log(socket);
+
+                socket.onopen = function () {
+                    console.log("WebSocket connection established!");
+                    const message = {
+                        connectionId: @idUsuario,
+                        action: "$default"
+                    };
+                    socket.send(JSON.stringify(message));
+                };
+
+                socket.onmessage = function (event) {
+                    console.log("Received WebSocket message:", event.data);
+                    const message = JSON.parse(event.data);
+                    if (message.idpedido && message.estado) {
+                        const orderStatusElement = document.getElementById(`estadopedido-${message.idpedido}`);
+                        if (orderStatusElement) {
+                            orderStatusElement.textContent = message.estado;
+                        }
+                    }
+                };
+
+                socket.onclose = function () {
+                    console.log("WebSocket connection closed!");
+                };
+
+                socket.onerror = function (error) {
+                    console.error("WebSocket error observed:", error);
+                };
+
+                return socket;
+            }
+
+            // connectToWebSocket();
+        </script>
+    }
 }

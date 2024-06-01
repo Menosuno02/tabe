@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using Azure.Security.KeyVault.Secrets;
+using TabeNuget;
 
 namespace ProyectoASPNET.Helpers
 {
@@ -8,14 +9,15 @@ namespace ProyectoASPNET.Helpers
     {
         private IConfiguration configuration;
         private SecretClient secretClient;
+        private string pass;
 
-        public HelperMails(IConfiguration configuration, SecretClient secretClient)
+        public HelperMails(IConfiguration configuration, SecretClient secretClient, KeysModel keys)
         {
             this.configuration = configuration;
             this.secretClient = secretClient;
+            this.pass = keys.TabeMailPass;
         }
 
-        /*
         private async Task<MailMessage> ConfigureMailMessage
             (string para, string asunto, string mensaje)
         {
@@ -35,8 +37,7 @@ namespace ProyectoASPNET.Helpers
         {
             string user = this.configuration.GetValue<string>
                 ("MailSettings:Credentials:User");
-            KeyVaultSecret secretMailPass = await secretClient.GetSecretAsync("TabeMailPass");
-            string password = secretMailPass.Value;
+            string password = pass;
             string hostName = this.configuration.GetValue<string>
                 ("MailSettings:ServerSmtp:Host");
             int port = this.configuration.GetValue<int>
@@ -63,6 +64,5 @@ namespace ProyectoASPNET.Helpers
             SmtpClient smtpClient = await ConfigureSmtpClient();
             await smtpClient.SendMailAsync(mail);
         }
-        */
     }
 }

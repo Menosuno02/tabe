@@ -18,7 +18,6 @@ namespace ProyectoASPNET.Helpers
         {
             string url = $"https://maps.googleapis.com/maps/api/distancematrix/json" +
                 $"?origins={origen}&destinations={destino}&key={_googleApiKey}&region=es&language=es&mode=bicycling";
-
             var client = _httpClientFactory.CreateClient();
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             using (var response = await client.SendAsync(request))
@@ -26,17 +25,13 @@ namespace ProyectoASPNET.Helpers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-
                     DistanceMatrixResponse distanceMatrix =
                         JsonConvert.DeserializeObject<DistanceMatrixResponse>(content);
-
-
                     return new DistanceMatrixInfo
                     {
                         Distancia = distanceMatrix.Rows[0].Elements[0].Distance.Text,
                         TiempoEstimado = distanceMatrix.Rows[0].Elements[0].Duration.Value / 60
                     };
-
                 }
                 else
                 {
@@ -48,50 +43,32 @@ namespace ProyectoASPNET.Helpers
 
         protected class DistanceMatrixResponse
         {
-
             public string[] Destination_Addresses { get; set; }
-
-
             public string[] Origin_Addresses { get; set; }
-
-
             public Row[] Rows { get; set; }
-
-
             public string Status { get; set; }
-
         }
 
         protected class Row
         {
-
             public Element[] Elements { get; set; }
-
         }
 
         protected class Element
         {
-
             public Distance Distance { get; set; }
-
-
             public Duration Duration { get; set; }
-
         }
 
         protected class Distance
         {
-
             public string Text { get; set; }
-
             public int Value { get; set; }
         }
 
         protected class Duration
         {
-
             public string Text { get; set; }
-
             public int Value { get; set; }
         }
     }
