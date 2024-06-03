@@ -89,10 +89,14 @@ namespace ProyectoASPNET.Controllers
             if (form == "cesta")
             {
                 int id = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                int restauranteSession = int.Parse(await this.cache.GetStringAsync("restaurante" + id));
+                int restauranteSession = 0;
+                if (await this.cache.GetStringAsync("restaurante" + id) != null)
+                {
+                    restauranteSession = int.Parse(await this.cache.GetStringAsync("restaurante" + id));
+                }
                 // Si id (idrestaurante) no es igual al idrestuarante en el Session, nos salta error
                 // Solo podemos tener productos en nuestra cesta de un solo restaurante
-                if (restauranteSession == 0
+                if (restauranteSession == null || restauranteSession == 0
                     || (restauranteSession != 0 && restauranteSession == idrestaurante))
                 {
                     await serviceRedis.UpdateCesta(new ProductoCesta
