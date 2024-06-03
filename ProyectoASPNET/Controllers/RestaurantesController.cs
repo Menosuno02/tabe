@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using ProyectoASPNET.Extensions;
 using ProyectoASPNET.Filters;
 using ProyectoASPNET.Helpers;
@@ -13,16 +14,19 @@ namespace ProyectoASPNET.Controllers
         private IServiceRestaurantes service;
         private ServiceCacheRedis serviceRedis;
         private HelperGoogleApiDirections helperDistanceMatrix;
+        private IDistributedCache cache;
 
         public RestaurantesController
             (IServiceRestaurantes service,
             ServiceCacheRedis serviceRedis,
             HelperGoogleApiDirections helperDistanceMatrix,
+            IDistributedCache cache,
             IConfiguration configuration)
         {
             this.service = service;
             this.serviceRedis = serviceRedis;
             this.helperDistanceMatrix = helperDistanceMatrix;
+            this.cache = cache;
         }
 
         [AuthorizeUser]
@@ -84,7 +88,8 @@ namespace ProyectoASPNET.Controllers
         {
             if (form == "cesta")
             {
-                int restauranteSession = HttpContext.Session.GetObject<int>("RESTAURANTE");
+                int id = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                int restauranteSession = int.Parse(await this.cache.GetStringAsync("restaurante" + id));
                 // Si id (idrestaurante) no es igual al idrestuarante en el Session, nos salta error
                 // Solo podemos tener productos en nuestra cesta de un solo restaurante
                 if (restauranteSession == 0
