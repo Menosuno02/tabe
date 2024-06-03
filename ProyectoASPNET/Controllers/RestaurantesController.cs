@@ -96,7 +96,7 @@ namespace ProyectoASPNET.Controllers
                 }
                 // Si id (idrestaurante) no es igual al idrestuarante en el Session, nos salta error
                 // Solo podemos tener productos en nuestra cesta de un solo restaurante
-                if (restauranteSession == null || restauranteSession == 0
+                if (restauranteSession == 0
                     || (restauranteSession != 0 && restauranteSession == idrestaurante))
                 {
                     await serviceRedis.UpdateCesta(new ProductoCesta
