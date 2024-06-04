@@ -71,9 +71,10 @@ Entre las tecnologías usadas para desarrollar Tabe se encuentran:
 ## Administradores
  - Crear, editar y eliminar restaurantes y ver sus detalles
 
-![]()
-![]()
-![]()
+![](https://i.imgur.com/D1UlHzt.png)
+![](https://i.imgur.com/wx3HSnS.png)
+![](https://i.imgur.com/lXQkKoN.png)
+![](https://i.imgur.com/DPu48YZ.png)
    
  - Crear, editar y eliminar productos de cualquier restaurante
    
